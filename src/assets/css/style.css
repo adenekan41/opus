@@ -1,0 +1,45 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+@font-face {
+  font-family: "Avenir Opus";
+  font-style: normal;
+  font-weight: 200;
+  src:local("Avenir"), url(../fonts/Avenir.ttc);
+}
+/*@font-face {
+  font-family: "Avenir Opus";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Avenir Opus Medium"), local("AvenirLTStd-Medium"), url(../fonts/AvenirLTStd-Medium.otf);
+}
+@font-face {
+  font-family: "Avenir Opus";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Avenir Opus Black"), local("AvenirLTStd-Black"), url(../fonts/AvenirLTStd-Black.otf);
+}*/
+body {
+  /*padding-right: 0px !important;*/
+  padding: 0px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  background-color: #fff !important;
+  font-family: "Avenir Opus", sans-serif;
+}
+
+a, h1, h2, h3, h4, h5, h6, p, button, input[type=text], input[type=date], input[type=password], input[type=value], b, label, td, select, textarea, th {
+  font-family: "Avenir Opus", sans-serif;
+}
+
