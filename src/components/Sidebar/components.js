@@ -39,19 +39,18 @@ export class CompanyMenu extends React.Component {
       <StyledDropdown onClick={onClick}>
         <Avatar
           initial={companyInitials}
-          bgColor='00B5D8'
-          size="91px"
+          bgColor="00B5D8"
+          size={isCollapsed ? '40px' : '91px'}
           bgColor="#ff9901"
           isRound
         />
         {!isCollapsed && (
-          <Flex flexDirection="column" alignItems="center">
+          <Flex flexDirection="column" alignItems="center" mt="16px">
             <Text
               width="160px"
               fontWeight="medium"
               color="#242424"
               className="Text"
-              mt="16px"
             >
               {companyName}
             </Text>

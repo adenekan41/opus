@@ -26,14 +26,14 @@ export const SidebarContainer = styled.div`
       align-items: center;
       border-bottom: 1px solid #e8e8e8;
       margin: 40px auto;
-      padding-bottom: 30px;
-      margin-bottom: 50px;
+      padding-bottom: 40px;
       transition: all 0.3s;
 
       ${props =>
         props.isCollapsed &&
         css`
-          padding: 0;
+          margin-right: 0;
+          margin-left: 0;
           justify-content: center;
         `}
 
