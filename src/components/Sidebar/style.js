@@ -20,14 +20,14 @@ export const SidebarContainer = styled.div`
     }
 
     &__Header {
-      height: 64px;
       flex-grow: 0;
       z-index: 100;
       display: flex;
       align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 24px;
-      padding: 0 24px;
+      border-bottom: 1px solid #e8e8e8;
+      margin: 40px auto;
+      padding-bottom: 30px;
+      margin-bottom: 50px;
       transition: all 0.3s;
 
       ${props =>
@@ -36,11 +36,6 @@ export const SidebarContainer = styled.div`
           padding: 0;
           justify-content: center;
         `}
-
-      &:hover {
-        cursor: pointer;
-        background: rgba(0, 0, 0, 0.1);
-      }
 
       .Logo {
         transform: translateX(-12px);

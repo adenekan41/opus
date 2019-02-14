@@ -7,12 +7,14 @@ import Tooltip from '../Tooltip';
 
 const StyledDropdown = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
   cursor: pointer;
   position: relative;
 
   .Text {
     line-height: 1;
+    text-align: center;
   }
 
   .customer-name {
@@ -37,28 +39,31 @@ export class CompanyMenu extends React.Component {
       <StyledDropdown onClick={onClick}>
         <Avatar
           initial={companyInitials}
-          bgColor={"00B5D8"}
-          size="32px"
+          bgColor='00B5D8'
+          size="91px"
+          bgColor="#ff9901"
+          isRound
         />
         {!isCollapsed && (
-          <Box ml="12px">
+          <Flex flexDirection="column" alignItems="center">
             <Text
               width="160px"
               fontWeight="medium"
-              color={theme === 'dark' ? 'white' : '#273444'}
+              color="#242424"
               className="Text"
+              mt="16px"
             >
               {companyName}
             </Text>
             <Text
-              className="customer-name"
-              color={theme === 'dark' ? 'white' : '#273444'}
+              className="Text customer-name"
+              color="#b4b4b4"
               size="tiny"
-              mt="4px"
+              mt="8px"
             >
               {customerName}
             </Text>
-          </Box>
+          </Flex>
         )}
       </StyledDropdown>
     );
@@ -88,7 +93,7 @@ const MenuLinkContainer = styled.li`
     display: flex;
     align-items: center;
     padding: 12px 24px;
-    text-decoration:none;
+    text-decoration: none;
 
     &:hover {
       background: #f2f2f2;
