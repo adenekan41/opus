@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {NavLink} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Text, Flex } from 'rebass';
 import Avatar from '../Avatar';
 import { Icon } from '../Icon';
@@ -48,7 +48,7 @@ export class CompanyMenu extends React.Component {
         <Flex flexDirection="column" alignItems="center" mt="16px">
           <Text
             width="160px"
-            fontWeight="medium"
+            fontWeight="bold"
             color="#242424"
             className="Text"
           >
@@ -100,16 +100,18 @@ const MenuLinkContainer = styled.li`
 
     &:hover {
       background: #f2f2f2;
+      text-decoration: none;
     }
 
     &:focus {
       outline: 0;
       background: #f2f2f2;
+      text-decoration: none;
     }
 
     &.MenuLink--active {
       border-left: 2px solid #ff9901;
-      background-color: rgba(0, 0, 0, 0.2);
+      text-decoration: none;
 
       .Icon {
         color: #000000;

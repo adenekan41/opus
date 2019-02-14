@@ -60,10 +60,10 @@ export class Sidebar extends React.Component {
 Sidebar.defaultProps = {
   showGetStarted: true,
   menus: [
-    { icon: 'weather', label: 'Weather Forecast', url: '/forecast', badge: 2 },
-    { icon: 'user', label: 'Contacts', url: '/contacts' },
-    { icon: 'send', label: 'Alerts', url: '/alerts' },
-    { icon: 'team', label: 'Team', url: '/team' },
+    { icon: 'weather', label: 'Weather Forecast', url: '/dashboard/weather-forecast' },
+    { icon: 'user', label: 'Contacts', url: '/dashboard/contacts' },
+    { icon: 'send', label: 'Alerts', url: '/dashboard/alerts' },
+    { icon: 'team', label: 'Team', url: '/dashboard/team' },
   ],
 };
 
