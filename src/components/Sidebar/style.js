@@ -31,9 +31,13 @@ export const SidebarContainer = styled.div`
       ${props =>
         props.isCollapsed &&
         css`
-          margin-right: 0;
-          margin-left: 0;
+          margin-right: 10px;
+          margin-left: 10px;
           justify-content: center;
+
+          button {
+            font-size: 12px;
+          }
         `}
 
       .Logo {
