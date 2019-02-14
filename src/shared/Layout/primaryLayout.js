@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Header from '../../components/Navbar';
 // import Footer from './Footer';
 import Login from '../../views/Auth/Login/login';
 import Recover from '../../views/Auth/Recover/Recover';
@@ -9,7 +8,6 @@ const PrimaryLayout = props => ({
   render() {
     return (
       <React.Fragment>
-        {/* <Header /> */}
         <Switch>
           <Route path="/" exact component={Login} />
           <Route path="/recover" component={Recover} />
