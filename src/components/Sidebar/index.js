@@ -25,6 +25,7 @@ export class Sidebar extends React.Component {
         isCollapsed={isCollapsed}
       >
         <div className="Sidebar__Content">
+          {/* <img src="/static/img/Opuslogo.svg"/> */}
           <div className="Sidebar__Header">
             <CompanyMenu
               role={user.role}

@@ -24,8 +24,8 @@ export const SidebarContainer = styled.div`
       display: flex;
       align-items: center;
       border-bottom: 1px solid #e8e8e8;
-      margin: 40px auto;
-      padding-bottom: 40px;
+      margin: 36px 40px;
+      padding-bottom: 30px;
       transition: all 0.3s;
 
       ${props =>

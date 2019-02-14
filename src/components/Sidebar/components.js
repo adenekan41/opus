@@ -13,6 +13,7 @@ const StyledDropdown = styled.div`
   align-items: center;
   cursor: pointer;
   position: relative;
+  width: 100%;
 
   .Text {
     line-height: 1;
@@ -45,10 +46,10 @@ export class CompanyMenu extends React.Component {
           bgColor="#ff9901"
           isRound
         />
-        <Flex flexDirection="column" alignItems="center" mt="16px">
+        <Flex flexDirection="column" alignItems="center" mt="16px" width="100%">
           <Text
-            width="160px"
             fontWeight="bold"
+            fontSize="18px"
             color="#242424"
             className="Text"
           >
@@ -64,7 +65,7 @@ export class CompanyMenu extends React.Component {
               {role}
             </Text>
           )}
-          <Button size="small" mt="16px" px={isCollapsed ? `4px` : `32px`}>
+          <Button size="small" mt="16px" px={isCollapsed ? `4px` : `32px`} width="100%">
             {isCollapsed ? `Profile` : `View Profile`}
           </Button>
         </Flex>
