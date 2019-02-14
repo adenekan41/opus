@@ -111,4 +111,8 @@ const Avatar = ({
   );
 };
 
+Avatar.defaultProps = {
+  photo_url: 'https://uinames.com/api/photos/female/21.jpg'
+}
+
 export default Avatar;

@@ -12,11 +12,10 @@ export class Sidebar extends React.Component {
       isCollapsed,
       useNavlink,
       showGetStarted,
-      agentInfo = {
+      user = {
         first_name: 'John',
         last_name: 'Doe',
-        company_name: 'Career Palace',
-        email: 'johndoe@gmail.com',
+        role: 'Customer',
       },
     } = this.props;
     return (
@@ -28,37 +27,14 @@ export class Sidebar extends React.Component {
         <div className="Sidebar__Content">
           <div className="Sidebar__Header">
             <CompanyMenu
-              companyName={agentInfo.company_name}
-              customerName={`${agentInfo.first_name} ${agentInfo.last_name}`}
+              role={user.role}
+              customerName={`${user.first_name} ${user.last_name}`}
               theme="dark"
               isCollapsed={isCollapsed}
             />
           </div>
 
           <div className="Sidebar__Main">
-            {showGetStarted && (
-              <MenuLink
-                url="/get-started"
-                icon="globe"
-                isCollapsed={isCollapsed}
-                isActive={activePage === 'Dashboard'}
-                Navlink={useNavlink}
-                title="Get Started"
-              >
-                Get Started
-              </MenuLink>
-            )}
-
-            <MenuLink
-              url="/account-dashboard"
-              icon="home"
-              isCollapsed={isCollapsed}
-              isActive={activePage === 'Dashboard'}
-              Navlink={useNavlink}
-              title="Home"
-            >
-              Home
-            </MenuLink>
             {menus.map((menu, i) => (
               <MenuLink
                 key={menu.label}
@@ -83,20 +59,18 @@ export class Sidebar extends React.Component {
 Sidebar.defaultProps = {
   showGetStarted: true,
   menus: [
-    { icon: 'user', label: 'Customers', url: '/customers', badge: 2 },
-    { icon: 'doc', label: 'Resumes', url: '/resumes' },
-    { icon: 'settings', label: 'Settings', url: '/settings' },
-    { icon: 'help', label: 'Support', url: '/support' },
+    { icon: 'weather', label: 'Weather Forecast', url: '/forecast', badge: 2 },
+    { icon: 'user', label: 'Contacts', url: '/contacts' },
+    { icon: 'send', label: 'Alerts', url: '/alerts' },
+    { icon: 'team', label: 'Team', url: '/team' },
   ],
 };
 
 class CombinedSidebar extends React.Component {
   render() {
     const {
-      agentInfo,
-      showGetStarted,
+      user,
       useNavlink,
-      resumeData,
       isCollapsed,
     } = this.props;
     return (
@@ -108,7 +82,7 @@ class CombinedSidebar extends React.Component {
                 {(isOpen, onOpen, onClose, onToggle) => (
                   <React.Fragment>
                     <Sidebar
-                      {...{ agentInfo, useNavlink, resumeData, showGetStarted }}
+                      {...{ user, useNavlink }}
                       isCollapsed={matches ? isCollapsed : !isOpen}
                       render={() => (
                         <MenuLink

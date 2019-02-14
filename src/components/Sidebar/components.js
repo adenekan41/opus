@@ -4,6 +4,7 @@ import { Text, Flex, Box } from 'rebass';
 import Avatar from '../Avatar';
 import { Icon } from '../Icon';
 import Tooltip from '../Tooltip';
+import Button from '../Button';
 
 const StyledDropdown = styled.div`
   display: flex;
@@ -28,42 +29,45 @@ export class CompanyMenu extends React.Component {
       onClick,
       isCollapsed,
       theme,
-      companyName = 'Careers Pro',
+      role,
       customerName = 'Segun Adebayo',
     } = this.props;
-    const companyInitials = companyName
+    const initials = customerName
       .split(' ')
       .map(item => item[0])
       .join('');
     return (
       <StyledDropdown onClick={onClick}>
         <Avatar
-          initial={companyInitials}
+          initial={initials}
           bgColor="00B5D8"
           size={isCollapsed ? '40px' : '91px'}
           bgColor="#ff9901"
           isRound
         />
-        {!isCollapsed && (
-          <Flex flexDirection="column" alignItems="center" mt="16px">
-            <Text
-              width="160px"
-              fontWeight="medium"
-              color="#242424"
-              className="Text"
-            >
-              {companyName}
-            </Text>
+        <Flex flexDirection="column" alignItems="center" mt="16px">
+          <Text
+            width="160px"
+            fontWeight="medium"
+            color="#242424"
+            className="Text"
+          >
+            {isCollapsed ? initials : customerName}
+          </Text>
+          {!isCollapsed && (
             <Text
               className="Text customer-name"
               color="#b4b4b4"
               size="tiny"
               mt="8px"
             >
-              {customerName}
+              {role}
             </Text>
-          </Flex>
-        )}
+          )}
+          <Button size="small" mt="16px" px={isCollapsed ? `4px` : `32px`}>
+            {isCollapsed ? `Profile` : `View Profile`}
+          </Button>
+        </Flex>
       </StyledDropdown>
     );
   }
