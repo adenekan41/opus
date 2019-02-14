@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Text, Flex, Box } from 'rebass';
+import {NavLink} from 'react-router-dom';
+import { Text, Flex } from 'rebass';
 import Avatar from '../Avatar';
 import { Icon } from '../Icon';
 import Tooltip from '../Tooltip';
@@ -28,8 +29,8 @@ export class CompanyMenu extends React.Component {
     const {
       onClick,
       isCollapsed,
-      theme,
       role,
+      history,
       customerName = 'Segun Adebayo',
     } = this.props;
     const initials = customerName
@@ -40,7 +41,6 @@ export class CompanyMenu extends React.Component {
       <StyledDropdown onClick={onClick}>
         <Avatar
           initial={initials}
-          bgColor="00B5D8"
           size={isCollapsed ? '40px' : '91px'}
           bgColor="#ff9901"
           isRound

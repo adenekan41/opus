@@ -11,7 +11,7 @@ export class Sidebar extends React.Component {
       activePage,
       isCollapsed,
       useNavlink,
-      showGetStarted,
+      history,
       user = {
         first_name: 'John',
         last_name: 'Doe',
@@ -30,6 +30,7 @@ export class Sidebar extends React.Component {
               role={user.role}
               customerName={`${user.first_name} ${user.last_name}`}
               theme="dark"
+              history={history}
               isCollapsed={isCollapsed}
             />
           </div>
@@ -70,6 +71,7 @@ class CombinedSidebar extends React.Component {
   render() {
     const {
       user,
+      history,
       useNavlink,
       isCollapsed,
     } = this.props;
@@ -82,7 +84,7 @@ class CombinedSidebar extends React.Component {
                 {(isOpen, onOpen, onClose, onToggle) => (
                   <React.Fragment>
                     <Sidebar
-                      {...{ user, useNavlink }}
+                      {...{ user, useNavlink, history }}
                       isCollapsed={matches ? isCollapsed : !isOpen}
                       render={() => (
                         <MenuLink

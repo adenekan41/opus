@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 // import Spinner from '../Layout/spinner';
 // import axios from 'axios';
 import './recover.css';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyledDashboardLayout } from './style';
-import CombinedSidebar from '../../components/Sidebar';
+import CombinedSidebar from '../../../components/Sidebar';
 
 class DashboardLayout extends React.Component {
   state = {
@@ -15,17 +15,11 @@ class DashboardLayout extends React.Component {
   };
 
   render() {
-    const { showSidebar, showDetailView } = this.state;
+    const { showSidebar } = this.state;
     const {
       agentInfo = {},
-      resumeData = {},
-      resume_fetched,
-      currentPage,
-      updateState,
       history,
       showGetStarted,
-      actions,
-      bannerShowing,
     } = this.props;
 
     return (
@@ -35,6 +29,7 @@ class DashboardLayout extends React.Component {
           showGetStarted={showGetStarted}
           agentInfo={agentInfo}
           isCollapsed={!showSidebar}
+          history={history}
         />
         <div
           className={`Page__Content ${
