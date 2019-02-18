@@ -42,7 +42,7 @@ export class CompanyMenu extends React.Component {
       <StyledDropdown onClick={onClick}>
         <Avatar
           initial={initials}
-          size={isCollapsed ? '40px' : '91px'}
+          size={isCollapsed ? '40px' : '80px'}
           bgColor="#ff9901"
           isRound
         />

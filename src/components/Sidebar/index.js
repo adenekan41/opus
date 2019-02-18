@@ -3,6 +3,7 @@ import Media from 'react-media';
 import { SidebarContainer, StyledCombinedSidebar } from './style';
 import { CompanyMenu, MenuLink } from './components';
 import { ToggleHandler } from '../../helpers/ToggleHandler';
+import Logo from '../Logo';
 
 export class Sidebar extends React.Component {
   render() {
@@ -25,7 +26,9 @@ export class Sidebar extends React.Component {
         isCollapsed={isCollapsed}
       >
         <div className="Sidebar__Content">
-          {/* <img src="/static/img/Opuslogo.svg"/> */}
+          <div className="Sidebar__Logo">
+            <Logo width="200px" height="40px" />
+          </div>
           <div className="Sidebar__Header">
             <CompanyMenu
               role={user.role}
@@ -61,7 +64,11 @@ export class Sidebar extends React.Component {
 Sidebar.defaultProps = {
   showGetStarted: true,
   menus: [
-    { icon: 'weather', label: 'Weather Forecast', url: '/dashboard/weather-forecast' },
+    {
+      icon: 'weather',
+      label: 'Weather Forecast',
+      url: '/dashboard/weather-forecast',
+    },
     { icon: 'user', label: 'Contacts', url: '/dashboard/contacts' },
     { icon: 'send', label: 'Alerts', url: '/dashboard/alerts' },
     { icon: 'team', label: 'Team', url: '/dashboard/team' },
@@ -70,12 +77,7 @@ Sidebar.defaultProps = {
 
 class CombinedSidebar extends React.Component {
   render() {
-    const {
-      user,
-      history,
-      useNavlink,
-      isCollapsed,
-    } = this.props;
+    const { user, history, useNavlink, isCollapsed } = this.props;
     return (
       <StyledCombinedSidebar>
         <Media query="(max-width: 1024px)">

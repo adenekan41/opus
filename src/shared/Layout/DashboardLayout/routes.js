@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import DashboardLayout from '.';
+import Contacts from '../../../views/Dashboard/Contacts';
 
 const DashboardRoutes = props => {
   return (
@@ -11,7 +12,7 @@ const DashboardRoutes = props => {
           exact
           component={<div />}
         />
-        <Route path="/dashboard/contacts" render={() => <div />} />
+        <Route path="/dashboard/contacts" render={() => <Contacts />} />
         <Route path="/dashboard/alert" render={() => <div />} />
         <Route path="/dashboard/team" render={() => <div />} />
       </Switch>

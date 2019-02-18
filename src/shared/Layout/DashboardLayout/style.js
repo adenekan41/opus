@@ -14,22 +14,10 @@ export const StyledDashboardLayout = styled.div`
     height: 100vh;
     overflow: auto;
     background-color: #f5f6fa;
+    padding: 40px;
 
     &.Sidebar--active {
       transform: translateX(264px);
     }
   }
-
-  /* @media screen and (max-width: 1024px) {
-    .CustomerViewDrawer .Drawer {
-      width: 100%;
-    }
-    .Sidebar {
-      position: fixed;
-      left: ${props => (props.showSidebar ? '0' : '-264px')};
-      top: 0;
-      bottom: 0;
-      z-index: 100000;
-    }
-  } */
 `;

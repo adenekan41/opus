@@ -73,15 +73,15 @@ const StyledAvatar = styled.div`
   align-items: center;
   flex-shrink: 0;
   justify-content: center;
-  font-weight: 500;
+  font-weight: bold;
   background-color: ${props => props.bgColor};
   background-position: center;
   background-image: url(${props => props.photo_url});
   background-repeat: no-repeat;
   background-size: 110%;
   border-radius: ${props => (props.isRound ? '50%' : '4px')};
-  color: white;
-  font-size: calc(${props => props.size} / 2 - 2px);
+  color: ${props => props.color || `white`};
+  font-size: ${props => props.fontSize || '14px'};
 
   ${sharedProps}
 `;
@@ -92,6 +92,7 @@ const Avatar = ({
   isRound,
   bgColor = '#495566',
   className,
+  color,
   size = '32px',
   ...rest
 }) => {
@@ -103,6 +104,7 @@ const Avatar = ({
         size,
         className: `Avatar ${className}`,
         isRound,
+        color,
         ...rest,
       }}
     >
@@ -112,7 +114,7 @@ const Avatar = ({
 };
 
 Avatar.defaultProps = {
-  photo_url: 'https://uinames.com/api/photos/female/21.jpg'
-}
+  photo_url: 'https://uinames.com/api/photos/female/21.jpg',
+};
 
 export default Avatar;

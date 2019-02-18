@@ -18,6 +18,10 @@ export const SidebarContainer = styled.div`
       flex-grow: 1;
     }
 
+    &__Logo {
+      margin: 20px 40px 20px;
+    }
+
     &__Header {
       flex-grow: 0;
       z-index: 100;
