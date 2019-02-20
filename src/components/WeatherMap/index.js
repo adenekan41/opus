@@ -25,6 +25,12 @@ const MapContainer = styled.div`
   .leaflet-popup-content {
     width: 250px;
   }
+  .leaflet-marker-icon.leaflet-interactive span {
+    color: #ffffff !important;
+  }
+  .marker-cluster-small {
+    background-color: rgba(181, 226, 140, 1);
+  }
   /* .leaflet-control-container {
     .leaflet-control-zoom {
       display: none;
