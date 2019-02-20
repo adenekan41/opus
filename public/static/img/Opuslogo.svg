@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2000px" height="500px" viewBox="0 0 2000 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>Artboard</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill="#17732D" fill-rule="nonzero" x="170" y="131" width="180" height="180"></rect>
+        <rect id="Rectangle" fill="#17732D" fill-rule="nonzero" x="95" y="311" width="75" height="75"></rect>
+        <rect id="Rectangle" fill="#17732D" fill-rule="nonzero" x="50" y="199" width="45" height="45"></rect>
+        <text id="OpusInsights" font-family="IM_FELL_French_Canon_Roman, IM FELL French Canon" font-size="230" font-weight="normal" fill="#FF9900">
+            <tspan x="379" y="308">OpusInsights</tspan>
+        </text>
+        <text id="Forecasting-the-trop" font-family="IM_FELL_French_Canon_Roman, IM FELL French Canon" font-size="60" font-weight="normal" fill="#17732D">
+            <tspan x="715" y="391">Forecasting the tropics</tspan>
+        </text>
+    </g>
+</svg>

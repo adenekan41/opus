@@ -1,29 +1,21 @@
 import React from 'react';
-import { BrowserRouter as Router , Route , Switch } from 'react-router-dom'
-import Header from '../../components/Navbar';
+import { Route, Switch } from 'react-router-dom';
 // import Footer from './Footer';
 import Login from '../../views/Auth/Login/login';
 import Recover from '../../views/Auth/Recover/Recover';
-import DashboardLayout from '../../shared/Layout/DashboardLayout';
+import DashboardRoutes from '../../shared/Layout/DashboardLayout/routes';
 const PrimaryLayout = props => ({
   render() {
     return (
-      
-        
-        <React.Fragment>
-        <Header />
-        <main>
+      <React.Fragment>
         <Switch>
           <Route path="/" exact component={Login} />
           <Route path="/recover" component={Recover} />
-         <Route path="/dashboard" component={DashboardLayout} />
+          <Route path="/dashboard" component={DashboardRoutes} />
         </Switch>
-        </main>
-        </React.Fragment>
-        
-      
+      </React.Fragment>
     );
-  }
+  },
 });
 
 export default PrimaryLayout;
