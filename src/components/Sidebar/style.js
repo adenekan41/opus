@@ -19,7 +19,8 @@ export const SidebarContainer = styled.div`
     }
 
     &__Logo {
-      margin: 20px 40px 20px;
+      margin: ${props =>
+        props.isCollapsed ? '20px 10px 20px' : '20px 40px 20px'};
     }
 
     &__Header {

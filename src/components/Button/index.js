@@ -48,6 +48,17 @@ const generateType = (
         background: #ff9901;
       }
     `;
+  else if (kind === 'green')
+    return css`
+      color: #ffffff;
+      border: 1px solid #29cb98!important;
+      background: #29cb98;
+      &:hover,
+      &:active {
+        color: #ffffff;
+        background: #29cb98;
+      }
+    `;
   else if (kind === 'secondary')
     return css`
       color: ${background};

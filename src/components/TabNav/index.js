@@ -10,7 +10,7 @@ const TabNavContainer = styled.div`
     border-bottom: 1px solid #bababa;
     list-style: none;
     padding: 0;
-    margin-bottom: 64px;
+    margin-bottom: 30px;
   }
   .TabNav__navigation__tab {
     max-width: 140px;
