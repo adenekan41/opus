@@ -34,11 +34,10 @@ const MapMarker = ({ position, goToBulletin, map, layerContainer }) => (
 export default class WeatherMap extends Component {
   render() {
     const { center, zoom, markers } = this.props;
-    console.log(process.env.REACT_APP_GOOGLE_KEY);
     return (
       <MapContainer>
         <Map center={center} zoom={zoom}>
-          <LayersControl position="bottomright">
+          <LayersControl position="bottomleft">
             <BaseLayer checked name="Google layer">
               <GoogleLayer
                 googlekey={process.env.REACT_APP_GOOGLE_KEY}
