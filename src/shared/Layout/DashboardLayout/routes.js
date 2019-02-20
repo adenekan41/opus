@@ -6,7 +6,7 @@ import Forecast from '../../../views/Dashboard/Forecast';
 
 const DashboardRoutes = props => {
   return (
-    <DashboardLayout NavLink={true}>
+    <DashboardLayout NavLink={true} {...props}>
       <Switch>
         <Route
           path="/dashboard/weather-forecast"
