@@ -71,8 +71,18 @@ const FullLogo = ({ width = '2000px', height = '500px' }) => (
   </svg>
 );
 
-const Logo = ({ type, width, height }) => {
-  let Component = type === 'full' ? FullLogo : FullLogo;
+const IconLogo = () => (
+  <svg width="35" height="30" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M14 0h21v21H14V0zM5 21h9v9H5v-9zM0 8h5v5H0V8z"
+      fill="#17732D"
+      fill-rule="nonzero"
+    />
+  </svg>
+);
+
+const Logo = ({ type="full", width, height }) => {
+  let Component = type === 'full' ? FullLogo : IconLogo;
   return <Component width={width} height={height} />;
 };
 

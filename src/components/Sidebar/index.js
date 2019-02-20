@@ -27,7 +27,11 @@ export class Sidebar extends React.Component {
       >
         <div className="Sidebar__Content">
           <div className="Sidebar__Logo">
-            <Logo width="200px" height="40px" />
+            {isCollapsed ? (
+              <Logo width="200px" height="40px" type="" icon />
+            ) : (
+              <Logo width="200px" height="40px" />
+            )}
           </div>
           <div className="Sidebar__Header">
             <CompanyMenu

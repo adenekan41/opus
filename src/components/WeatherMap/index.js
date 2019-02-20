@@ -2,10 +2,17 @@ import React, { Component } from 'react';
 import { Flex, Text } from 'rebass';
 import styled from 'styled-components';
 import { Map, Marker, Popup, LayersControl } from 'react-leaflet';
+import L from 'leaflet';
 import { GoogleLayer } from 'react-leaflet-google';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import Button from '../Button';
 import 'react-leaflet-markercluster/dist/styles.min.css';
+
+const pointerIcon = new L.Icon({
+  iconUrl: require('../../assets/img/map-marker.svg'),
+  iconRetinaUrl: require('../../assets/img/map-marker.svg'),
+  popupAnchor: [20, -4],
+});
 
 const { BaseLayer } = LayersControl;
 
@@ -50,7 +57,12 @@ const MapMarker = ({
   barometer,
   name,
 }) => (
-  <Marker position={position} map={map} layerContainer={layerContainer}>
+  <Marker
+    position={position}
+    map={map}
+    layerContainer={layerContainer}
+    icon={pointerIcon}
+  >
     <Popup>
       <Text
         mb="12px"
