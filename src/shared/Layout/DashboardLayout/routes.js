@@ -2,17 +2,21 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import DashboardLayout from '.';
 import Contacts from '../../../views/Dashboard/Contacts';
+import Forecast from '../../../views/Dashboard/Forecast';
 
 const DashboardRoutes = props => {
   return (
     <DashboardLayout NavLink={true}>
       <Switch>
         <Route
-          path={`/dashboard/weather-forecast"`}
+          path="/dashboard/weather-forecast"
           exact
-          component={<div />}
+          render={() => <Forecast {...props} />}
         />
-        <Route path="/dashboard/contacts" render={() => <Contacts />} />
+        <Route
+          path="/dashboard/contacts"
+          render={() => <Contacts {...props} />}
+        />
         <Route path="/dashboard/alert" render={() => <div />} />
         <Route path="/dashboard/team" render={() => <div />} />
       </Switch>

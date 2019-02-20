@@ -10,10 +10,12 @@ class Contacts extends React.Component {
   };
   render() {
     return (
-      <ContactTable
-        onContactDelete={this.onContactDelete}
-        onContactEdit={this.onContactEdit}
-      />
+      <div style={{ padding: '40px' }}>
+        <ContactTable
+          onContactDelete={this.onContactDelete}
+          onContactEdit={this.onContactEdit}
+        />
+      </div>
     );
   }
 }

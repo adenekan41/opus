@@ -14,7 +14,6 @@ export const StyledDashboardLayout = styled.div`
     height: 100vh;
     overflow: auto;
     background-color: #f5f6fa;
-    padding: 40px;
 
     &.Sidebar--active {
       transform: translateX(264px);

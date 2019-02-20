@@ -65,7 +65,12 @@ export class CompanyMenu extends React.Component {
               {role}
             </Text>
           )}
-          <Button size="small" mt="16px" px={isCollapsed ? `4px` : `32px`} width="100%">
+          <Button
+            size="small"
+            mt="16px"
+            px={isCollapsed ? `4px` : `32px`}
+            width="100%"
+          >
             {isCollapsed ? `Profile` : `View Profile`}
           </Button>
         </Flex>
@@ -98,6 +103,7 @@ const MenuLinkContainer = styled.li`
     align-items: center;
     padding: 12px 24px;
     text-decoration: none;
+    font-weight: 500;
 
     &:hover {
       background: #f2f2f2;
@@ -120,7 +126,7 @@ const MenuLinkContainer = styled.li`
 
       .Text {
         font-weight: 500;
-        color: #000000;
+        color: #242424!important;
       }
     }
   }
@@ -148,7 +154,7 @@ export const MenuLink = ({
         <Icon name={icon} color="#b4b4b4" size={iconSize} />
       </Flex>
       {!isCollapsed && (
-        <Text ml="12px" color="#b4b4b4" size="small">
+        <Text ml="12px" color="#b4b4b4" size="small" className="Text">
           {children}
         </Text>
       )}

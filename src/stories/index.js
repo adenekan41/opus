@@ -6,6 +6,7 @@ import './Navbar';
 import './Sidebar';
 import './DashboardLayout';
 import './Table';
+import './Form'
 
 storiesOf('Welcome', module).add('to Storybook', () => {
   return <Welcome showApp={linkTo('Button')} />;

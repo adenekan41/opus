@@ -37,6 +37,17 @@ const generateType = (
         opacity: 0.8;
       }
     `;
+  else if (kind === 'orange')
+    return css`
+      color: #ffffff;
+      border: 1px solid #ff9901!important;
+      background: #ff9901;
+      &:hover,
+      &:active {
+        color: #ffffff;
+        background: #ff9901;
+      }
+    `;
   else if (kind === 'secondary')
     return css`
       color: ${background};
