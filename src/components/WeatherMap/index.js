@@ -108,9 +108,6 @@ const MapMarker = ({
 );
 
 export default class WeatherMap extends Component {
-  goToBulletinPage = () => {
-    this.props.history.push('/dashboard/weather-forecast/bulletin');
-  };
   render() {
     const { center, zoom, markers } = this.props;
     return (
@@ -131,7 +128,7 @@ export default class WeatherMap extends Component {
                 key={i}
                 {...marker}
                 position={[marker.lat, marker.lng]}
-                goToBulletin={this.goToBulletinPage}
+                goToBulletin={this.props.goToBulletinPage}
               />
             ))}
           </MarkerClusterGroup>

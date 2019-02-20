@@ -67,7 +67,7 @@ Sidebar.defaultProps = {
     {
       icon: 'weather',
       label: 'Weather Forecast',
-      url: '/dashboard/weather-forecast',
+      url: '/dashboard/weather-forecast/map',
     },
     { icon: 'user', label: 'Contacts', url: '/dashboard/contacts' },
     { icon: 'send', label: 'Alerts', url: '/dashboard/alerts' },

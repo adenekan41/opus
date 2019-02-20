@@ -10,7 +10,6 @@ const DashboardRoutes = props => {
       <Switch>
         <Route
           path="/dashboard/weather-forecast"
-          exact
           render={() => <Forecast {...props} />}
         />
         <Route
