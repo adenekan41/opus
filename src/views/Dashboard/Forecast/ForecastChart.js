@@ -64,6 +64,10 @@ export default class ForecastCharts extends Component {
     }
   };
 
+  goToReportPage = () => {
+    this.props.history.push('/dashboard/weather-forecast/bulletin/charts')
+  }
+
   render() {
     let { selectedCharts, charts } = this.state;
     let selectedChartsLabels = selectedCharts.map(chart =>
@@ -90,6 +94,7 @@ export default class ForecastCharts extends Component {
               <Box key={`${label}-${i}`}>
                 <Component
                   hideCard={() => this.removeFromSelectedCharts(label)}
+                  viewDetails={this.goToReportPage}
                 />
               </Box>
             ))}
