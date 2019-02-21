@@ -3,20 +3,29 @@ import { Box, Flex } from 'rebass';
 import { TagButton } from '../../../components/Tags';
 import EmptyState from '../../../components/EmptyState';
 import emptyStateImage from '../../../assets/img/empty-states/bulletin.png';
+import TemperatureChart from './charts/TemperatureChart';
+import CurrentRainChart from './charts/CurrentRainChart';
+import TotalRainChart from './charts/TotalRainChart';
+import HumidityChart from './charts/HumidityChart';
+import WindSpeedChart from './charts/WindSpeedChart';
+import SunsetChart from './charts/SunsetChart';
+import WindRoseChart from './charts/WindRoseChart';
+import WindDirection from './charts/WindDirectionChart';
+import BarometerChart from './charts/BarometerChart';
 
 const chartMapping = {
-  temperature: { label: 'Temperature', Component: <div>temperature</div> },
-  'current rain': { label: 'Current rain', Component: <div>Current rain</div> },
-  'total rain': { label: 'Total rain', Component: <div>Total rain</div> },
-  humdity: { label: 'Humdity', Component: <div>Humdity</div> },
-  'wind speed': { label: 'Wind speed', Component: <div>Wind speed</div> },
+  temperature: { label: 'Temperature', Component: TemperatureChart },
+  'current rain': { label: 'Current rain', Component: CurrentRainChart},
+  'total rain': { label: 'Total rain', Component: TotalRainChart },
+  humdity: { label: 'Humdity', Component: HumidityChart },
+  'wind speed': { label: 'Wind speed', Component: WindSpeedChart },
   'wind direction': {
     label: 'Wind direction',
-    Component: <div>Wind direction</div>,
+    Component: WindDirection,
   },
-  'wind rose': { label: 'Wind rose', Component: <div>Wind rose</div> },
-  barometer: { label: 'Barometer', Component: <div>Barometer</div> },
-  sunset: { label: 'Sunset', Component: <div>Sunset</div> },
+  'wind rose': { label: 'Wind rose', Component: WindRoseChart },
+  barometer: { label: 'Barometer', Component: BarometerChart },
+  sunset: { label: 'Sunset', Component: SunsetChart },
   'moon phase': { label: 'Moon phase', Component: <div>Moon phase</div> },
 };
 
@@ -63,7 +72,7 @@ export default class ForecastCharts extends Component {
     let chartFilter = Object.values(charts).map(item => item.label);
     return (
       <Box>
-        <Flex>
+        <Flex mb="30px">
           {chartFilter.map((filter, i) => (
             <TagButton
               key={i.toString()}
@@ -76,9 +85,13 @@ export default class ForecastCharts extends Component {
           ))}
         </Flex>
         {selectedCharts.length > 0 ? (
-          <Flex>
+          <Flex flexWrap="wrap">
             {selectedCharts.map(({ Component, label }, i) => (
-              <Box key={`${label}-${i}`}>{Component}</Box>
+              <Box key={`${label}-${i}`}>
+                <Component
+                  hideCard={() => this.removeFromSelectedCharts(label)}
+                />
+              </Box>
             ))}
           </Flex>
         ) : (

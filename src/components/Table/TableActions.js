@@ -30,26 +30,6 @@ const TableActions = ({ onEdit, onDelete, model, data }) => (
         >
           delete {model}
         </Item>
-
-        {/* <ToggleHandler>
-            {(isOpen, onOpen, onClose) => (
-              <React.Fragment>
-                <Confirm
-                  heading="Delete Resume"
-                  showModal={isOpen}
-                  onConfirm={() => {
-                    onDelete();
-                    onClose();
-                  }}
-                  onCloseModal={onClose}
-                  description="Are you sure you want to delete this resume?"
-                />
-                <Item icon="delete" onClick={blockFunction(onOpen)} isNegative>
-                  Delete
-                </Item>
-              </React.Fragment>
-            )}
-          </ToggleHandler> */}
       </Fragment>
     )}
   </Droplist>
