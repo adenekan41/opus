@@ -1,18 +1,20 @@
-.RecoverBody{
-	background: #fafafa;
-	height: 100vh;
-    padding-top: 11rem;
+import styled from 'styled-components';
+
+export const LoginLayout = styled.div`
+ .loginBody{
+  background: #fafafa;
+  height: 100vh;
 
 }
-.Recover__opus-insight h1{
-	font-size: 35px;
-	color: #ff9901;
-	margin-bottom: 0;
-	
-	font-weight: 500;
+.login__opus-insight h1{
+  font-size: 32px;
+  color: #ff9901;
+  margin-bottom: 0;
+  margin-top: 11rem;
+  font-weight: 500;
 }
-.Recover__opus-insight p{
-	font-size: 17px
+.login__opus-insight p{
+  font-size: 16px
 }
 
 
@@ -33,18 +35,18 @@
 .div_input {
     padding: 1px;
     background: #fff;
-    box-shadow: 0 10px 14px -4px rgba(70, 70, 70, 0.06);
     border-top: 1px solid #e9e9e9 !important;
 }
 .div_input:hover  {
     border-left: 3px solid #19272D !important;
 }
-.Recover__opus-insight button {
+.login__opus-insight button {
     background: #242424 !important;
     padding: 15px;
     border-radius: 4px;
     margin-top: 18px;
 }
 .border_none{
-	border: none !important;
+  border: none !important;
 }
+`;

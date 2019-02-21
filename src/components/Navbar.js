@@ -4,7 +4,7 @@ import logo from '../assets/img/Opuslogo.svg';
 const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light fixed-top bg-light__opus">
-      <a className="navbar-brand" href="#">
+      <a className="navbar-brand" href="/">
         <img src={logo} alt="LOADING >>>>" style={{}} />
       </a>
       <button

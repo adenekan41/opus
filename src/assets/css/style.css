@@ -10,24 +10,30 @@
   font-family: "Avenir Opus", sans-serif;
 }
 
-@font-face {
+/*@font-face {
   font-family: "Avenir Opus";
   font-style: normal;
   font-weight: 200;
   src:local("Avenir"), url(../fonts/Avenir.ttc);
+}*/
+@font-face {
+  font-family: "Avenir Opus";
+  font-style: normal;
+  font-weight: 200;
+  src: local("Avenir Opus Light"), local("AvenirLTStd-Light"), url(../fonts/AvenirLTStd-Light.otf);
 }
-/*@font-face {
+@font-face {
   font-family: "Avenir Opus";
   font-style: normal;
   font-weight: 400;
-  src: local("Avenir Opus Medium"), local("AvenirLTStd-Medium"), url(../fonts/AvenirLTStd-Medium.otf);
+  src: local("Avenir Opus Book"), local("AvenirLTStd-Book"), url(../fonts/AvenirLTStd-Book.otf);
 }
 @font-face {
   font-family: "Avenir Opus";
   font-style: normal;
   font-weight: 600;
   src: local("Avenir Opus Black"), local("AvenirLTStd-Black"), url(../fonts/AvenirLTStd-Black.otf);
-}*/
+}
 body {
   /*padding-right: 0px !important;*/
   padding: 0px;
