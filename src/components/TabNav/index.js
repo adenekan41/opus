@@ -35,6 +35,12 @@ const TabNavContainer = styled.div`
         margin-right: 6px;
       }
 
+      &:focus {
+        .Icon {
+          color: #242424;
+        }
+      }
+
       &.active {
         font-weight: bold;
         color: #242424;
