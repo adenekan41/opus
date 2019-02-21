@@ -4,8 +4,6 @@ import HighchartsReact from 'highcharts-react-official';
 import ChartContainer from './ChartContainer';
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/solid-gauge')(Highcharts);
-require('highcharts/modules/exporting')(Highcharts);
-require('highcharts/modules/export-data')(Highcharts);
 
 const options = {
   data: {

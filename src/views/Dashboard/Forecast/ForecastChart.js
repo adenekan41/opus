@@ -11,6 +11,7 @@ import WindSpeedChart from './charts/WindSpeedChart';
 import SunsetChart from './charts/SunsetChart';
 import WindRoseChart from './charts/WindRoseChart';
 import WindDirection from './charts/WindDirectionChart';
+import BarometerChart from './charts/BarometerChart';
 
 const chartMapping = {
   temperature: { label: 'Temperature', Component: TemperatureChart },
@@ -23,7 +24,7 @@ const chartMapping = {
     Component: WindDirection,
   },
   'wind rose': { label: 'Wind rose', Component: WindRoseChart },
-  barometer: { label: 'Barometer', Component: <div>Barometer</div> },
+  barometer: { label: 'Barometer', Component: BarometerChart },
   sunset: { label: 'Sunset', Component: SunsetChart },
   'moon phase': { label: 'Moon phase', Component: <div>Moon phase</div> },
 };
