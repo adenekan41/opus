@@ -68,7 +68,7 @@ export class CompanyMenu extends React.Component {
           <Button
             size="small"
             mt="16px"
-            px={isCollapsed ? `4px` : `32px`}
+            px={isCollapsed ? `4px` : `40px`}
             width="100%"
             onClick={() => history.push('/dashboard/profile')}
           >

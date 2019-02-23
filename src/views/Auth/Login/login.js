@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 // import Spinner from '../Layout/spinner';
 // import axios from 'axios';
-import './login.css';
+import { LoginLayout } from './style';
+import Header from '../../../components/Navbar';
 class Login extends Component {
   render() {
     return (
-      <React.Fragment>
+      <LoginLayout>
+      	<Header />
         <div className="loginBody login__opus-insight">
           <div className="container">
             <div className="row">
@@ -44,7 +46,7 @@ class Login extends Component {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </LoginLayout>
     );
   }
 }
