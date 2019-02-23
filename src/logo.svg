@@ -4,4 +4,30 @@
         <circle cx="420.9" cy="296.5" r="45.7"/>
         <path d="M520.5 78.1z"/>
     </g>
+    <div class="row">
+    	<div class="col-md-3">
+    		<div class="card d-flex justify-content-center">
+    			<div class="card-body">
+    				<img src="" alt=""/>
+    				<div class="change_photo">
+    					<input type="text"/>
+    					<button class="btn btn-success btn-block"></button>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="col-md-9">
+    		<div class="row">
+    			<div class="col">
+    			
+	    		</div>
+	    		<div class="col">
+	    			
+	    		</div>
+	    		<div class="col">
+	    			
+	    		</div>
+	    	</div>
+    	</div>
+    </div>
 </svg>
