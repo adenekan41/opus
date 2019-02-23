@@ -30,6 +30,7 @@
   },
   "scripts": {
     "preinstall": "npm install webpack@4.19.1 --save",
+    "postinstall": "npm install webpack@4.19.1 --save",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
