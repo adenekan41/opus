@@ -1,6 +1,7 @@
 import React from 'react';
 import ContactTable from './components/ContactTable';
 import Modal from '../../../components/Modal/index';
+import SearchInput from '../../../components/SearchInput';
 class Contacts extends React.Component {
   onContactEdit = contact => {
     console.log(contact);
@@ -42,12 +43,28 @@ class Contacts extends React.Component {
         });
         console.log('ssss')
     }
+
+
   render() {
+    const defaultStyle = {
+       background: '#29cb98',
+      borderColor: '#29cb98',
+      padding:"11px"
+    }
     return (
+
       <div>
        { this.state.isShowing ? <div onClick={this.closeModalHandler} className="back-drop"></div> : null }
       <div style={{ padding: '40px' }}>
-
+        <div className="row">
+          <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
+            <SearchInput placeholder="Search contacts"/>
+          </div>
+          <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
+            <button className="btn btn-success btn-block sucss_btn" style={defaultStyle}><i className="ion-ios-plus"></i>&nbsp;&nbsp;Add contact</button>
+          </div>
+        </div>
+        <br />  <br /> 
         <ContactTable
           onContactDelete={this.onContactDelete}
           onContactEdit={this.onContactEdit}

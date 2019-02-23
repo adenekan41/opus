@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import DashboardLayout from '.';
 import Contacts from '../../../views/Dashboard/Contacts';
 import Alerts from '../../../views/Dashboard/Alerts';
+import Teams from '../../../views/Dashboard/Team';
 import Forecast from '../../../views/Dashboard/Forecast';
 
 const DashboardRoutes = props => {
@@ -17,8 +18,8 @@ const DashboardRoutes = props => {
           path="/dashboard/contacts"
           render={() => <Contacts {...props} />}
         />
-        <Route path="/dashboard/alert" render={() => <Alerts {...props} />} /> 
-        <Route path="/dashboard/team" render={() => <div />} />
+        <Route path="/dashboard/alerts" render={() => <Alerts {...props} />} /> 
+        <Route path="/dashboard/team" render={() => <Teams {...props} />} />
       </Switch>
     </DashboardLayout>
   );

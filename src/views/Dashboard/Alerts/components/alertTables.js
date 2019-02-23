@@ -1,11 +1,19 @@
  import React from 'react';
-import Table from '../../../../components/Table';
+import Alerts from '../../../../components/Alert';
 import Avatar from '../../../../components/Avatar';
 import TableActions from '../../../../components/Table/TableActions';
 
 
-
-const Alert = ({
+const AlertStyle = {
+  borderRadius: '3px',
+  boxShadow: '0 10px 14px -4px rgba(70, 70, 70, 0.06)',
+  backgroundColor: '#ffffff',
+  padding:'20px',
+  border: 'none',
+  height: '44px',
+  width: '144px',
+}
+const Alerttable = ({
   isLoading,
   pageSize,
   currentPage,
@@ -13,13 +21,25 @@ const Alert = ({
   onClickRow,
   hasError,
   onRefresh,
-  contacts,
+  alerts,
   onPageChange,
   onPageSizeChange,
   onFetchData,
  }) => {
   return (
-    <Table
+  	<React.Fragment>
+  	<div>
+  		<p>
+	  		<select style={AlertStyle}>
+	  			<option>All messages</option>
+	  			<option>All messages</option>
+	  			<option>All messages</option>
+	  		</select>
+	  		<b style={{float:'right' ,color: '#242424', fontWeight:'100'}}>Showing {alerts.length} of {alerts.length}</b>
+  		</p>
+  	</div>
+  	<hr/>
+    <Alerts
       mt="50px"
     
       onClickRow={onClickRow}
@@ -30,20 +50,21 @@ const Alert = ({
       onPageSizeChange={onPageSizeChange}
       pageSize={pageSize}
       currentPage={currentPage}
-      showPagination={contacts && contacts.length > pageSize}
+      showPagination={alerts && alerts.length > pageSize}
       totalPages={totalPages}
       onFetchData={onFetchData}
-      data={contacts}
+      data={alerts}
       noDataText="No Alert Yet"
       errorText="Oops! There was an issue fetching your alerts"
      
     />
+    </React.Fragment>
   );
 };
 
-export default Alert;
+export default Alerttable;
 
-Alert.defaultProps = {
+Alerttable.defaultProps = {
   alerts: [
     {
       title: 'Storm Alert',
