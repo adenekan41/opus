@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-// import Spinner from '../Layout/spinner';
+import Header from '../../../components/Navbar';
 // import axios from 'axios';
-import './recover.css';
+import { RecoverLayout } from './style';
 class Recover extends Component {
   render() {
     return (
-      <React.Fragment>
+
+      <RecoverLayout>
+      <Header />
         <div className="RecoverBody Recover__opus-insight">
           <div className="container">
             <h1 className="text-center">Recover password</h1>
@@ -36,7 +38,7 @@ class Recover extends Component {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </RecoverLayout>
     );
   }
 }

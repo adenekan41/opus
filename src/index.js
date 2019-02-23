@@ -5,6 +5,7 @@ import * as serviceWorker from './serviceWorker';
 import './assets/css/bootstrap.min.css'
 import './assets/css/normalize.css'
 import './assets/css/animate.css'
+import './assets/css/ionicons.min.css'
 import './assets/css/style.css'
 // import './assets/js/bootstrap.min.js'
 ReactDOM.render(<App />, document.getElementById('root'));

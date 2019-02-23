@@ -12,16 +12,16 @@ const DashboardRoutes = props => {
     <DashboardLayout NavLink={true} {...props}>
       <Switch>
         <Route
-          path="/dashboard/weather-forecast"
+          path="/admin/dashboard/weather-forecast"
           render={() => <Forecast {...props} />}
         />
         <Route
-          path="/dashboard/contacts"
+          path="/admin/dashboard/contacts"
           render={() => <Contacts {...props} />}
         />
-        <Route path="/dashboard/alerts" render={() => <Alerts {...props} />} /> 
-        <Route path="/dashboard/team" render={() => <Teams {...props} />} />
-        <Route path="/dashboard/profile/" render={() => <Account {...props} />} />
+        <Route path="/admin/dashboard/alerts" render={() => <Alerts {...props} />} /> 
+        <Route path="/admin/dashboard/team" render={() => <Teams {...props} />} />
+        <Route path="/admin/dashboard/profile/" render={() => <Account {...props} />} />
       </Switch>
     </DashboardLayout>
   );
