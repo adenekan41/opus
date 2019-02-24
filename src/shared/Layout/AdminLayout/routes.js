@@ -6,24 +6,47 @@ import Alerts from '../../../views/Dashboard/Alerts';
 import Teams from '../../../views/Dashboard/Team';
 import Account from '../../../views/Dashboard/Account';
 import Forecast from '../../../views/Dashboard/Forecast';
+import { DataProvider } from '../../../api/provider';
+import { DataContext } from '../../../api/context';
 
-const DashboardRoutes = props => {
+const DashboardRoutes = ({token, ...rest}) => {
   return (
-    <DashboardLayout NavLink={true} {...props}>
-      <Switch>
-        <Route
-          path="/admin/dashboard/weather-forecast"
-          render={() => <Forecast {...props} />}
-        />
-        <Route
-          path="/admin/dashboard/contacts"
-          render={() => <Contacts {...props} />}
-        />
-        <Route path="/admin/dashboard/alerts" render={() => <Alerts {...props} />} /> 
-        <Route path="/admin/dashboard/team" render={() => <Teams {...props} />} />
-        <Route path="/admin/dashboard/profile/" render={() => <Account {...props} />} />
-      </Switch>
-    </DashboardLayout>
+    <DataProvider token={token}>
+      <DataContext.Consumer>
+        {({ state, dispatch }) => (
+          <DashboardLayout NavLink={true} {...rest}>
+            <Switch>
+              <Route
+                path="/admin/dashboard/weather-forecast"
+                render={() => (
+                  <Forecast {...rest} {...{ ...state, dispatch }} />
+                )}
+              />
+              <Route
+                path="/admin/dashboard/contacts"
+                render={() => (
+                  <Contacts {...rest} {...{ ...state, dispatch }} />
+                )}
+              />
+              <Route
+                path="/admin/dashboard/alerts"
+                render={() => <Alerts {...rest} {...{ ...state, dispatch }} />}
+              />
+              <Route
+                path="/admin/dashboard/team"
+                render={() => <Teams {...rest} {...{ ...state, dispatch }} />}
+              />
+              <Route
+                path="/admin/dashboard/profile/"
+                render={() => (
+                  <Account {...rest} {...{ ...state, dispatch }} />
+                )}
+              />
+            </Switch>
+          </DashboardLayout>
+        )}
+      </DataContext.Consumer>
+    </DataProvider>
   );
 };
 

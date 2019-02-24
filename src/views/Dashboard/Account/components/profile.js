@@ -92,11 +92,6 @@ const ProfileStyle = styled.div`
 class Profile extends React.Component {
  
   render() {
-     const defaultStyle = {
-       background: '#29cb98',
-      borderColor: '#29cb98',
-      padding:"11px"
-    }
     return (
       <ProfileStyle>
      

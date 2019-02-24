@@ -35,7 +35,7 @@ export class Sidebar extends React.Component {
           </div>
           <div className="Sidebar__Header">
             <CompanyMenu
-              role={user.role}
+              role={user.username}
               customerName={`${user.first_name} ${user.last_name}`}
               theme="dark"
               history={history}
@@ -44,13 +44,24 @@ export class Sidebar extends React.Component {
           </div>
 
           <div className="Sidebar__Main">
+            {user.username === 'admin' && (
+              <MenuLink
+                key="Dashboard"
+                url="/dashboard/stats"
+                icon="boxes"
+                isCollapsed={isCollapsed}
+                Navlink={useNavlink}
+                title="Dashboard"
+              >
+                Dashboard
+              </MenuLink>
+            )}
             {menus.map((menu, i) => (
               <MenuLink
                 key={menu.label}
                 url={menu.url}
                 icon={menu.icon}
                 isCollapsed={isCollapsed}
-                isActive={activePage === 'Dashboard'}
                 Navlink={useNavlink}
                 title={menu.label}
               >

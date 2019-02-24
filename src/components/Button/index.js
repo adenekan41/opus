@@ -116,8 +116,7 @@ const Button = props => {
   const {
     width,
     children,
-    is,
-    showSpinner,
+    isLoading,
     icon,
     loadingText,
     disabled,
@@ -127,21 +126,19 @@ const Button = props => {
   return (
     <ButtonSkeleton
       width={width}
-      disabled={disabled || is.fetching}
+      disabled={disabled || isLoading}
       css={css}
       {...rest}
     >
-      {is.fetching && showSpinner ? loadingText : children}
+      {isLoading ? loadingText : children}
     </ButtonSkeleton>
   );
 };
 
 Button.defaultProps = {
-  is: {
-    fetching: false,
-  },
+  isLoading: false,
   showSpinner: false,
-  loadingText: 'Saving',
+  loadingText: 'Loading...',
 };
 
 Button.propTypes = {

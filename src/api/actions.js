@@ -1,0 +1,6 @@
+export const ACTIONS = {
+    INITIALIZE: 'INITIALIZE',
+    GET_USERS: 'GET_USERS',
+    GET_PROFILE: 'GET_PROFILE',
+  };
+  
