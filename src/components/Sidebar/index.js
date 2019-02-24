@@ -9,7 +9,6 @@ export class Sidebar extends React.Component {
   render() {
     const {
       menus,
-      activePage,
       isCollapsed,
       useNavlink,
       history,

@@ -32,7 +32,7 @@ export class CompanyMenu extends React.Component {
       isCollapsed,
       role,
       history,
-      customerName = 'Segun Adebayo',
+      customerName = 'James Molaeka',
     } = this.props;
     const initials = customerName
       .split(' ')

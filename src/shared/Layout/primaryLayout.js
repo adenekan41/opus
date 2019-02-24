@@ -6,7 +6,7 @@ import Recover from '../../views/Auth/Recover/Recover';
 import DashboardRoutes from '../../shared/Layout/DashboardLayout/routes';
 import AdminDashboardRoutes from '../../shared/Layout/AdminLayout/routes';
 import { ProtectedRoute } from '../../components/Route';
-const PrimaryLayout = ({ isLoggedIn, token, onLogin }) => (
+const PrimaryLayout = ({ isLoggedIn, token, onLogin, clearAllState }) => (
   <React.Fragment>
     <Switch>
       <Route
@@ -18,7 +18,13 @@ const PrimaryLayout = ({ isLoggedIn, token, onLogin }) => (
       <ProtectedRoute
         path="/dashboard"
         isLoggedIn={isLoggedIn}
-        render={props => <DashboardRoutes {...props} token={token} />}
+        render={props => (
+          <DashboardRoutes
+            {...props}
+            token={token}
+            clearAllState={clearAllState}
+          />
+        )}
       />
       <ProtectedRoute
         path="/admin/dashboard"
