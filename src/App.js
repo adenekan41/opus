@@ -36,6 +36,14 @@ class App extends Component {
       })
       .catch(error => errorCallback(error));
   };
+  onResetPassword = (payload, errorCallback = () => {}) => {
+    return this.getAdapter()
+      .resetPassword(payload)
+      .then(data => {
+        console.log(data)
+      })
+      .catch(error => errorCallback(error));
+  };
   clearAllState = history => {
     clearState();
     history.push('/');
@@ -48,6 +56,7 @@ class App extends Component {
             token={this.state.token}
             onLogin={this.onLogin}
             isLoggedIn={this.isLoggedIn}
+            onResetPassword={this.onResetPassword}
             clearAllState={this.clearAllState}
           />
         </React.Fragment>

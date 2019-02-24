@@ -4,33 +4,14 @@ const icon = {
   add: {
     path: (
       <g fill="currentColor">
-        <line
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="square"
-          strokeMiterlimit="10"
-          x1="12"
-          y1="2"
-          x2="12"
-          y2="22"
-          strokeLinejoin="miter"
-        />
-        <line
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="square"
-          strokeMiterlimit="10"
-          x1="22"
-          y1="12"
-          x2="2"
-          y2="12"
-          strokeLinejoin="miter"
+        <path
+          fill="currentColor"
+          fillRule="nonzero"
+          d="M12.1 12.1h4.4a1.1 1.1 0 0 0 0-2.2h-4.4V5.5a1.1 1.1 0 0 0-2.2 0v4.4H5.5a1.1 1.1 0 0 0 0 2.2h4.4v4.4a1.1 1.1 0 0 0 2.2 0v-4.4zM11 22C4.925 22 0 17.075 0 11S4.925 0 11 0s11 4.925 11 11-4.925 11-11 11z"
         />
       </g>
     ),
-    viewBox: '0 0 24 24',
+    viewBox: '0 0 22 22',
   },
 
   'right-arrow': {
@@ -1069,7 +1050,7 @@ const icon = {
     path: (
       <g fill="currentColor">
         <path
-          fill="#B4B4B4"
+          fill="currentColor"
           d="M12.117 0a2.616 2.616 0 1 1 0 5.233 2.616 2.616 0 0 1 0-5.233zM1.403 3.923a3.26 3.26 0 1 0 6.518 0 3.26 3.26 0 0 0-6.518 0zm7.454 6.67C7.65 8.418 4.97 8.5 4.671 8.5c-.3 0-2.963-.083-4.184 2.092-1.481 2.69.889 8.37.889 8.37h6.593s2.37-5.68.888-8.37zm5.974 4.121s1.914-4.545.717-6.696c-.966-1.74-3.108-1.674-3.348-1.674-.24 0-2.37-.065-3.348 1.674-.091.165-.163.34-.217.521.515.404.943.908 1.257 1.482.723 1.3.74 3.052.494 4.696h4.445v-.003z"
         />
       </g>

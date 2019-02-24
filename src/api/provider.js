@@ -13,6 +13,7 @@ export class DataProvider extends React.Component {
     this.state = {
       fetching: false,
       users: [],
+      user: {},
       profile: {},
       token: this.loadTokenFromStorage(),
     };
@@ -30,7 +31,6 @@ export class DataProvider extends React.Component {
     const { token } = this.state;
     this.updateState({ fetching: true });
     this.initialize(token).then(data => {
-      
       saveState({
         ...loadState(),
         auth: { ...loadState().auth, user: data.profile },
@@ -64,6 +64,12 @@ export class DataProvider extends React.Component {
       [ACTIONS.INITIALIZE]: this.initialize,
       [ACTIONS.GET_USERS]: this.getUsers,
       [ACTIONS.GET_PROFILE]: this.getProfile,
+      [ACTIONS.GET_USER]: this.getUser,
+      [ACTIONS.CREATE_USER]: this.createUser,
+      [ACTIONS.ADMIN_CREATE_USER]: this.adminCreateUser,
+      [ACTIONS.UPDATE_USER]: this.updateUser,
+      [ACTIONS.PATCH_USER]: this.patchUser,
+      [ACTIONS.DELETE_USER]: this.deleteUser,
     };
     console.log({ type });
     return options[type](value);
@@ -112,6 +118,79 @@ export class DataProvider extends React.Component {
         this.updateState({
           users: data,
         });
+        return data;
+      });
+  };
+  getUser = id => {
+    let { token } = this.state;
+    return this.getAdapter()
+      .getUser(token, id)
+      .then(data => {
+        this.updateState({
+          user: data,
+        });
+        return data;
+      });
+  };
+  createUser = payload => {
+    let { token, users } = this.state;
+    return this.getAdapter()
+      .createUser(token, payload)
+      .then(data => {
+        console.log(data);
+        this.updateState({ users: [data, ...users] });
+        return data;
+      });
+  };
+  adminCreateUser = payload => {
+    let { token, users } = this.state;
+    return this.getAdapter()
+      .adminCreateUser(token, payload)
+      .then(data => {
+        console.log(data);
+        this.updateState({ users: [data, ...users] });
+        return data;
+      });
+  };
+  updateUser = (id, payload) => {
+    let { token, users } = this.state;
+    return this.getAdapter()
+      .updateUser(token, id, payload)
+      .then(data => {
+        console.log(data);
+        let result = users.map(user => {
+          if (user.id === id) {
+            return data;
+          }
+          return user;
+        });
+        this.updateState({ users: result });
+        return data;
+      });
+  };
+  patchUser = (id, payload) => {
+    let { token, users } = this.state;
+    return this.getAdapter()
+      .patchUser(token, id, payload)
+      .then(data => {
+        console.log(data);
+        let result = users.map(user => {
+          if (user.id === id) {
+            return data;
+          }
+          return user;
+        });
+        this.updateState({ users: result });
+        return data;
+      });
+  };
+  deleteUser = id => {
+    let { token, users } = this.state;
+    return this.getAdapter()
+      .deleteUser(token, id)
+      .then(data => {
+        let result = users.filter(user => user.id !== id);
+        this.updateState({ users: result });
         return data;
       });
   };

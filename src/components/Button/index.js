@@ -90,7 +90,9 @@ const generateType = (
 };
 export const ButtonSkeleton = styled.button`
   text-align: center;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: ${props => props.width};
   ${props =>
     props.block

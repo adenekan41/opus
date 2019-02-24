@@ -35,6 +35,7 @@ export class Sidebar extends React.Component {
           <div className="Sidebar__Header">
             <CompanyMenu
               role={user.username}
+              photo={user.photo}
               customerName={`${user.first_name} ${user.last_name}`}
               theme="dark"
               history={history}

@@ -9,9 +9,10 @@ class Login extends Component {
   state = {
     loading: false,
     error: false,
+    errorMessage: ''
   };
   login = payload => {
-    this.setState({ loading: true });
+    this.setState({ loading: true, error: false });
     this.props
       .onLogin(payload, () => this.setState({ error: true }))
       .then((data) => {

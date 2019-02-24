@@ -61,6 +61,11 @@ const ProfileStyle = styled.div`
 class Profile extends React.Component {
   render() {
     const { profile, clearAllState } = this.props;
+    console.log(profile);
+    let initials =
+      Object.values(profile).length > 0
+        ? `${profile.first_name[0]}${profile.last_name[0]}`
+        : ``;
     return (
       <ProfileStyle>
         <div style={{ padding: '0px' }}>
@@ -75,7 +80,7 @@ class Profile extends React.Component {
                       photo_url={profile.photo}
                       color="#ff9901"
                       bgColor="rgba(255,153,1,.15)"
-                      initial={`${'J'}${'D'}`}
+                      initial={initials}
                     />
                   </center>
                   <br />
@@ -96,10 +101,9 @@ class Profile extends React.Component {
               <br />
               <hr />
               <br />
-              <ChangeEmailForm email={profile.email}/>
+              <ChangeEmailForm email={profile.email} />
               <Box mt="20px">
-              <ChangePasswordForm/>
-
+                <ChangePasswordForm />
               </Box>
               <br />
               <hr />

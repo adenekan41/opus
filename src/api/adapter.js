@@ -32,9 +32,42 @@ const login = payload => {
   return makeApiCall({ url: `/token/login/`, method: 'POST', data: payload });
 };
 
+const resetPassword = payload => {
+  return makeApiCall({ url: `/auth/password/request/reset/`, method: 'POST', data: payload });
+};
+
+
+const newPassword = payload => {
+  return makeApiCall({ url: `/auth/password/reset/`, method: 'POST', data: payload });
+};
+
 const getUsers = token => {
   return makeApiCall({ url: `/users/`, token });
 };
+
+const getUser = (token, id) => {
+  return makeApiCall({ url: `/users/${id}`, token });
+};
+
+const createUser = (token, payload) => {
+  return makeApiCall({ url: `/users/`, method: 'POST', token, data: payload });
+};
+
+const adminCreateUser = (token, payload) => {
+  return makeApiCall({ url: `/users/admins/create/`, method: 'POST', token, data: payload });
+};
+
+const patchUser = (token, id, payload) => {
+  return makeApiCall({ url: `/users/${id}/`, method: 'PATCH', token, data: payload });
+};
+
+const updateUser = (token, id, payload) => {
+  return makeApiCall({ url: `/users/${id}/`, method: 'PUT', token, data: payload });
+};
+
+const deleteUser = (token, id) => {
+  return makeApiCall({url: `/users/${id}`, method: 'DELETE', token})
+}
 
 const getProfile = token => {
   return makeApiCall({ url: `/users/me/`, token });
@@ -42,6 +75,14 @@ const getProfile = token => {
 
 export default {
   login,
+  getUser,
   getUsers,
-  getProfile
+  getProfile,
+  patchUser,
+  updateUser,
+  createUser,
+  deleteUser,
+  newPassword,
+  resetPassword,
+  adminCreateUser
 };
