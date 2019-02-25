@@ -12,13 +12,13 @@ const generateSize = (size, fontSize) => {
     `;
   else if (size === 'large')
     return css`
-      height: 48px;
+      height: 56px;
       padding: 0 16px;
-      font-size: ${fontSize || '18px'};
+      font-size: ${fontSize || '16px'};
     `;
   else
     return css`
-      height: 40px;
+      height: 48px;
       padding: 0 16px;
       font-size: ${fontSize || '16px'};
     `;
@@ -46,6 +46,17 @@ const generateType = (
       &:active {
         color: #ffffff;
         background: #ff9901;
+      }
+    `;
+  else if (kind === 'gray')
+    return css`
+      color: #ffffff;
+      border: 1px solid #8c8c8c!important;
+      background: #8c8c8c;
+      &:hover,
+      &:active {
+        color: #ffffff;
+        background: #8c8c8c;
       }
     `;
   else if (kind === 'green')
@@ -79,7 +90,9 @@ const generateType = (
 };
 export const ButtonSkeleton = styled.button`
   text-align: center;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: ${props => props.width};
   ${props =>
     props.block
@@ -116,8 +129,7 @@ const Button = props => {
   const {
     width,
     children,
-    is,
-    showSpinner,
+    isLoading,
     icon,
     loadingText,
     disabled,
@@ -127,21 +139,19 @@ const Button = props => {
   return (
     <ButtonSkeleton
       width={width}
-      disabled={disabled || is.fetching}
+      disabled={disabled || isLoading}
       css={css}
       {...rest}
     >
-      {is.fetching && showSpinner ? loadingText : children}
+      {isLoading ? loadingText : children}
     </ButtonSkeleton>
   );
 };
 
 Button.defaultProps = {
-  is: {
-    fetching: false,
-  },
+  isLoading: false,
   showSpinner: false,
-  loadingText: 'Saving',
+  loadingText: 'Loading...',
 };
 
 Button.propTypes = {

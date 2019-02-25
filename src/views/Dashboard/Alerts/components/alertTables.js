@@ -1,7 +1,5 @@
  import React from 'react';
 import Alerts from '../../../../components/Alert';
-import Avatar from '../../../../components/Avatar';
-import TableActions from '../../../../components/Table/TableActions';
 
 
 const AlertStyle = {

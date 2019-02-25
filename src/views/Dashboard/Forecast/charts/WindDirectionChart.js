@@ -21,7 +21,7 @@ const options = {
   credits: { enabled: false },
 
   title: {
-    text: 'Wind rose for South Shore Met Station, Oregon',
+    text: 'Wind direction for South Shore Met Station, Oregon',
   },
 
   subtitle: {

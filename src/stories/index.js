@@ -7,6 +7,7 @@ import './Sidebar';
 import './DashboardLayout';
 import './Table';
 import './Form';
+import './Feedback';
 import './Breadcrumb';
 
 storiesOf('Welcome', module).add('to Storybook', () => {

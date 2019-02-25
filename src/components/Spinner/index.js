@@ -1,6 +1,7 @@
-import React from "react";
-import styled, { keyframes } from "styled-components";
-import propTypes from "prop-types";
+import React from 'react';
+import styled, { keyframes } from 'styled-components';
+import propTypes from 'prop-types';
+import { Flex } from 'rebass';
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }
@@ -39,12 +40,41 @@ Spinner.defaultProps = {
   color: '#ff9901',
   speed: 0.3,
   marginLeft: 0,
-  thickness: "2px",
-  border: "rgba(255,255,255,0.2)"
+  thickness: '2px',
+  border: 'rgba(255,255,255,0.2)',
 };
 
 Spinner.propTypes = {
   size: propTypes.number,
   color: propTypes.string,
-  speed: propTypes.number
+  speed: propTypes.number,
+};
+
+export function FullScreenSpinner(props) {
+  return (
+    <Flex
+      style={{ position: 'absolute', height: '100vh' }}
+      width="100%"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Spinner {...props} />
+    </Flex>
+  );
+}
+
+FullScreenSpinner.defaultProps = {
+  size: 16,
+  color: '#ff9901',
+  speed: 0.3,
+  marginLeft: 0,
+  thickness: '2px',
+  border: 'rgba(255,255,255,0.2)',
+};
+
+FullScreenSpinner.propTypes = {
+  size: propTypes.number,
+  color: propTypes.string,
+  speed: propTypes.number,
 };
