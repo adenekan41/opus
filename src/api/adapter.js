@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const BASE_URL_ONE =
   process.env.NODE_ENV === 'production'
-    ? process.env.REACT_APP_BASE_URL_ONE_PRODUCTION
+    ? process.env.REACT_APP_BASE_URL_ONE_DEVELOPMENT
     : process.env.REACT_APP_BASE_URL_ONE_DEVELOPMENT;
 
 export const makeApiCall = async ({

@@ -154,7 +154,7 @@ class Input extends React.Component {
           )}
         </Flex>
         {isInvalid && (
-          <Text color="#f66262" fontSize="12px" mt="8px" className="error">
+          <Text color="#f66262" fontSize="12px" className="error">
             {errorMessage}
           </Text>
         )}
