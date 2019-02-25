@@ -32,7 +32,8 @@ export class CompanyMenu extends React.Component {
       isCollapsed,
       role,
       history,
-      customerName = 'Segun Adebayo',
+      photo,
+      customerName = 'James Molaeka',
     } = this.props;
     const initials = customerName
       .split(' ')
@@ -44,6 +45,7 @@ export class CompanyMenu extends React.Component {
           initial={initials}
           size={isCollapsed ? '40px' : '80px'}
           bgColor="#ff9901"
+          photo_url={photo}
           isRound
         />
         <Flex flexDirection="column" alignItems="center" mt="16px" width="100%">

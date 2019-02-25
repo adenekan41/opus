@@ -16,20 +16,16 @@ class DashboardLayout extends React.Component {
 
   render() {
     const { showSidebar } = this.state;
-    const {
-      agentInfo = {},
-      history,
-      showGetStarted,
-    } = this.props;
+    const { history, showGetStarted, profile } = this.props;
 
     return (
       <StyledDashboardLayout {...{ showSidebar }}>
         <CombinedSidebar
           useNavlink={Boolean(this.props.NavLink)}
           showGetStarted={showGetStarted}
-          agentInfo={agentInfo}
           isCollapsed={!showSidebar}
           history={history}
+          user={profile}
         />
         <div
           className={`Page__Content ${

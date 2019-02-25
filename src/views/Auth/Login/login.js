@@ -1,52 +1,61 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-// import Spinner from '../Layout/spinner';
-// import axios from 'axios';
 import { LoginLayout } from './style';
+import LoginForm from './form';
 import Header from '../../../components/Navbar';
+import { Toast } from '../../../components/Toast';
+
 class Login extends Component {
+  state = {
+    loading: false,
+    error: false,
+    errorMessage: ''
+  };
+  login = payload => {
+    this.setState({ loading: true, error: false });
+    this.props
+      .onLogin(payload, () => this.setState({ error: true }))
+      .then((data) => {
+        this.setState({
+          loading: false,
+        });
+        if(data) {
+          this.props.history.push('/dashboard/weather-forecast/map');
+        }
+      });
+  };
   render() {
+    const { error, errorMessage } = this.state;
     return (
-      <LoginLayout>
-      	<Header />
-        <div className="loginBody login__opus-insight">
-          <div className="container">
-            <div className="row">
-              <div className="col" />
-              <div className="col-md-5">
-                <h1 className="text-center">Welcome back!</h1>
-                <p className="text-center">
-                  Login to continue using your account.
-                </p>
-                <form action="">
-                  <div class="div_input border_none">
-                    <label for="">Email</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="johndoe@gmail.com"
-                    />
-                  </div>
-                  <div class="div_input">
-                    <label for="">Password</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="*******"
-                    />
-                  </div>
-                  <button class="btn btn-dark btn-block">Login</button>
-                  <br />
-                  <p className="text-center">
-                    <Link to={`/recover`}>Forgot password ?</Link>
-                  </p>
-                </form>
-              </div>
-              <div className="col" />
+      <>
+        <LoginLayout>
+          <Header />
+          <div className="loginBody login__opus-insight">
+            <div className="loginBody__container">
+              <h1 className="text-center">Welcome back!</h1>
+              <p className="text-center">
+                Login to continue using your account.
+              </p>
+              <LoginForm onSubmit={this.login} isLoading={this.state.loading} />
+              <br />
+              <p className="text-center">
+                <Link to={`/recover`}>Forgot password ?</Link>
+              </p>
             </div>
           </div>
-        </div>
-      </LoginLayout>
+        </LoginLayout>
+
+        {error && (
+          <Toast
+            showToast={error}
+            title="Error"
+            status="error"
+            onClose={() => this.setState({ error: false })}
+          >
+            {errorMessage || "Unable to log in with provided credentials."}
+          </Toast>
+        )}
+      </>
     );
   }
 }
