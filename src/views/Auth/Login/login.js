@@ -50,6 +50,8 @@ class Login extends Component {
             showToast={error}
             title="Error"
             status="error"
+            showCloseButton
+            autoClose={false}
             onClose={() => this.setState({ error: false })}
           >
             {errorMessage || "Unable to log in with provided credentials."}

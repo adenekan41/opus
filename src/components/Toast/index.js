@@ -139,7 +139,7 @@ export class Toast extends React.Component {
     if (this.props.autoClose) {
       this.timeout = setTimeout(() => {
         this.props.onClose();
-      }, 2000);
+      }, 5000);
     }
   }
 
@@ -172,7 +172,7 @@ export class Toast extends React.Component {
     return (
       <Fragment>
         {this.props.showToast && (
-          <ToastDiv status={status} autoClose={autoClose}>
+          <ToastDiv status={status}>
             <div className="Toast__wrapper" role="alert">
               <div className="Toast__header">
                 <div className="Toast__header__left-icon">
