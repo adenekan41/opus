@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { Box, Flex } from 'rebass';
 import Avatar from '../../../../components/Avatar';
 import ProfileForm from './ProfileForm';
-import ChangeEmailForm from './ChangeEmailForm';
-import ChangePasswordForm from './ChangePasswordForm';
 import Button from '../../../../components/Button';
 const ProfileStyle = styled.div`
   .card {

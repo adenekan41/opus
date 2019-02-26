@@ -4,6 +4,8 @@ import { Box } from 'rebass';
 import * as yup from 'yup';
 import Input from '../../../../components/Input';
 import Button from '../../../../components/Button';
+import ChangeEmailForm from './ChangeEmailForm';
+import ChangePasswordForm from './ChangePasswordForm';
 
 const profileValdationSchema = yup.object().shape({
   first_name: yup.string().required('First name is required'),
@@ -18,6 +20,8 @@ const ProfileForm = ({
   phone_number,
   location,
   email,
+  onEmailChange,
+  onPasswordChange,
 }) => (
   <Formik
     initialValues={{
@@ -119,9 +123,7 @@ const ProfileForm = ({
             />
           </div>
           <div className="col-md-3">
-            <Button width="100%" size="large" kind="gray" onClick={() => {}}>
-              Change Email Address
-            </Button>
+            <ChangeEmailForm onSubmit={onEmailChange}/>
           </div>
         </div>
 
@@ -138,9 +140,7 @@ const ProfileForm = ({
               />
             </div>
             <div className="col-md-3">
-              <Button width="100%" size="large" kind="gray" onClick={() => {}}>
-                Change Email Address
-              </Button>
+            <ChangePasswordForm onSubmit={onPasswordChange}/>
             </div>
           </div>
         </Box>
@@ -150,14 +150,14 @@ const ProfileForm = ({
         <div className="footer_button mt-3">
           <div className="row">
             <div className="col-md-4">
-              <button className="btn btn-danger btn-block">
+              <Button size="large" block type="button" kind="red">
                 Deactivate Account
-              </button>
+              </Button>
             </div>
             <div className="col-md-8">
-              <button className="btn btn-warning btn-block">
+              <Button size="large" block kind="orange">
                 Save Changes
-              </button>
+              </Button>
             </div>
           </div>
         </div>

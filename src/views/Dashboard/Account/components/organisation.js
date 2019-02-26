@@ -53,7 +53,7 @@ class Organisation extends React.Component {
     return (
       <OragnisationStyle>
         <div style={{ padding: '0px' }}>
-        <OrganizationForm/>
+          <OrganizationForm />
         </div>
       </OragnisationStyle>
     );

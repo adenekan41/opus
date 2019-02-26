@@ -151,7 +151,6 @@ export class Toast extends React.Component {
     const {
       title,
       children,
-      autoClose,
       showCloseButton,
       onClose,
       status,
