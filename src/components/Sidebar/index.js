@@ -99,7 +99,7 @@ class CombinedSidebar extends React.Component {
           {matches => {
             return (
               <ToggleHandler>
-                {(isOpen, onOpen, onClose, onToggle) => (
+                {(isOpen, onToggle) => (
                   <React.Fragment>
                     <Sidebar
                       {...{ user, useNavlink, history }}
