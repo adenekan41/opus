@@ -134,6 +134,7 @@ const Button = props => {
     loadingText,
     disabled,
     css,
+    type="submit",
     ...rest
   } = props;
   return (
@@ -141,6 +142,7 @@ const Button = props => {
       width={width}
       disabled={disabled || isLoading}
       css={css}
+      type={type}
       {...rest}
     >
       {isLoading ? loadingText : children}

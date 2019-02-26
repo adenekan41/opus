@@ -53,10 +53,12 @@ const DropdownContainer = styled.div`
   background-color: #ffffff;
   border-radius: 3px;
   ${props => (props.isInvalid ? 'border: solid 0.5px #f66262 ' : '')};
-  ${props => (props.disabled && `
+  ${props =>
+    props.disabled &&
+    `
       border: solid 1px rgba(18, 18, 18, 0.11);
       background-color: #f5f4f4;
-      cursor: not-allowed;`)};
+      cursor: not-allowed;`};
 
   &:focus-within {
     outline: none;
@@ -103,6 +105,16 @@ const DropdownContainer = styled.div`
     padding: 0 16px;
   }
 
+  ${props =>
+    props.touched
+      ? `.label {
+      font-size: 75%;
+      transform: translate3d(0, -30%, 0);
+      opacity: 1;
+      color: #b4b4b4;
+    }`
+      : ``}
+
   ${sharedProps};
 `;
 
@@ -122,7 +134,12 @@ const Dropdown = ({
   ...rest
 }) => {
   return (
-    <DropdownContainer disabled={isDisabled} mb={mb} mt={mt}>
+    <DropdownContainer
+      mb={mb}
+      mt={mt}
+      disabled={isDisabled}
+      touched={Boolean(value)}
+    >
       <Flex flexDirection="column">
         <StyledSelect
           id={id}

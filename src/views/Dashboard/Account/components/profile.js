@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Box } from 'rebass';
+import { Box, Flex } from 'rebass';
 import Avatar from '../../../../components/Avatar';
 import ProfileForm from './ProfileForm';
 import ChangeEmailForm from './ChangeEmailForm';
@@ -57,11 +57,17 @@ const ProfileStyle = styled.div`
     border: none;
     font-size: 14px;
   }
+  .photo-section {
+    width: 12vw;
+    flex: 0 0 12vw;
+  }
+  .form-section {
+    flex: 1;
+  }
 `;
 class Profile extends React.Component {
   render() {
     const { profile, clearAllState } = this.props;
-    console.log(profile);
     let initials =
       Object.values(profile).length > 0
         ? `${profile.first_name[0]}${profile.last_name[0]}`
@@ -69,14 +75,14 @@ class Profile extends React.Component {
     return (
       <ProfileStyle>
         <div style={{ padding: '0px' }}>
-          <div className="row">
-            <div className="col-md-3">
+          <Flex width="100%">
+            <Box className="photo-section">
               <div className="card d-flex justify-content-center">
                 <div className="card-body text-center">
                   <center>
                     <Avatar
                       isRound
-                      size="100px"
+                      size="5vw"
                       photo_url={profile.photo}
                       color="#ff9901"
                       bgColor="rgba(255,153,1,.15)"
@@ -95,35 +101,12 @@ class Profile extends React.Component {
                   </Button>
                 </div>
               </div>
-            </div>
-            <div className="col-md-9">
+            </Box>
+            <Box mx="32px" />
+            <Box className="form-section">
               <ProfileForm {...profile} />
-              <br />
-              <hr />
-              <br />
-              <ChangeEmailForm email={profile.email} />
-              <Box mt="20px">
-                <ChangePasswordForm />
-              </Box>
-              <br />
-              <hr />
-
-              <div className="footer_button mt-3">
-                <div className="row">
-                  <div className="col-md-4">
-                    <button className="btn btn-danger btn-block">
-                      Deactivate Account
-                    </button>
-                  </div>
-                  <div className="col-md-8">
-                    <button className="btn btn-warning btn-block">
-                      Save Changes
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            </Box>
+          </Flex>
         </div>
       </ProfileStyle>
     );

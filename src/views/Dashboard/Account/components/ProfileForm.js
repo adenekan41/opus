@@ -1,7 +1,9 @@
 import React from 'react';
 import { Formik } from 'formik';
+import { Box } from 'rebass';
 import * as yup from 'yup';
 import Input from '../../../../components/Input';
+import Button from '../../../../components/Button';
 
 const profileValdationSchema = yup.object().shape({
   first_name: yup.string().required('First name is required'),
@@ -15,6 +17,7 @@ const ProfileForm = ({
   middle_name,
   phone_number,
   location,
+  email,
 }) => (
   <Formik
     initialValues={{
@@ -98,6 +101,64 @@ const ProfileForm = ({
               errorMessage={errors.location}
               isInvalid={errors.location && touched.location}
             />
+          </div>
+        </div>
+
+        <br />
+        <hr />
+        <br />
+        <div className="row">
+          <div className="col-md-4">
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              label="Email"
+              disabled
+              value={email}
+            />
+          </div>
+          <div className="col-md-3">
+            <Button width="100%" size="large" kind="gray" onClick={() => {}}>
+              Change Email Address
+            </Button>
+          </div>
+        </div>
+
+        <Box mt="20px">
+          <div className="row">
+            <div className="col-md-4">
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                label="Password"
+                disabled
+                value="........"
+              />
+            </div>
+            <div className="col-md-3">
+              <Button width="100%" size="large" kind="gray" onClick={() => {}}>
+                Change Email Address
+              </Button>
+            </div>
+          </div>
+        </Box>
+        <Box mt="32px">
+          <hr />
+        </Box>
+        <div className="footer_button mt-3">
+          <div className="row">
+            <div className="col-md-4">
+              <button className="btn btn-danger btn-block">
+                Deactivate Account
+              </button>
+            </div>
+            <div className="col-md-8">
+              <button className="btn btn-warning btn-block">
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
       </form>

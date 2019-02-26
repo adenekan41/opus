@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import BillingForm from './BillingForm';
 const BillingStyle = styled.div`
   .footer_button button.btn-warning {
     background: #ff9901;
@@ -51,45 +52,7 @@ class Billing extends React.Component {
   render() {
     return (
       <BillingStyle>
-        <div style={{ padding: '0px' }}>
-          <div className="row">
-            <div className="col-md-6">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="div_input border_none">
-                    <label for="">VAT Number</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="1234567"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-12">
-                  <div className="div_input border_none">
-                    <label for="">Company Registration Number</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="0987654321234"
-                    />
-                  </div>
-                </div>
-              </div>
-              <hr />
-
-              <div className="footer_button mt-3">
-                <div className="row">
-                  <div className="col-md-12">
-                    <button className="btn btn-warning btn-block">
-                      Save Changes
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <BillingForm />
       </BillingStyle>
     );
   }

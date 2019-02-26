@@ -26,7 +26,7 @@ const ChangePasswordForm = ({ isLoading, onSubmit, }) => (
             />
           </div>
           <div className="col-md-4">
-            <Button width="100%" size="large" kind="gray" isLoading={isLoading}>
+            <Button width="100%" size="large" kind="gray" isLoading={isLoading} type="submit">
               Change Password
             </Button>
           </div>

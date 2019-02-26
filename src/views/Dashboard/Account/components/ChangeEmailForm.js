@@ -17,6 +17,7 @@ const ChangeEmailForm = ({ isLoading, onSubmit, email }) => (
               name="email"
               type="email"
               label="Email"
+              disabled
               touched={touched.email}
               value={values.email}
               onChange={handleChange}
@@ -25,7 +26,7 @@ const ChangeEmailForm = ({ isLoading, onSubmit, email }) => (
             />
           </div>
           <div className="col-md-4">
-            <Button width="100%" size="large" kind="gray" isLoading={isLoading}>
+            <Button width="100%" size="large" kind="gray" isLoading={isLoading} type="submit">
               Change Email Address
             </Button>
           </div>

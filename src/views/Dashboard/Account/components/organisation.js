@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import OrganizationForm from './OrganizationForm';
 const OragnisationStyle = styled.div`
   .footer_button button.btn-warning {
     background: #ff9901;
@@ -52,83 +53,7 @@ class Organisation extends React.Component {
     return (
       <OragnisationStyle>
         <div style={{ padding: '0px' }}>
-          <div className="row">
-            <div className="col-md-6">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="div_input border_none">
-                    <label for="">Company Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Royal Navy Consulting"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="div_input border_none">
-                    <label for="">Country</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Uganda"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="div_input border_none">
-                    <label for="">City</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Anabel"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="div_input border_none">
-                    <label for="">Zip code</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="554453"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="div_input border_none">
-                    <label for="">Plot Number</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="14"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-12">
-                  <div className="div_input border_none">
-                    <label for="">Street</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Royal Navy Consulting"
-                    />
-                  </div>
-                </div>
-              </div>
-              <hr />
-
-              <div className="footer_button mt-3">
-                <div className="row">
-                  <div className="col-md-12">
-                    <button className="btn btn-warning btn-block">
-                      Save Changes
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <OrganizationForm/>
         </div>
       </OragnisationStyle>
     );
