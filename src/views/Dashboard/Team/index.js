@@ -1,21 +1,14 @@
 import React from 'react';
+import { Text } from 'rebass';
 import TeamTable from './components/TeamTable';
 import Modal, { ToggleModal } from '../../../components/Modal/index';
 import SearchInput from '../../../components/SearchInput';
 import { Icon } from '../../../components/Icon';
 import Button from '../../../components/Button';
+import AdminTeamTable from './components/AdminTeamTable';
+import TeamForm from './components/TeamForm';
 
 class Teams extends React.Component {
-  onTeamEdit = team => {
-    console.log(team);
-    this.openModalHandler();
-  };
-  onTeamDelete = team => {
-    console.log(team);
-    this.openModalHandler();
-
-    console.log(this.state);
-  };
   constructor() {
     super();
 
@@ -25,21 +18,15 @@ class Teams extends React.Component {
       userdata: null,
     };
   }
-
-  openModalHandler = () => {
-    this.setState({
-      isShowing: true,
-    });
+  onTeamEdit = team => {
+    console.log(team);
   };
-
-  closeModalHandler = () => {
-    this.setState({
-      isShowing: false,
-    });
-    console.log('ssss');
+  onTeamDelete = team => {
+    console.log(team);
   };
-
   render() {
+    const { profile } = this.props;
+    let isAdmin = profile.username === 'admin';
     return (
       <div>
         <div style={{ padding: '40px' }}>
@@ -52,34 +39,23 @@ class Teams extends React.Component {
                 {(show, openModal, closeModal) => (
                   <>
                     <Button onClick={openModal} kind="green" block>
-                      <Icon name="add" color="#ffffff" /> &nbsp;&nbsp;Invite
-                      team member
+                      <Icon name="add" color="#ffffff" /> &nbsp;&nbsp;
+                      {isAdmin
+                        ? `Invite user`
+                        : `Invite
+                      team member`}
                     </Button>
                     <Modal
-                      className="modal"
-                      show={show}
-                      close={closeModal}
-                      header={this.state.header}
-                      actionTitle="Invite"
+                      size="medium"
+                      showModal={show}
+                      onCloseModal={closeModal}
+                      heading={this.state.header}
                     >
-                      <p>
+                      <Text textAlign="center" mb="24px">
                         Please enter the email address of the team member you
                         would like to invite.
-                      </p>
-                      <form action="">
-                        <div className="row">
-                          <div className="col-md-12">
-                            <div className="div_input border_none">
-                              <label for="">Email</label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="johndoe@gmail.com"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </form>
+                      </Text>
+                      <TeamForm isAdd onCancel={closeModal} />
                     </Modal>
                   </>
                 )}
@@ -87,10 +63,17 @@ class Teams extends React.Component {
             </div>
           </div>
           <br /> <br />
-          <TeamTable
-            onTeamDelete={this.onTeamDelete}
-            onTeamEdit={this.onTeamEdit}
-          />
+          {isAdmin ? (
+            <AdminTeamTable
+              onTeamDelete={this.onTeamDelete}
+              onTeamEdit={this.onTeamEdit}
+            />
+          ) : (
+            <TeamTable
+              onTeamDelete={this.onTeamDelete}
+              onTeamEdit={this.onTeamEdit}
+            />
+          )}
         </div>
       </div>
     );

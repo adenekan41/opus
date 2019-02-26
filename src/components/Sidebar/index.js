@@ -113,7 +113,7 @@ class CombinedSidebar extends React.Component {
                           className="Sidebar__toggle-button"
                           isCollapsed={!isOpen}
                         >
-                          Hide Sidebar
+                          {!matches ? `Hide Sidebar`:``}
                         </MenuLink>
                       )}
                     />

@@ -40,7 +40,7 @@ const generateType = (
   else if (kind === 'red')
     return css`
       color: #ffffff;
-      border: 1px solid #f66262!important;
+      border: 1px solid #f66262 !important;
       background: #f66262;
       &:hover,
       &:active {
@@ -51,7 +51,7 @@ const generateType = (
   else if (kind === 'orange')
     return css`
       color: #ffffff;
-      border: 1px solid #ff9901!important;
+      border: 1px solid #ff9901 !important;
       background: #ff9901;
       &:hover,
       &:active {
@@ -62,7 +62,7 @@ const generateType = (
   else if (kind === 'gray')
     return css`
       color: #ffffff;
-      border: 1px solid #8c8c8c!important;
+      border: 1px solid #8c8c8c !important;
       background: #8c8c8c;
       &:hover,
       &:active {
@@ -73,7 +73,7 @@ const generateType = (
   else if (kind === 'green')
     return css`
       color: #ffffff;
-      border: 1px solid #29cb98!important;
+      border: 1px solid #29cb98 !important;
       background: #29cb98;
       &:hover,
       &:active {
@@ -110,8 +110,7 @@ export const ButtonSkeleton = styled.button`
       ? 'width: 100%'
       : `width : ${props => (props.width ? props.width : 'auto')}`};
   border-radius: ${props => (props.radius ? props.radius : '3px')};
-  font-weight: ${props =>
-    props.weight === 'bold' ? 900 : 400};
+  font-weight: ${props => (props.weight === 'bold' ? 900 : 400)};
   ${props => generateSize(props.size)};
   ${props => generateType(props.kind, props.color, props.background)};
   box-shadow: none;
@@ -145,7 +144,7 @@ const Button = props => {
     loadingText,
     disabled,
     css,
-    type="submit",
+    type = 'submit',
     ...rest
   } = props;
   return (
@@ -180,4 +179,24 @@ Button.propTypes = {
   margin: PropTypes.string,
 };
 
-export default Button
+export const EmptyButton = styled.button`
+  font-family: 'Avenir Opus', sans-serif;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.23, 1);
+  border-radius: 3px;
+  background: none;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  border: none;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  width: ${props => (props.block ? '100%' : 'auto')};
+
+  &:focus {
+    outline: 0;
+  }
+`;
+
+export default Button;

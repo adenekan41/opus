@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import styled,  { css } from "styled-components";
-import { Manager, Reference, Popper } from "react-popper";
-import { CSSTransition } from "react-transition-group";
-import OutsideClickHandler from "../../helpers/OutsideClickHandler";
-import Button from "../Button";
-import { Icon } from "../Icon";
+import React, { Component } from 'react';
+import styled, { css } from 'styled-components';
+import { Manager, Reference, Popper } from 'react-popper';
+import { CSSTransition } from 'react-transition-group';
+import OutsideClickHandler from '../../helpers/OutsideClickHandler';
+import Button from '../Button';
+import { Icon } from '../Icon';
 
 const StyledItemGroup = styled.ul`
   align-items: center;
@@ -48,7 +48,7 @@ const StyledItem = styled.li`
       props.isNegative &&
       css`
         > * {
-          color: #E85257;
+          color: #e85257;
         }
       `}
   }
@@ -91,7 +91,6 @@ export const Item = ({
   </StyledItem>
 );
 
-
 const StyledDroplist = styled.div`
   position: relative;
   display: inline-flex;
@@ -119,17 +118,19 @@ const Dropdown = styled.div`
 
 export class Droplist extends Component {
   state = {
-    showDropdown: false
+    showDropdown: false,
   };
 
   toggleDroplist = () => {
     this.setState(prevState => ({
-      showDropdown: !prevState.showDropdown
+      showDropdown: !prevState.showDropdown,
     }));
   };
 
   closeDroplist = () => {
-    this.setState({ showDropdown: false });
+    if (this.props.triggerClickOutside) {
+      this.setState({ showDropdown: false });
+    }
   };
 
   render() {
@@ -138,7 +139,7 @@ export class Droplist extends Component {
       children,
       maxHeight,
       width,
-      placement = "right"
+      placement = 'right',
     } = this.props;
     const { showDropdown } = this.state;
     return (
@@ -170,7 +171,7 @@ export class Droplist extends Component {
                 placement={placement}
                 modifiers={{
                   preventOverflow: { enabled: false },
-                  hide: { enabled: false }
+                  hide: { enabled: false },
                 }}
                 eventsEnabled={true}
                 positionFixed={true}
@@ -183,7 +184,7 @@ export class Droplist extends Component {
                     role="menu"
                     className="Droplist__Dropdown"
                   >
-                    {typeof children === "function"
+                    {typeof children === 'function'
                       ? children(this.closeDroplist)
                       : children}
                   </Dropdown>
@@ -199,5 +200,6 @@ export class Droplist extends Component {
 
 Droplist.defaultProps = {
   trigger: <Button size="small">Trigger</Button>,
-  children: "Droplist Children"
+  children: 'Droplist Children',
+  triggerClickOutside: true
 };

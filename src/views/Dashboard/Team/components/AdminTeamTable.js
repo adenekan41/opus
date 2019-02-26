@@ -1,10 +1,20 @@
 import React from 'react';
+import { Flex } from 'rebass';
+import styled from 'styled-components';
 import Table from '../../../../components/Table';
 import Avatar from '../../../../components/Avatar';
-import Button from '../../../../components/Button';
 import TableActions from '../../../../components/Table/TableActions';
+import TeamForm from './TeamForm';
 
-const team_columns = (onTeamEdit, onTeamDelete) => [
+const Dot = styled.span`
+  display: inline-flex;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: ${props => props.color};
+`;
+
+const admin_team_columns = (onTeamEdit, onTeamDelete) => [
   {
     Header: '',
     accessor: '',
@@ -23,15 +33,15 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
     },
   },
   {
-    Header: 'First Name',
-    accessor: 'firstName',
+    Header: 'FullName',
+    Cell: ({ original: { firstName, lastName } }) => {
+      return (
+        <span>
+          {firstName} {lastName}
+        </span>
+      );
+    },
     id: 'firstName',
-  },
-
-  {
-    Header: 'Last Name',
-    accessor: 'lastName',
-    id: 'lastName',
   },
   {
     Header: 'Email',
@@ -39,28 +49,49 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
     id: 'email',
   },
   {
+    Header: 'Models Permission',
+    id: 'models_permission',
+    Cell: ({ original: { models_permission } }) => (
+      <Flex>
+        {models_permission ? (
+          <span>
+            <Dot color="#70c889" /> YES
+          </span>
+        ) : (
+          <span>
+            <Dot color="#f66262" /> NO
+          </span>
+        )}
+      </Flex>
+    ),
+  },
+  {
+    Header: 'Messages Permission',
+    id: 'messages_permission',
+    Cell: ({ original: { messages_permission } }) => (
+      <Flex>
+        {messages_permission ? (
+          <span>
+            <Dot color="#70c889" /> YES
+          </span>
+        ) : (
+          <span>
+            <Dot color="#f66262" /> NO
+          </span>
+        )}
+      </Flex>
+    ),
+  },
+  {
     Header: 'Date Added',
     accessor: 'date',
     id: 'date',
   },
   {
-    Header: 'Status',
-    accessor: 'status',
-    id: 'status',
-      Cell: ({ original: {status} }) => (
-      <Button
-        background={status === 'pending' ? '#ffc502' : '#29cb98'}
-        height="25px"
-       
-      >{status}</Button>
-    ),
-  },
-  
-  {
     Header: '',
     accessor: '',
     id: 'actions',
-  
+
     Cell: ({ original }) => (
       <TableActions
         model="user"
@@ -68,12 +99,20 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
         onEdit={onTeamEdit}
         onDelete={onTeamDelete}
         editModalHeading="Edit User"
+        renderEditForm={({ data, onEdit, closeModal }) => (
+          <TeamForm
+            {...data}
+            isAdd={false}
+            onsubmit={onEdit}
+            onCancel={closeModal}
+          />
+        )}
       />
     ),
   },
 ];
 
-const TeamTable = ({
+const AdminTeamTable = ({
   isLoading,
   pageSize,
   currentPage,
@@ -96,7 +135,7 @@ const TeamTable = ({
           id: 'contact_initals',
           value: 80,
         },
-        
+
         {
           id: 'actions',
           value: 80,
@@ -116,69 +155,58 @@ const TeamTable = ({
       data={teams}
       noDataText="No Team Added Yet"
       errorText="Oops! There was an issue fetching your users"
-      columns={team_columns(onTeamEdit, onTeamDelete)}
+      columns={admin_team_columns(onTeamEdit, onTeamDelete)}
     />
   );
 };
 
-export default TeamTable;
+export default AdminTeamTable;
 
-TeamTable.defaultProps = {
+AdminTeamTable.defaultProps = {
   teams: [
     {
       firstName: 'Faith',
-     
+      lastName: 'Odia',
+      email: 'faithdoe@gmail.com',
+      date: '08 January, 2019',
+      models_permission: true,
+      messages_permission: false,
+    },
+    {
+      firstName: 'Faith',
       lastName: 'Odia',
       email: 'faithdoe@gmail.com',
       date: '08 January, 2019',
       status: 'pending',
-   
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
+      models_permission: false,
+      messages_permission: true,
     },
     {
       firstName: 'Faith',
-     
       lastName: 'Odia',
       email: 'faithdoe@gmail.com',
       date: '08 January, 2019',
       status: 'pending',
-   
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
+      models_permission: true,
+      messages_permission: false,
     },
     {
       firstName: 'Faith',
-     
       lastName: 'Odia',
       email: 'faithdoe@gmail.com',
       date: '08 January, 2019',
       status: 'pending',
-   
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
+      models_permission: false,
+      messages_permission: true,
     },
     {
       firstName: 'Faith',
-     
-      lastName: 'Odia',
-      email: 'faithdoe@gmail.com',
-      date: '08 January, 2019',
-      status: 'pending',
-   
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
-    },
-    {
-      firstName: 'Faith',
-    
       lastName: 'Odia',
       email: 'faithdoe@gmail.com',
       date: '08 January, 2019',
       status: 'assigned',
-   
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
+      models_permission: true,
+      messages_permission: false,
     },
   ],
 };

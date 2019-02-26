@@ -6,7 +6,8 @@ export const ModalStyleLayout = styled.div`
     position: fixed;
     top: 0;
     left: 0;
-
+    right: 0;
+    bottom: 0;
     display: block !important;
     width: 100%;
     height: 100%;
