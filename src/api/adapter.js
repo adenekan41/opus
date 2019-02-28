@@ -5,7 +5,13 @@ const BASE_URL_ONE =
     ? process.env.REACT_APP_BASE_URL_ONE_DEVELOPMENT
     : process.env.REACT_APP_BASE_URL_ONE_DEVELOPMENT;
 
+const BASE_URL_TWO =
+  process.env.NODE_ENV === 'production'
+    ? process.env.REACT_APP_BASE_URL
+    : process.env.REACT_APP_BASE_URL;
+
 export const makeApiCall = async ({
+  baseURL = BASE_URL_ONE,
   url,
   method = 'get',
   params,
@@ -14,7 +20,7 @@ export const makeApiCall = async ({
 }) => {
   const config = {
     headers: { Authorization: `JWT ${token}` },
-    baseURL: BASE_URL_ONE,
+    baseURL,
     url,
     method,
     params,
@@ -33,12 +39,19 @@ const login = payload => {
 };
 
 const resetPassword = payload => {
-  return makeApiCall({ url: `/auth/password/request/reset/`, method: 'POST', data: payload });
+  return makeApiCall({
+    url: `/auth/password/request/reset/`,
+    method: 'POST',
+    data: payload,
+  });
 };
 
-
 const newPassword = payload => {
-  return makeApiCall({ url: `/auth/password/reset/`, method: 'POST', data: payload });
+  return makeApiCall({
+    url: `/auth/password/reset/`,
+    method: 'POST',
+    data: payload,
+  });
 };
 
 const getUsers = token => {
@@ -54,23 +67,52 @@ const createUser = (token, payload) => {
 };
 
 const adminCreateUser = (token, payload) => {
-  return makeApiCall({ url: `/users/admins/create/`, method: 'POST', token, data: payload });
+  return makeApiCall({
+    url: `/users/admins/create/`,
+    method: 'POST',
+    token,
+    data: payload,
+  });
 };
 
 const patchUser = (token, id, payload) => {
-  return makeApiCall({ url: `/users/${id}/`, method: 'PATCH', token, data: payload });
+  return makeApiCall({
+    url: `/users/${id}/`,
+    method: 'PATCH',
+    token,
+    data: payload,
+  });
 };
 
 const updateUser = (token, id, payload) => {
-  return makeApiCall({ url: `/users/${id}/`, method: 'PUT', token, data: payload });
+  return makeApiCall({
+    url: `/users/${id}/`,
+    method: 'PUT',
+    token,
+    data: payload,
+  });
 };
 
 const deleteUser = (token, id) => {
-  return makeApiCall({url: `/users/${id}`, method: 'DELETE', token})
-}
+  return makeApiCall({ url: `/users/${id}`, method: 'DELETE', token });
+};
 
 const getProfile = token => {
   return makeApiCall({ url: `/users/me/`, token });
+};
+
+const getWhatsappAlerts = token => {
+  return makeApiCall({ baseURL: BASE_URL_TWO, url: '/whatsapp', token });
+};
+
+const sendWhatsappAlert = (token, payload) => {
+  return makeApiCall({
+    baseURL: BASE_URL_TWO,
+    url: '/whatsapp',
+    token,
+    method: 'POST',
+    data: payload,
+  });
 };
 
 export default {
@@ -84,5 +126,7 @@ export default {
   deleteUser,
   newPassword,
   resetPassword,
-  adminCreateUser
+  adminCreateUser,
+  getWhatsappAlerts,
+  sendWhatsappAlert,
 };

@@ -8,7 +8,6 @@ import CurrentRainChart from './charts/CurrentRainChart';
 import TotalRainChart from './charts/TotalRainChart';
 import HumidityChart from './charts/HumidityChart';
 import WindSpeedChart from './charts/WindSpeedChart';
-import SunsetChart from './charts/SunsetChart';
 import WindRoseChart from './charts/WindRoseChart';
 import WindDirection from './charts/WindDirectionChart';
 import BarometerChart from './charts/BarometerChart';
@@ -17,7 +16,7 @@ const chartMapping = {
   temperature: { label: 'Temperature', Component: TemperatureChart },
   'current rain': { label: 'Current rain', Component: CurrentRainChart},
   'total rain': { label: 'Total rain', Component: TotalRainChart },
-  humdity: { label: 'Humdity', Component: HumidityChart },
+  humidity: { label: 'Humidity', Component: HumidityChart },
   'wind speed': { label: 'Wind speed', Component: WindSpeedChart },
   'wind direction': {
     label: 'Wind direction',
@@ -25,8 +24,6 @@ const chartMapping = {
   },
   'wind rose': { label: 'Wind rose', Component: WindRoseChart },
   barometer: { label: 'Barometer', Component: BarometerChart },
-  sunset: { label: 'Sunset', Component: SunsetChart },
-  'moon phase': { label: 'Moon phase', Component: <div>Moon phase</div> },
 };
 
 export default class ForecastCharts extends Component {
@@ -65,7 +62,7 @@ export default class ForecastCharts extends Component {
   };
 
   goToReportPage = () => {
-    this.props.history.push('/dashboard/weather-forecast/bulletin/charts')
+    this.props.history.push('/dashboard/weather-forecast/report')
   }
 
   render() {

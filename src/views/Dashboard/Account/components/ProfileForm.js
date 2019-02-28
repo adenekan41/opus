@@ -1,7 +1,11 @@
 import React from 'react';
 import { Formik } from 'formik';
+import { Box } from 'rebass';
 import * as yup from 'yup';
 import Input from '../../../../components/Input';
+import Button from '../../../../components/Button';
+import ChangeEmailForm from './ChangeEmailForm';
+import ChangePasswordForm from './ChangePasswordForm';
 
 const profileValdationSchema = yup.object().shape({
   first_name: yup.string().required('First name is required'),
@@ -15,6 +19,9 @@ const ProfileForm = ({
   middle_name,
   phone_number,
   location,
+  email,
+  onEmailChange,
+  onPasswordChange,
 }) => (
   <Formik
     initialValues={{
@@ -98,6 +105,60 @@ const ProfileForm = ({
               errorMessage={errors.location}
               isInvalid={errors.location && touched.location}
             />
+          </div>
+        </div>
+
+        <br />
+        <hr />
+        <br />
+        <div className="row">
+          <div className="col-md-4">
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              label="Email"
+              disabled
+              value={email}
+            />
+          </div>
+          <div className="col-md-3">
+            <ChangeEmailForm onSubmit={onEmailChange}/>
+          </div>
+        </div>
+
+        <Box mt="20px">
+          <div className="row">
+            <div className="col-md-4">
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                label="Password"
+                disabled
+                value="........"
+              />
+            </div>
+            <div className="col-md-3">
+            <ChangePasswordForm onSubmit={onPasswordChange}/>
+            </div>
+          </div>
+        </Box>
+        <Box mt="32px">
+          <hr />
+        </Box>
+        <div className="footer_button mt-3">
+          <div className="row">
+            <div className="col-md-4">
+              <Button size="large" block type="button" kind="red">
+                Deactivate Account
+              </Button>
+            </div>
+            <div className="col-md-8">
+              <Button size="large" block kind="orange">
+                Save Changes
+              </Button>
+            </div>
           </div>
         </div>
       </form>

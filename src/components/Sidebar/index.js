@@ -99,7 +99,7 @@ class CombinedSidebar extends React.Component {
           {matches => {
             return (
               <ToggleHandler>
-                {(isOpen, onOpen, onClose, onToggle) => (
+                {(isOpen, onToggle) => (
                   <React.Fragment>
                     <Sidebar
                       {...{ user, useNavlink, history }}
@@ -113,7 +113,7 @@ class CombinedSidebar extends React.Component {
                           className="Sidebar__toggle-button"
                           isCollapsed={!isOpen}
                         >
-                          Hide Sidebar
+                          {!matches ? `Hide Sidebar`:``}
                         </MenuLink>
                       )}
                     />
