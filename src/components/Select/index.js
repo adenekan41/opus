@@ -118,6 +118,14 @@ const DropdownContainer = styled.div`
   ${sharedProps};
 `;
 
+
+function getValueWithLabel(value, options) {
+  if (value && value.hasOwnProperty("label")) {
+    return value;
+  }
+  return options.find(x => x.value === value);
+}
+
 const Dropdown = ({
   id,
   isInvalid,
@@ -143,7 +151,7 @@ const Dropdown = ({
       <Flex flexDirection="column">
         <StyledSelect
           id={id}
-          value={value}
+          value={getValueWithLabel(value, options)}
           inputId={inputId}
           className="select"
           onChange={onChange}

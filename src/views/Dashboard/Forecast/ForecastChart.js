@@ -16,7 +16,7 @@ const chartMapping = {
   temperature: { label: 'Temperature', Component: TemperatureChart },
   'current rain': { label: 'Current rain', Component: CurrentRainChart},
   'total rain': { label: 'Total rain', Component: TotalRainChart },
-  humdity: { label: 'Humdity', Component: HumidityChart },
+  humidity: { label: 'Humidity', Component: HumidityChart },
   'wind speed': { label: 'Wind speed', Component: WindSpeedChart },
   'wind direction': {
     label: 'Wind direction',
@@ -62,7 +62,7 @@ export default class ForecastCharts extends Component {
   };
 
   goToReportPage = () => {
-    this.props.history.push('/dashboard/weather-forecast/bulletin/charts')
+    this.props.history.push('/dashboard/weather-forecast/report')
   }
 
   render() {
