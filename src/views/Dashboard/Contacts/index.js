@@ -4,6 +4,7 @@ import Modal, { ToggleModal } from '../../../components/Modal/index';
 import SearchInput from '../../../components/SearchInput';
 import Button from '../../../components/Button';
 import ContactForm from './components/ContactForm';
+import { Icon } from '../../../components/Icon';
 class Contacts extends React.Component {
   constructor() {
     super();
@@ -38,7 +39,7 @@ class Contacts extends React.Component {
                 {(show, openModal, closeModal) => (
                   <>
                     <Button kind="green" block onClick={openModal}>
-                      <i className="ion-ios-plus" />
+                      <Icon name="add" color="#ffffff"/>
                       &nbsp;&nbsp;Add contact
                     </Button>
                     <Modal

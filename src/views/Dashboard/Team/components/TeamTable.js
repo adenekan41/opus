@@ -3,6 +3,7 @@ import Table from '../../../../components/Table';
 import Avatar from '../../../../components/Avatar';
 import Button from '../../../../components/Button';
 import TableActions from '../../../../components/Table/TableActions';
+import TeamForm from './TeamForm';
 
 const team_columns = (onTeamEdit, onTeamDelete) => [
   {
@@ -68,6 +69,14 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
         onEdit={onTeamEdit}
         onDelete={onTeamDelete}
         editModalHeading="Edit User"
+        renderEditForm={({ data, onEdit, closeModal }) => (
+          <TeamForm
+            {...data}
+            isAdd={false}
+            onsubmit={onEdit}
+            onCancel={closeModal}
+          />
+        )}
       />
     ),
   },

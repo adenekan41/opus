@@ -17,29 +17,41 @@ background-color: #ffffff;
 `;
 
 const contactFormValidation = yup.object().shape({
-  email: yup
-    .string()
-    .email()
-    .required('Email is required'),
-  model_permission: yup.object().required('Crop models permission is required'),
-  message_permission: yup.object().required('Messages permission is required'),
+  first_name: yup.string().required('First name is required'),
+  last_name: yup.string().required('Last name is required'),
+  country: yup.string().required('Country is required'),
+  city: yup.string().required('City is required'),
+  crop: yup.string().required('Crop managed is required'),
+  phone_number: yup.string().required('Phone number is required'),
 });
 
 const ContactForm = ({
   onSubmit,
   isAdmin = true,
-  email,
-  model_permission,
-  message_permission,
+  first_name,
+  last_name,
+  middle_name,
+  crop,
+  city,
+  country,
+  phone_number,
+  language,
+  customer,
   onCancel,
 }) => (
   <Formik
     onSubmit={values => onSubmit(values)}
     validationSchema={contactFormValidation}
     initialValues={{
-      email: email || '',
-      model_permission: model_permission || { value: true, label: 'YES' },
-      message_permission: message_permission || { value: true, label: 'YES' },
+      first_name: first_name || '',
+      last_name: last_name || '',
+      middle_name: middle_name || '',
+      phone_number: phone_number || '',
+      crop: crop || '',
+      city: city || {},
+      country: country || {},
+      language: language || {},
+      customer: customer || {},
     }}
   >
     {({ values, errors, touched, handleSubmit, handleChange }) => (
@@ -101,7 +113,7 @@ const ContactForm = ({
                     label="Crop managed"
                     touched={touched.crop}
                     value={values.crop}
-                    options={[]}
+                    options={[{value: 'Cashew',label: 'Cashew'}]}
                     errorMessage={errors.crop}
                     isInvalid={errors.crop && touched.crop}
                     onChange={crop => form.setFieldValue('crop', crop)}
@@ -122,7 +134,7 @@ const ContactForm = ({
                     label="Country"
                     touched={touched.country}
                     value={values.country}
-                    options={[]}
+                    options={[{value: 'Ethiopia',label: 'Ethiopia'}]}
                     errorMessage={errors.country}
                     isInvalid={errors.country && touched.country}
                     onChange={country => form.setFieldValue('country', country)}
@@ -141,7 +153,7 @@ const ContactForm = ({
                     label="City"
                     touched={touched.city}
                     value={values.city}
-                    options={[]}
+                    options={[{value: 'Addis Ababa',label: 'Addis Ababa'}]}
                     errorMessage={errors.city}
                     isInvalid={errors.city && touched.city}
                     onChange={city => form.setFieldValue('city', city)}
@@ -203,7 +215,7 @@ const ContactForm = ({
                       label="Customer"
                       touched={touched.customer}
                       value={values.customer}
-                      options={[]}
+                      options={[{value: 'Daniel Wass',label: 'Daniel Wass'}]}
                       errorMessage={errors.customer}
                       isInvalid={errors.customer && touched.customer}
                       onChange={customer =>
