@@ -21,13 +21,19 @@ const InputContainer = styled.div`
   box-sizing: border-box;
   background-color: #ffffff;
   ${props => (props.hasStrip ? `` : `border-radius: 3px`)};
-  ${props => (props.isInvalid ? 'border: solid 0.5px #f66262 ' : '')};
+  ${props => (props.isInvalid ? 'border: solid 0.5px #f66262!important' : '')};
   ${props =>
-    props.isInvalid && props.hasStrip ? 'border: solid 0.5px #f66262 ' : ''};
+    props.isInvalid && props.hasStrip ? 'border: solid 0.5px #f66262!important' : ''};
   ${props =>
     props.hasStrip
       ? `border: none`
       : `border: solid 0.5px rgba(18, 18, 18, 0.11)`};
+  ${props =>
+    props.disabled &&
+    `
+      border: solid 1px rgba(18, 18, 18, 0.11);
+      background-color: #f5f4f4;
+      cursor: not-allowed;`};
 
   &:focus-within {
     outline: none;
@@ -76,7 +82,6 @@ const InputContainer = styled.div`
     }
 
     &:disabled {
-      border: solid 1px rgba(18, 18, 18, 0.11);
       background-color: #f5f4f4;
       cursor: not-allowed;
     }
@@ -122,7 +127,7 @@ class Input extends React.Component {
       iconSize,
       isInvalid,
       errorMessage,
-      value="",
+      value = '',
       mb,
       mt,
       ...rest
@@ -132,6 +137,7 @@ class Input extends React.Component {
         hasStrip={hasStrip}
         isInvalid={isInvalid}
         touched={Boolean(value)}
+        disabled={rest.disabled}
         mb={mb}
         mt={mt}
       >

@@ -2,13 +2,14 @@ import React from 'react';
 import Table from '../../../../components/Table';
 import Avatar from '../../../../components/Avatar';
 import TableActions from '../../../../components/Table/TableActions';
+import ContactForm from './ContactForm';
 
 const contact_columns = (onContactEdit, onContactDelete) => [
   {
     Header: '',
     accessor: '',
     id: 'contact_initals',
-    Cell: ({ original: { firstName, lastName } }) => {
+    Cell: ({ original: { first_name, last_name } }) => {
       return (
         <Avatar
           isRound
@@ -16,30 +17,32 @@ const contact_columns = (onContactEdit, onContactDelete) => [
           photo_url=""
           color="#ff9901"
           bgColor="rgba(255,153,1,.15)"
-          initial={`${firstName[0]}${lastName[0]}`}
+          initial={`${first_name[0]}${last_name[0]}`}
         />
       );
     },
   },
   {
     Header: 'First Name',
-    accessor: 'firstName',
-    id: 'firstName',
+    accessor: 'first_name',
+    id: 'first_name',
   },
   {
     Header: 'Middle Name',
-    accessor: 'middleName',
-    id: 'middleName',
+    accessor: 'middle_name',
+    id: 'middle_name',
   },
   {
     Header: 'Last Name',
-    accessor: 'lastName',
-    id: 'lastName',
+    accessor: 'last_name',
+    id: 'last_name',
   },
   {
     Header: 'Location',
-    accessor: 'location',
     id: 'location',
+    Cell: ({ original }) => (
+      <span>{original.city}, {original.country}</span>
+    ),
   },
   {
     Header: 'Crop',
@@ -48,8 +51,8 @@ const contact_columns = (onContactEdit, onContactDelete) => [
   },
   {
     Header: 'Phone',
-    accessor: 'phone',
-    id: 'phone',
+    accessor: 'phone_number',
+    id: 'phone_number',
   },
   {
     Header: 'Customer',
@@ -71,6 +74,14 @@ const contact_columns = (onContactEdit, onContactDelete) => [
         data={original}
         onEdit={onContactEdit}
         onDelete={onContactDelete}
+        editModalHeading="Edit Contact"
+        renderEditForm={({ data, onEdit, closeModal }) => (
+          <ContactForm
+            {...data}
+            onsubmit={onEdit}
+            onCancel={closeModal}
+          />
+        )}
       />
     ),
   },
@@ -136,124 +147,114 @@ export default ContactTable;
 ContactTable.defaultProps = {
   contacts: [
     {
-      firstName: 'Jessica',
-      middleName: 'Amanda',
-      lastName: 'Jones',
+      first_name: 'Jessica',
+      middle_name: 'Amanda',
+      last_name: 'Jones',
       crop: 'Cashew',
-      location: 'Addis Ababa, Ethiopia',
-      phone: '0912345672',
+      country: 'Ethiopia',
+      city: 'Addis Ababa',
+      phone_number: '0912345672',
       customer: 'Daniel Wass',
       language: 'English',
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
     },
      {
-      firstName: 'Jessica',
-      middleName: 'Amanda',
-      lastName: 'Jones',
+      first_name: 'Jessica',
+      middle_name: 'Amanda',
+      last_name: 'Jones',
       crop: 'Cashew',
-      location: 'Addis Ababa, Ethiopia',
-      phone: '0912345672',
+      country: 'Ethiopia',
+      city: 'Addis Ababa',
+      phone_number: '0912345672',
       customer: 'Daniel Wass',
       language: 'English',
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
     },
      {
-      firstName: 'Jessica',
-      middleName: 'Amanda',
-      lastName: 'Jones',
+      first_name: 'Jessica',
+      middle_name: 'Amanda',
+      last_name: 'Jones',
       crop: 'Cashew',
-      location: 'Addis Ababa, Ethiopia',
-      phone: '0912345672',
+      country: 'Ethiopia',
+      city: 'Addis Ababa',
+      phone_number: '0912345672',
       customer: 'Daniel Wass',
       language: 'English',
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
     },
      {
-      firstName: 'Jessica',
-      middleName: 'Amanda',
-      lastName: 'Jones',
+      first_name: 'Jessica',
+      middle_name: 'Amanda',
+      last_name: 'Jones',
       crop: 'Cashew',
-      location: 'Addis Ababa, Ethiopia',
-      phone: '0912345672',
+      country: 'Ethiopia',
+      city: 'Addis Ababa',
+      phone_number: '0912345672',
       customer: 'Daniel Wass',
       language: 'English',
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
     },
      {
-      firstName: 'Jessica',
-      middleName: 'Amanda',
-      lastName: 'Jones',
+      first_name: 'Jessica',
+      middle_name: 'Amanda',
+      last_name: 'Jones',
       crop: 'Cashew',
-      location: 'Addis Ababa, Ethiopia',
-      phone: '0912345672',
+      country: 'Ethiopia',
+      city: 'Addis Ababa',
+      phone_number: '0912345672',
       customer: 'Daniel Wass',
       language: 'English',
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
     },
      {
-      firstName: 'Jessica',
-      middleName: 'Amanda',
-      lastName: 'Jones',
+      first_name: 'Jessica',
+      middle_name: 'Amanda',
+      last_name: 'Jones',
       crop: 'Cashew',
-      location: 'Addis Ababa, Ethiopia',
-      phone: '0912345672',
+      country: 'Ethiopia',
+      city: 'Addis Ababa',
+      phone_number: '0912345672',
       customer: 'Daniel Wass',
       language: 'English',
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
     },
      {
-      firstName: 'Jessica',
-      middleName: 'Amanda',
-      lastName: 'Jones',
+      first_name: 'Jessica',
+      middle_name: 'Amanda',
+      last_name: 'Jones',
       crop: 'Cashew',
-      location: 'Addis Ababa, Ethiopia',
-      phone: '0912345672',
+      country: 'Ethiopia',
+      city: 'Addis Ababa',
+      phone_number: '0912345672',
       customer: 'Daniel Wass',
       language: 'English',
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
     },
      {
-      firstName: 'Jessica',
-      middleName: 'Amanda',
-      lastName: 'Jones',
+      first_name: 'Jessica',
+      middle_name: 'Amanda',
+      last_name: 'Jones',
       crop: 'Cashew',
-      location: 'Addis Ababa, Ethiopia',
-      phone: '0912345672',
+      country: 'Ethiopia',
+      city: 'Addis Ababa',
+      phone_number: '0912345672',
       customer: 'Daniel Wass',
       language: 'English',
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
     },
     {
-      firstName: 'Jessica',
-      middleName: 'Amanda',
-      lastName: 'Jones',
+      first_name: 'Jessica',
+      middle_name: 'Amanda',
+      last_name: 'Jones',
       crop: 'Cashew',
-      location: 'Addis Ababa, Ethiopia',
-      phone: '0912345672',
+      country: 'Ethiopia',
+      city: 'Addis Ababa',
+      phone_number: '0912345672',
       customer: 'Daniel Wass',
       language: 'English',
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
     },
     {
-      firstName: 'Jessica',
-      middleName: 'Amanda',
-      lastName: 'Jones',
+      first_name: 'Jessica',
+      middle_name: 'Amanda',
+      last_name: 'Jones',
       crop: 'Cashew',
-      location: 'Addis Ababa, Ethiopia',
-      phone: '0912345672',
+      country: 'Ethiopia',
+      city: 'Addis Ababa',
+      phone_number: '0912345672',
       customer: 'Daniel Wass',
       language: 'English',
-      photo_url:
-        'https://www.dropbox.com/s/nd8z3hxuo3ahauk/segun_adebayo.jpg?dl=1',
     },
   ],
 };

@@ -76,7 +76,7 @@ const IconLogo = () => (
     <path
       d="M14 0h21v21H14V0zM5 21h9v9H5v-9zM0 8h5v5H0V8z"
       fill="#17732D"
-      fill-rule="nonzero"
+      fillRule="nonzero"
     />
   </svg>
 );

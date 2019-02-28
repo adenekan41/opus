@@ -13,6 +13,8 @@ export class DataProvider extends React.Component {
     this.state = {
       fetching: false,
       users: [],
+      contacts: [],
+      alerts: [],
       user: {},
       profile: {},
       token: this.loadTokenFromStorage(),
@@ -49,13 +51,20 @@ export class DataProvider extends React.Component {
     }
   };
   initialize = token => {
-    let { profile } = this.state;
+    let { profile, alerts } = this.state;
     if (Object.values(profile).length > 0) {
       return Promise(resolve => resolve({ profile }));
     }
-    return Promise.all([this.getProfile(token)]).then(data => {
+    // if (alerts.length > 0) {
+    //   return Promise(resolve => resolve({ alerts }));
+    // }
+    return Promise.all([
+      this.getProfile(token),
+      // this.getWhatsappAlerts(token),
+    ]).then(data => {
       return {
         profile: data[0],
+        // alerts: data[1],
       };
     });
   };
@@ -70,6 +79,8 @@ export class DataProvider extends React.Component {
       [ACTIONS.UPDATE_USER]: this.updateUser,
       [ACTIONS.PATCH_USER]: this.patchUser,
       [ACTIONS.DELETE_USER]: this.deleteUser,
+      [ACTIONS.GET_WHATSAPP_ALERTS]: this.getWhatsappAlerts,
+      [ACTIONS.SEND_WHATSAPP_ALERT]: this.sendWhatsappAlert,
     };
     console.log({ type });
     return options[type](value);
@@ -191,6 +202,25 @@ export class DataProvider extends React.Component {
       .then(data => {
         let result = users.filter(user => user.id !== id);
         this.updateState({ users: result });
+        return data;
+      });
+  };
+  getWhatsappAlerts = () => {
+    let { token } = this.state;
+    return this.getAdapter()
+      .getWhatsappAlerts(token)
+      .then(data => {
+        this.updateState({ alerts: data });
+        return data;
+      });
+  };
+  sendWhatsappAlert = payload => {
+    let { token, alerts } = this.state;
+    return this.getAdapter()
+      .sendWhatsappAlert(token, payload)
+      .then(data => {
+        let result = [data, ...alerts];
+        this.updateState({ alerts: result });
         return data;
       });
   };

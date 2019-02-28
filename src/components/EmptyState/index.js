@@ -1,19 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Flex, Image, Heading, Text } from 'rebass';
-import Button from '../../components/Button';
 
 const EmptyStateContainer = styled.div`
   border-radius: 5px;
   background-color: #ffffff;
   padding-bottom: 60px;
+
+  .action-button {
+    width: 350px;
+    margin: 0 auto;
+    margin-top: 32px;
+  }
 `;
 
 export default function EmptyState({
   heading,
   helpText,
-  buttonText,
-  onClick,
+  renderButton,
   image,
   margin,
 }) {
@@ -34,11 +38,7 @@ export default function EmptyState({
           <Text color="#8c8c8c" textAlign="center" m="0 auto" width="70%">
             {helpText}
           </Text>
-          {buttonText && (
-            <Button onClick={onClick} kind="green" size="large">
-              {buttonText}
-            </Button>
-          )}
+          <div className="action-button">{renderButton && renderButton()}</div>
         </Flex>
       </EmptyStateContainer>
     </Flex>

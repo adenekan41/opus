@@ -9,6 +9,7 @@ import Forecast from '../../../views/Dashboard/Forecast';
 import { DataProvider } from '../../../api/provider';
 import { DataContext } from '../../../api/context';
 import { FullScreenSpinner } from '../../../components/Spinner';
+import Home from '../../../views/Dashboard/Home';
 
 const DashboardRoutes = ({ token, ...rest }) => {
   return (
@@ -24,6 +25,9 @@ const DashboardRoutes = ({ token, ...rest }) => {
               {...{ ...state, dispatch }}
             >
               <Switch>
+                <Route path="/dashboard/stats" render={() => (
+                  <Home  {...rest} {...{ ...state, dispatch }}/>
+                )}/>
                 <Route
                   path="/dashboard/weather-forecast"
                   render={() => (

@@ -25,8 +25,8 @@ export default class ForecastBulletin extends Component {
                 url: '/dashboard/weather-forecast/bulletin/charts',
                 label: 'Opus snapshots',
                 icon: 'boxes',
-                flex:'0 0 170px',
-                max:"170px"
+                flex: '0 0 170px',
+                max: '170px',
               },
               {
                 url: '/dashboard/weather-forecast/bulletin/weather-data',
