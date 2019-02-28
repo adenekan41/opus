@@ -31,7 +31,7 @@ class Alerts extends React.Component {
                     showModal={show}
                     onCloseModal={closeModal}
                   >
-                    <ManualAlertForm onCancel={closeModal}/>
+                    <ManualAlertForm onCancel={closeModal} />
                   </Modal>
                 </>
               )}
@@ -48,6 +48,25 @@ class Alerts extends React.Component {
               heading="No Messages"
               helpText="You haven’t sent any alerts yet,
                 click the button below to send one now."
+              renderButton={() => (
+                <ToggleModal>
+                  {(show, openModal, closeModal) => (
+                    <>
+                      <Button kind="green" block onClick={openModal}>
+                        <Icon name="add" color="#ffffff" />
+                        &nbsp;&nbsp;New Alert
+                      </Button>
+                      <Modal
+                        size="medium"
+                        showModal={show}
+                        onCloseModal={closeModal}
+                      >
+                        <ManualAlertForm onCancel={closeModal} />
+                      </Modal>
+                    </>
+                  )}
+                </ToggleModal>
+              )}
             />
           )}
         </Box>
