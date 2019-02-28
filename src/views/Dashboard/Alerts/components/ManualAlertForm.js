@@ -21,6 +21,7 @@ const ManualAlertForm = ({
   type,
   recipients,
   message,
+  isLoading,
 }) => (
   <Formik
     onSubmit={values => onSubmit(values)}
@@ -114,7 +115,7 @@ const ManualAlertForm = ({
             </Button>
           </div>
           <div className="col-md-6">
-            <Button kind="orange" block>
+            <Button kind="orange" block isLoading={isLoading}>
               Save
             </Button>
           </div>

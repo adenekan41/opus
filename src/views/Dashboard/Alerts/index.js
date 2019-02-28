@@ -13,8 +13,24 @@ import AdvisoryAlertForm from './components/AdvisoryAlertForm';
 import { Tabs } from '../../../components/TabNav';
 
 class Alerts extends React.Component {
+  state = {
+    loading: false,
+  };
+  sendWhatsappAlert = values => {
+    const { dispatch, actions } = this.props;
+    this.setState({
+      loading: true,
+    });
+    dispatch({ type: actions.SEND_WHATSAPP_ALERT, values }).then(data => {
+      console.log(data);
+      this.setState({
+        loading: false,
+      });
+    });
+  };
   render() {
     const { alerts } = this.props;
+    const { loading } = this.state;
     return (
       <div style={{ padding: '40px' }}>
         <Box className="row" mb="40px">
@@ -44,7 +60,11 @@ class Alerts extends React.Component {
                           label: 'Manual alert',
                           content: (
                             <Box m="-12px">
-                              <ManualAlertForm onCancel={closeModal} />
+                              <ManualAlertForm
+                                onCancel={closeModal}
+                                isLoading={loading}
+                                onSubmit={this.sendWhatsappAlert}
+                              />
                             </Box>
                           ),
                         },
@@ -52,7 +72,10 @@ class Alerts extends React.Component {
                           label: 'Automated alert',
                           content: (
                             <Box m="-12px">
-                              <AutomaticAlertForm onCancel={closeModal} />
+                              <AutomaticAlertForm
+                                onCancel={closeModal}
+                                isLoading={loading}
+                              />
                             </Box>
                           ),
                         },
@@ -60,7 +83,10 @@ class Alerts extends React.Component {
                           label: 'Advisory alert',
                           content: (
                             <Box m="-12px">
-                              <AdvisoryAlertForm onCancel={closeModal} />
+                              <AdvisoryAlertForm
+                                onCancel={closeModal}
+                                isLoading={loading}
+                              />
                             </Box>
                           ),
                         },
@@ -127,7 +153,7 @@ class Alerts extends React.Component {
                               ),
                             },
                           ]}
-                          TabListCSS={`justify-content: initial;`}
+                          TabListCSS={`justify-content: space-between;`}
                           TabPanelCSS={`padding: 24px;`}
                         />
                       </Modal>

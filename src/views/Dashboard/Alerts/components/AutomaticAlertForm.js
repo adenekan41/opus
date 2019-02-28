@@ -24,6 +24,7 @@ const AutomaticAlertForm = ({
   recipients,
   forecast_type,
   location,
+  isLoading,
 }) => (
   <Formik
     onSubmit={values => onSubmit(values)}
@@ -157,7 +158,7 @@ const AutomaticAlertForm = ({
             </Button>
           </div>
           <div className="col-md-6">
-            <Button kind="orange" block>
+            <Button block kind="orange" isLoading={isLoading}>
               Save
             </Button>
           </div>

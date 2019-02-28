@@ -17,6 +17,7 @@ const AdvisoryAlertForm = ({
   type,
   recipients,
   message,
+  isLoading,
 }) => (
   <Formik
     onSubmit={values => onSubmit(values)}
@@ -79,12 +80,12 @@ const AdvisoryAlertForm = ({
         </div>
         <Box className="row" mt="24px">
           <div className="col-md-6">
-            <Button kind="gray" block onClick={onCancel} type="button">
+            <Button block kind="gray" type="button" onClick={onCancel}>
               Cancel
             </Button>
           </div>
           <div className="col-md-6">
-            <Button kind="orange" block>
+            <Button block kind="orange" isLoading={isLoading}>
               Save
             </Button>
           </div>

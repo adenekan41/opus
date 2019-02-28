@@ -13,33 +13,33 @@ const DashboardRoutes = ({token, ...rest}) => {
   return (
     <DataProvider token={token}>
       <DataContext.Consumer>
-        {({ state, dispatch }) => (
+        {({ state, dispatch, actions }) => (
           <DashboardLayout NavLink={true} {...rest}>
             <Switch>
               <Route
                 path="/admin/dashboard/weather-forecast"
                 render={() => (
-                  <Forecast {...rest} {...{ ...state, dispatch }} />
+                  <Forecast {...rest} {...{ ...state, dispatch, actions }} />
                 )}
               />
               <Route
                 path="/admin/dashboard/contacts"
                 render={() => (
-                  <Contacts {...rest} {...{ ...state, dispatch }} />
+                  <Contacts {...rest} {...{ ...state, dispatch, actions }} />
                 )}
               />
               <Route
                 path="/admin/dashboard/alerts"
-                render={() => <Alerts {...rest} {...{ ...state, dispatch }} />}
+                render={() => <Alerts {...rest} {...{ ...state, dispatch, actions }} />}
               />
               <Route
                 path="/admin/dashboard/team"
-                render={() => <Teams {...rest} {...{ ...state, dispatch }} />}
+                render={() => <Teams {...rest} {...{ ...state, dispatch, actions }} />}
               />
               <Route
                 path="/admin/dashboard/profile/"
                 render={() => (
-                  <Account {...rest} {...{ ...state, dispatch }} />
+                  <Account {...rest} {...{ ...state, dispatch, actions }} />
                 )}
               />
             </Switch>
