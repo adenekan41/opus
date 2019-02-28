@@ -5,6 +5,9 @@ import SearchInput from '../../../components/SearchInput';
 import Button from '../../../components/Button';
 import ContactForm from './components/ContactForm';
 import { Icon } from '../../../components/Icon';
+import EmptyState from '../../../components/EmptyState';
+import emptyStateImage from '../../../assets/img/empty-states/contacts.png';
+
 class Contacts extends React.Component {
   constructor() {
     super();
@@ -25,7 +28,7 @@ class Contacts extends React.Component {
   };
 
   render() {
-    const { profile } = this.props;
+    const { profile, contacts } = this.props;
     let isAdmin = profile.username === 'admin';
     return (
       <div>
@@ -39,14 +42,14 @@ class Contacts extends React.Component {
                 {(show, openModal, closeModal) => (
                   <>
                     <Button kind="green" block onClick={openModal}>
-                      <Icon name="add" color="#ffffff"/>
+                      <Icon name="add" color="#ffffff" />
                       &nbsp;&nbsp;Add contact
                     </Button>
                     <Modal
                       size="medium"
                       showModal={show}
                       onCloseModal={closeModal}
-                      heading={"Add Contact"}
+                      heading={'Add Contact'}
                     >
                       <ContactForm isAdmin={isAdmin} onCancel={closeModal} />
                     </Modal>
@@ -55,11 +58,40 @@ class Contacts extends React.Component {
               </ToggleModal>
             </div>
           </div>
-          <br /> <br />
-          <ContactTable
-            onContactDelete={this.onContactDelete}
-            onContactEdit={this.onContactEdit}
-          />
+          {contacts.length > 0 ? (
+            <ContactTable
+              onContactDelete={this.onContactDelete}
+              onContactEdit={this.onContactEdit}
+              contacts={contacts}
+            />
+          ) : (
+            <EmptyState
+              image={emptyStateImage}
+              margin="80px"
+              heading="No Contacts"
+              helpText="You haven’t added any contacts yet,
+              click the button below to add a new one."
+              renderButton={() => (
+                <ToggleModal>
+                  {(show, openModal, closeModal) => (
+                    <>
+                      <Button kind="green" block onClick={openModal}>
+                        Add contact
+                      </Button>
+                      <Modal
+                        size="medium"
+                        showModal={show}
+                        onCloseModal={closeModal}
+                        heading={'Add Contact'}
+                      >
+                        <ContactForm isAdmin={isAdmin} onCancel={closeModal} />
+                      </Modal>
+                    </>
+                  )}
+                </ToggleModal>
+              )}
+            />
+          )}
         </div>
       </div>
     );

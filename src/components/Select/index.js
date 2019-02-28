@@ -140,12 +140,14 @@ const Dropdown = ({
   options,
   mb,
   mt,
+  width,
   ...rest
 }) => {
   return (
     <DropdownContainer
       mb={mb}
       mt={mt}
+      width={width}
       disabled={isDisabled}
       touched={Boolean(value)}
     >

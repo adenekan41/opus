@@ -7,6 +7,8 @@ import { Icon } from '../../../components/Icon';
 import Button from '../../../components/Button';
 import AdminTeamTable from './components/AdminTeamTable';
 import TeamForm from './components/TeamForm';
+import EmptyState from '../../../components/EmptyState';
+import emptyStateImage from '../../../assets/img/empty-states/contacts.png';
 
 class Teams extends React.Component {
   constructor() {
@@ -25,7 +27,7 @@ class Teams extends React.Component {
     console.log(team);
   };
   render() {
-    const { profile } = this.props;
+    const { profile, users } = this.props;
     let isAdmin = profile.username === 'admin';
     return (
       <div>
@@ -63,15 +65,52 @@ class Teams extends React.Component {
             </div>
           </div>
           <br /> <br />
-          {isAdmin ? (
-            <AdminTeamTable
-              onTeamDelete={this.onTeamDelete}
-              onTeamEdit={this.onTeamEdit}
-            />
+          {users.length > 0 ? (
+            isAdmin ? (
+              <AdminTeamTable
+                onTeamDelete={this.onTeamDelete}
+                onTeamEdit={this.onTeamEdit}
+              />
+            ) : (
+              <TeamTable
+                onTeamDelete={this.onTeamDelete}
+                onTeamEdit={this.onTeamEdit}
+              />
+            )
           ) : (
-            <TeamTable
-              onTeamDelete={this.onTeamDelete}
-              onTeamEdit={this.onTeamEdit}
+            <EmptyState
+              image={emptyStateImage}
+              margin="80px"
+              heading="No Team Members"
+              helpText="You haven’t invited any team members yet,
+              click the button below to invite someone."
+              renderButton={() => (
+                <ToggleModal>
+                  {(show, openModal, closeModal) => (
+                    <>
+                      <Button onClick={openModal} kind="green" block>
+                        <Icon name="add" color="#ffffff" /> &nbsp;&nbsp;
+                        {isAdmin
+                          ? `Invite user`
+                          : `Invite
+                        team member`}
+                      </Button>
+                      <Modal
+                        size="medium"
+                        showModal={show}
+                        onCloseModal={closeModal}
+                        heading={this.state.header}
+                      >
+                        <Text textAlign="center" mb="24px">
+                          Please enter the email address of the team member you
+                          would like to invite.
+                        </Text>
+                        <TeamForm isAdd onCancel={closeModal} />
+                      </Modal>
+                    </>
+                  )}
+                </ToggleModal>
+              )}
             />
           )}
         </div>
