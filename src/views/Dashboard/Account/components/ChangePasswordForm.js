@@ -25,10 +25,10 @@ const ChangePasswordForm = ({ isLoading, onSubmit }) => (
           Change Password
         </Button>
         <Modal
-          className="modal"
-          show={show}
-          close={closeModal}
-          header="Change Password"
+          size="medium"
+          showModal={show}
+          onCloseModal={closeModal}
+          heading="Change Password"
         >
           <Formik
             initialValues={{

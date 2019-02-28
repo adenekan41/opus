@@ -122,7 +122,7 @@ const ProfileForm = ({
               value={email}
             />
           </div>
-          <div className="col-md-3">
+          <div className="col-md-4">
             <ChangeEmailForm onSubmit={onEmailChange}/>
           </div>
         </div>
@@ -139,7 +139,7 @@ const ProfileForm = ({
                 value="........"
               />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-4">
             <ChangePasswordForm onSubmit={onPasswordChange}/>
             </div>
           </div>

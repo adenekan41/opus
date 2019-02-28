@@ -57,7 +57,7 @@ const ProfileStyle = styled.div`
   }
   .photo-section {
     width: 12vw;
-    flex: 0 0 12vw;
+    flex: 0 0 18vw;
   }
   .form-section {
     flex: 1;
@@ -80,7 +80,7 @@ class Profile extends React.Component {
                   <center>
                     <Avatar
                       isRound
-                      size="5vw"
+                      size="8vw"
                       photo_url={profile.photo}
                       color="#ff9901"
                       bgColor="rgba(255,153,1,.15)"
