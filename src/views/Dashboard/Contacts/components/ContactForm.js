@@ -48,10 +48,10 @@ const ContactForm = ({
       middle_name: middle_name || '',
       phone_number: phone_number || '',
       crop: crop || '',
-      city: city || {},
-      country: country || {},
-      language: language || {},
-      customer: customer || {},
+      city: city || '',
+      country: country || '',
+      language: language || '',
+      customer: customer || '',
     }}
   >
     {({ values, errors, touched, handleSubmit, handleChange }) => (

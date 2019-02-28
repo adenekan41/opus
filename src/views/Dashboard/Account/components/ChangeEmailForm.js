@@ -27,10 +27,10 @@ const ChangeEmailForm = ({ isLoading, onSubmit }) => (
           Change Email Address
         </Button>
         <Modal
-          className="modal"
-          show={show}
-          close={closeModal}
-          header="Change Email"
+          size="medium"
+          showModal={show}
+          onCloseModal={closeModal}
+          heading="Change Email"
         >
           <Text textAlign="center" mt="20px" mb="40px">
             Update your email adress and we’ll send you a link to verify your
