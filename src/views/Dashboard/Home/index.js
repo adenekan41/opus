@@ -27,7 +27,7 @@ const Home = ({ users, alerts, contacts, advice_models, profile, history }) => {
       </div>
       <div className="row">
         <div className="col-md-3">
-          <Card padding="30px" mb="15px">
+          <Card padding="30px 20px" mb="15px">
             <Flex flexDirection="column" alignItems="center">
               <div className="card-icon__wrapper">
                 <Icon name="team" color="#29cb98" />
@@ -49,7 +49,7 @@ const Home = ({ users, alerts, contacts, advice_models, profile, history }) => {
           </Card>
         </div>
         <div className="col-md-3">
-          <Card padding="30px" mb="15px">
+          <Card padding="30px 20px" mb="15px">
             <Flex flexDirection="column" alignItems="center">
               <div className="card-icon__wrapper">
                 <Icon name="send" color="#29cb98" />
@@ -71,7 +71,7 @@ const Home = ({ users, alerts, contacts, advice_models, profile, history }) => {
           </Card>
         </div>
         <div className="col-md-3">
-          <Card padding="30px" mb="15px">
+          <Card padding="30px 20px" mb="15px">
             <Flex flexDirection="column" alignItems="center">
               <div className="card-icon__wrapper">
                 <Icon name="user" color="#29cb98" />
@@ -93,7 +93,7 @@ const Home = ({ users, alerts, contacts, advice_models, profile, history }) => {
           </Card>
         </div>
         <div className="col-md-3">
-          <Card padding="30px" mb="15px">
+          <Card padding="30px 20px" mb="15px">
             <Flex flexDirection="column" alignItems="center">
               <div className="card-icon__wrapper">
                 <Icon name="plant" color="#29cb98" />
