@@ -26,9 +26,9 @@ const ManualAlertForm = ({
     onSubmit={values => onSubmit(values)}
     initialValues={{
       subject: subject || '',
-      type: type || {},
+      type: type || 'whatsapp',
       message: message || '',
-      recipients: recipients || [],
+      recipients: recipients || '',
     }}
     validationSchema={manualAlertFormValidation}
   >
@@ -39,7 +39,7 @@ const ManualAlertForm = ({
             <Input
               mb="20px"
               id="subject"
-              label="subject"
+              label="Subject"
               type="text"
               name="Subject"
               value={values.subject}
@@ -81,7 +81,7 @@ const ManualAlertForm = ({
                   id="recipients"
                   name="recipients"
                   label="Recipients"
-                  options={[{ value: 'whatsapp', label: 'Whatsapp' }]}
+                  options={[]}
                   touched={touched.recipients}
                   value={values.recipients}
                   onChange={recipients =>

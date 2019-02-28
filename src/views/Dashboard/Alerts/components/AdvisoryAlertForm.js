@@ -22,9 +22,9 @@ const AdvisoryAlertForm = ({
     onSubmit={values => onSubmit(values)}
     initialValues={{
       subject: subject || '',
-      type: type || {},
+      type: type || '',
       message: message || '',
-      recipients: recipients || [],
+      recipients: recipients || '',
     }}
     validationSchema={advisoryAlertFormValidation}
   >
@@ -64,7 +64,7 @@ const AdvisoryAlertForm = ({
                   id="recipients"
                   name="recipients"
                   label="Recipients"
-                  options={[{ value: 'whatsapp', label: 'Whatsapp' }]}
+                  options={[]}
                   touched={touched.recipients}
                   value={values.recipients}
                   onChange={recipients =>

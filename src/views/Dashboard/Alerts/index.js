@@ -8,6 +8,9 @@ import EmptyState from '../../../components/EmptyState';
 import emptyStateImage from '../../../assets/img/empty-states/alerts.png';
 import Modal, { ToggleModal } from '../../../components/Modal';
 import ManualAlertForm from './components/ManualAlertForm';
+import AutomaticAlertForm from './components/AutomaticAlertForm';
+import AdvisoryAlertForm from './components/AdvisoryAlertForm';
+import { Tabs } from '../../../components/TabNav';
 
 class Alerts extends React.Component {
   render() {
@@ -31,7 +34,40 @@ class Alerts extends React.Component {
                     showModal={show}
                     onCloseModal={closeModal}
                   >
-                    <ManualAlertForm onCancel={closeModal} />
+                    <Tabs
+                      defaultActiveTab="Manual alert"
+                      isFitted={false}
+                      showBorderBottom
+                      tabSpacing="24px"
+                      tabs={[
+                        {
+                          label: 'Manual alert',
+                          content: (
+                            <Box m="-12px">
+                              <ManualAlertForm onCancel={closeModal} />
+                            </Box>
+                          ),
+                        },
+                        {
+                          label: 'Automated alert',
+                          content: (
+                            <Box m="-12px">
+                              <AutomaticAlertForm onCancel={closeModal} />
+                            </Box>
+                          ),
+                        },
+                        {
+                          label: 'Advisory alert',
+                          content: (
+                            <Box m="-12px">
+                              <AdvisoryAlertForm onCancel={closeModal} />
+                            </Box>
+                          ),
+                        },
+                      ]}
+                      TabListCSS={`justify-content: space-between;`}
+                      TabPanelCSS={`padding: 24px;`}
+                    />
                   </Modal>
                 </>
               )}
@@ -61,7 +97,39 @@ class Alerts extends React.Component {
                         showModal={show}
                         onCloseModal={closeModal}
                       >
-                        <ManualAlertForm onCancel={closeModal} />
+                        <Tabs
+                          defaultActiveTab="Manual alert"
+                          isFitted={false}
+                          tabSpacing="24px"
+                          tabs={[
+                            {
+                              label: 'Manual alert',
+                              content: (
+                                <Box m="-12px">
+                                  <ManualAlertForm onCancel={closeModal} />
+                                </Box>
+                              ),
+                            },
+                            {
+                              label: 'Automated alert',
+                              content: (
+                                <Box m="-12px">
+                                  <AutomaticAlertForm onCancel={closeModal} />
+                                </Box>
+                              ),
+                            },
+                            {
+                              label: 'Advisory alert',
+                              content: (
+                                <Box m="-12px">
+                                  <AdvisoryAlertForm onCancel={closeModal} />
+                                </Box>
+                              ),
+                            },
+                          ]}
+                          TabListCSS={`justify-content: initial;`}
+                          TabPanelCSS={`padding: 24px;`}
+                        />
                       </Modal>
                     </>
                   )}

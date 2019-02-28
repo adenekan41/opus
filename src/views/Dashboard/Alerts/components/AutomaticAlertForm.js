@@ -29,8 +29,8 @@ const AutomaticAlertForm = ({
     onSubmit={values => onSubmit(values)}
     initialValues={{
       name: name || '',
-      type: type || {},
-      recipients: recipients || [],
+      type: type || 'whatsapp',
+      recipients: recipients || '',
       forecast_type: forecast_type || '',
       location: location || '',
     }}
@@ -85,7 +85,7 @@ const AutomaticAlertForm = ({
                   id="recipients"
                   name="recipients"
                   label="Recipients"
-                  options={[{ value: 'whatsapp', label: 'Whatsapp' }]}
+                  options={[]}
                   touched={touched.recipients}
                   value={values.recipients}
                   onChange={recipients =>
@@ -141,6 +141,7 @@ const AutomaticAlertForm = ({
             render={({ field, form }) => (
               <FrequencySelect
                 {...field}
+                label="Frequency"
                 name="frequency"
                 onChange={frequency =>
                   form.setFieldValue('frequency', frequency)
