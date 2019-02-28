@@ -193,6 +193,7 @@ export const EmptyButton = styled.button`
   padding: 0;
   cursor: pointer;
   width: ${props => (props.block ? '100%' : 'auto')};
+  ${props => props.css};
 
   &:focus {
     outline: 0;

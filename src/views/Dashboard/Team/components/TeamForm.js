@@ -123,4 +123,8 @@ const TeamForm = ({
   </Formik>
 );
 
+TeamForm.defaultProps = {
+  onSubmit: values => console.log(values)
+}
+
 export default TeamForm;

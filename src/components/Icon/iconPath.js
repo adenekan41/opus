@@ -1635,24 +1635,13 @@ const icon = {
 
   'add-section': {
     path: (
-      <g
-        strokeLinecap="square"
-        strokeLinejoin="miter"
-        strokeWidth="2"
+      <path
         fill="currentColor"
-        stroke="currentColor"
-      >
-        <polyline
-          points="19 14 19 22 2 22 2 5 10 5"
-          fill="none"
-          stroke="currentColor"
-          strokeMiterlimit="10"
-        />
-        <line x1="19" y1="1" x2="19" y2="9" fill="none" strokeMiterlimit="10" />
-        <line x1="15" y1="5" x2="23" y2="5" fill="none" strokeMiterlimit="10" />
-      </g>
+        fillRule="nonzero"
+        d="M11 11h4a1 1 0 0 0 0-2h-4V5a1 1 0 0 0-2 0v4H5a1 1 0 0 0 0 2h4v4a1 1 0 0 0 2 0v-4zm-1 9C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10z"
+      />
     ),
-    viewBox: '0 0 24 24',
+    viewBox: '0 0 20 20',
   },
 
   gmail: {
