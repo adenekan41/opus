@@ -35,6 +35,7 @@ const StyledSelect = styled(Select)`
   }
   .select-inner__menu {
     top: 50px;
+    z-index: 100000;
   }
   .select-inner__indicator-separator {
     display: none;

@@ -28,7 +28,7 @@ const TableActions = ({
               <Item
                 onClick={() => {
                   openModal();
-                  // onClose();
+                  onClose();
                 }}
               >
                 edit {model}
