@@ -11,9 +11,9 @@ import { DataContext } from '../../../api/context';
 import { FullScreenSpinner } from '../../../components/Spinner';
 import Home from '../../../views/Dashboard/Home';
 
-const DashboardRoutes = ({ token, ...rest }) => {
+const DashboardRoutes = ({ token, opus1_token, ...rest }) => {
   return (
-    <DataProvider token={token} history={rest.history}>
+    <DataProvider token={token} opus1_token={opus1_token} history={rest.history}>
       <DataContext.Consumer>
         {({ state, dispatch, actions }) =>
           state.fetching ? (

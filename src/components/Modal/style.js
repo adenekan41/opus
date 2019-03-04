@@ -82,7 +82,7 @@ const fullWidthModal = `
 export const StyledModal = styled(ReactModal)`
   background: ${props => props.bgColor};
   position: relative;
-  top: 24%;
+  top: 10%;
   left: 0;
   right: 0;
   bottom: 0;

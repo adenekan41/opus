@@ -134,7 +134,7 @@ export class Confirm extends React.Component {
         isFullScreenOnMobile={false}
       >
         <div className="confirm">
-          <Text>{description}</Text>
+          <Text textAlign="center">{description}</Text>
           <div className="confirm__btn-group">
             <Button
               className="confirm__btn-group__secondary-btn"

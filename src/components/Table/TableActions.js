@@ -7,7 +7,6 @@ import Modal, { ToggleModal, Confirm } from '../Modal';
 const TableActions = ({
   data,
   model,
-  onEdit,
   onDelete,
   isLoading,
   editModalHeading,
@@ -40,7 +39,7 @@ const TableActions = ({
                 onCloseModal={closeModal}
                 size="medium"
               >
-                {renderEditForm({ data, onEdit, closeModal })}
+                {renderEditForm({ closeModal })}
               </Modal>
             </>
           )}

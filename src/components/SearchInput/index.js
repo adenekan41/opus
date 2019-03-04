@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Icon } from '../Icon';
+import { sharedProps } from '../Avatar';
 
 const SearchInputContainer = styled.div`
   height: 50px;
@@ -10,6 +11,7 @@ const SearchInputContainer = styled.div`
   box-shadow: 0 10px 14px -4px rgba(70, 70, 70, 0.06);
   background-color: #ffffff;
   box-sizing: border-box;
+  ${sharedProps};
   .search-input {
     display: flex;
     align-items: center;
@@ -50,9 +52,9 @@ const SearchInputContainer = styled.div`
 
 export default class SearchInput extends Component {
   render() {
-    const { name, type, value, onBlur, onChange, placeholder } = this.props;
+    const { name, type, value, onBlur, onChange, placeholder, ...rest } = this.props;
     return (
-      <SearchInputContainer className="SearchInput">
+      <SearchInputContainer className="SearchInput" {...rest}>
         <div className="search-input">
           <Icon name="search" color="#000000" />
           <input

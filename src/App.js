@@ -25,12 +25,13 @@ class App extends Component {
     return this.getAdapter()
       .login(payload)
       .then(data => {
-        const { token } = data;
+        const { token, opus1_token } = data;
         this.setState({
           token,
+          opus1_token
         });
         saveState({
-          auth: { token },
+          auth: { token, opus1_token },
         });
         return token;
       })
@@ -53,11 +54,12 @@ class App extends Component {
       <Router>
         <React.Fragment>
           <PrimaryLayout
-            token={this.state.token}
             onLogin={this.onLogin}
+            token={this.state.token}
             isLoggedIn={this.isLoggedIn}
-            onResetPassword={this.onResetPassword}
             clearAllState={this.clearAllState}
+            opus1_token={this.state.opus1_token}
+            onResetPassword={this.onResetPassword}
           />
         </React.Fragment>
       </Router>

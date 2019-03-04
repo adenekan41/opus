@@ -34,14 +34,8 @@ export const makeApiCall = async ({
     throw error;
   }
 };
+
 const login = payload => {
-  return makeApiCall({
-    url: `/token/login/`,
-    method: 'POST',
-    data: payload,
-  });
-};
-const login2 = payload => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/token/`,
@@ -129,6 +123,7 @@ const createContact = (token, payload) => {
 
 const updateContact = (token, payload) => {
   return makeApiCall({
+    baseURL: BASE_URL_TWO,
     url: `/contacts/${payload.id}/`,
     method: 'PUT',
     token,
@@ -177,6 +172,10 @@ const getWeatherForecast = (token, payload) => {
   });
 };
 
+const getCrops = token => {
+  return makeApiCall({ url: `/crops/`, token });
+};
+
 export default {
   login,
   getUser,
@@ -198,4 +197,5 @@ export default {
   sendWhatsappAlert,
   getWeatherForecast,
   getWeatherForecastLogs,
+  getCrops,
 };

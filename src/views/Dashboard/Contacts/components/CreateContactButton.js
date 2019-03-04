@@ -4,12 +4,21 @@ import Button from '../../../../components/Button';
 import { Icon } from '../../../../components/Icon';
 import ContactForm from './ContactForm';
 
-export default function CreateContactButton({ onSubmit, isAdmin, isLoading }) {
+export default function CreateContactButton({
+  crops,
+  cities,
+  onSubmit,
+  isAdmin,
+  isLoading,
+  countries,
+  getCountryCities,
+  ...rest
+}) {
   return (
     <ToggleModal>
       {(show, openModal, closeModal) => (
         <>
-          <Button kind="green" block onClick={openModal}>
+          <Button kind="green" block onClick={openModal} {...rest}>
             <Icon name="add" color="#ffffff" />
             &nbsp;&nbsp;Add contact
           </Button>
@@ -20,10 +29,14 @@ export default function CreateContactButton({ onSubmit, isAdmin, isLoading }) {
             heading={'Add Contact'}
           >
             <ContactForm
+              crops={crops}
+              cities={cities}
               isAdmin={isAdmin}
-              onCancel={closeModal}
               onSubmit={onSubmit}
+              countries={countries}
+              onCancel={closeModal}
               isLoading={isLoading}
+              getCountryCities={getCountryCities}
             />
           </Modal>
         </>

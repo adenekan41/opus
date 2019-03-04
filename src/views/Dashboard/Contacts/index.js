@@ -1,27 +1,31 @@
 import React from 'react';
 import ContactTable from './components/ContactTable';
-import Modal, { ToggleModal } from '../../../components/Modal/index';
 import SearchInput from '../../../components/SearchInput';
-import Button from '../../../components/Button';
-import ContactForm from './components/ContactForm';
-import { Icon } from '../../../components/Icon';
 import EmptyState from '../../../components/EmptyState';
 import emptyStateImage from '../../../assets/img/empty-states/contacts.png';
 import CreateContactButton from './components/CreateContactButton';
 import { FullScreenSpinner } from '../../../components/Spinner';
+import { countries, getCitites } from '../../../helpers/countries';
 
 class Contacts extends React.Component {
   constructor() {
     super();
-
     this.state = {
       buttonLoading: false,
       loading: false,
+      cities: [],
     };
   }
+
   componentDidMount() {
     this.getContacts();
   }
+
+  getCountryCities = country => {
+    this.setState({
+      cities: getCitites(country.toLowerCase()),
+    });
+  };
 
   getContacts = () => {
     const { dispatch, actions } = this.props;
@@ -29,72 +33,79 @@ class Contacts extends React.Component {
       loading: true,
     });
     dispatch({ type: actions.GET_CONTACTS })
-      .then(data => {
-        console.log(data);
+      .then(() => {
         this.setState({
           loading: false,
         });
       })
-      .catch(err => {
+      .catch(() => {
         this.setState({
           loading: false,
         });
       });
   };
 
-  onContactCreate = values => {
+  onContactCreate = (values, callback) => {
     const { dispatch, actions } = this.props;
+    let { phone_number, secondary_phone_number, ...rest } = values;
+    let payload = {
+      ...rest,
+      phone_numbers: [phone_number, secondary_phone_number],
+    };
     this.setState({
       buttonLoading: true,
     });
-    dispatch({ type: actions.CREATE_CONTACT, value: values })
-      .then(data => {
-        console.log(data);
-        this.setState({
-          buttonLoading: false,
-        });
-      })
-      .catch(err => {
-        this.setState({
-          buttonLoading: false,
-        });
-      });
-  };
-
-  onContactEdit = (contact, callback) => {
-    const { dispatch, actions } = this.props;
-    this.setState({
-      buttonLoading: true,
-    });
-    dispatch({ type: actions.UPDATE_CONTACT, value: contact })
-      .then(data => {
-        console.log(data);
+    dispatch({ type: actions.CREATE_CONTACT, value: payload })
+      .then(() => {
         this.setState({
           buttonLoading: false,
         });
         callback();
       })
-      .catch(err => {
+      .catch(() => {
         this.setState({
           buttonLoading: false,
         });
       });
   };
 
-  onContactDelete = (contact, callback) => {
+  onContactEdit = (values, callback) => {
     const { dispatch, actions } = this.props;
+    let { phone_number, secondary_phone_number, ...rest } = values;
+    let payload = {
+      ...rest,
+      phone_numbers: [phone_number, secondary_phone_number],
+    };
     this.setState({
       buttonLoading: true,
     });
-    dispatch({ type: actions.DELETE_CONTACT, value: contact.id })
-      .then(data => {
-        console.log(data);
+    dispatch({ type: actions.UPDATE_CONTACT, value: payload })
+      .then(() => {
         this.setState({
           buttonLoading: false,
         });
         callback();
       })
-      .catch(err => {
+      .catch(() => {
+        this.setState({
+          buttonLoading: false,
+        });
+      });
+  };
+
+  onContactDelete = (id, callback) => {
+    const { dispatch, actions } = this.props;
+    this.setState({
+      buttonLoading: true,
+    });
+    dispatch({ type: actions.DELETE_CONTACT, value: id })
+      .then(() => {
+        this.setState({
+          buttonLoading: false,
+        });
+        callback();
+      })
+      .catch(() => {
         this.setState({
           buttonLoading: false,
         });
@@ -102,21 +113,30 @@ class Contacts extends React.Component {
   };
 
   render() {
-    const { profile, contacts } = this.props;
-    let { buttonLoading, loading } = this.state;
+    const { profile, contacts, crops } = this.props;
+    let { buttonLoading, loading, cities } = this.state;
     let isAdmin = profile.username === 'admin';
+    let formatCrops = crops.map(crop => ({
+      label: crop.name,
+      value: crop.name,
+    }));
     return (
       <div>
         <div style={{ padding: '40px' }}>
           <div className="row">
             <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
-              <SearchInput placeholder="Search contacts" />
+              <SearchInput placeholder="Search contacts" mb="8px" />
             </div>
             <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
               <CreateContactButton
+                mb="8px"
+                cities={cities}
                 isAdmin={isAdmin}
+                crops={formatCrops}
+                countries={countries}
                 isLoading={buttonLoading}
                 onSubmit={this.onContactCreate}
+                getCountryCities={this.getCountryCities}
               />
             </div>
           </div>
@@ -124,10 +144,15 @@ class Contacts extends React.Component {
             <FullScreenSpinner />
           ) : contacts.length > 0 ? (
             <ContactTable
+              cities={cities}
+              isAdmin={isAdmin}
               contacts={contacts}
+              crops={formatCrops}
+              countries={countries}
               isLoading={buttonLoading}
               onContactEdit={this.onContactEdit}
               onContactDelete={this.onContactDelete}
+              getCountryCities={this.getCountryCities}
             />
           ) : (
             <EmptyState
@@ -138,9 +163,13 @@ class Contacts extends React.Component {
               click the button below to add a new one."
               renderButton={() => (
                 <CreateContactButton
+                  cities={cities}
                   isAdmin={isAdmin}
+                  crops={formatCrops}
+                  countries={countries}
                   isLoading={buttonLoading}
                   onSubmit={this.onContactCreate}
+                  getCountryCities={this.getCountryCities}
                 />
               )}
             />

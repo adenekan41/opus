@@ -35,7 +35,7 @@ const StyledSelect = styled(Select)`
   }
   .select-inner__menu {
     top: 50px;
-    z-index: 100000;
+    z-index: 100000000;
   }
   .select-inner__indicator-separator {
     display: none;
@@ -149,6 +149,7 @@ const Dropdown = ({
       mb={mb}
       mt={mt}
       width={width}
+      isInvalid={isInvalid}
       disabled={isDisabled}
       touched={Boolean(value)}
     >

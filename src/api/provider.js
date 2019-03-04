@@ -8,6 +8,7 @@ export class DataProvider extends React.Component {
   static defaultProps = {
     adapter,
   };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -15,9 +16,10 @@ export class DataProvider extends React.Component {
       users: [],
       contacts: [],
       alerts: [],
+      crops: [],
       user: {},
       profile: {},
-      token: this.loadTokenFromStorage(),
+      ...this.loadTokenFromStorage(),
     };
     this.state.context = {
       state: this.state,
@@ -30,9 +32,9 @@ export class DataProvider extends React.Component {
   }
 
   componentDidMount() {
-    const { token } = this.state;
+    const { token, opus1_token } = this.state;
     this.updateState({ fetching: true });
-    this.initialize(token).then(data => {
+    this.initialize({ token, opus1_token }).then(data => {
       saveState({
         ...loadState(),
         auth: { ...loadState().auth, user: data.profile },
@@ -40,34 +42,44 @@ export class DataProvider extends React.Component {
       this.updateState({ fetching: false });
     });
   }
+
   loadTokenFromStorage = () => {
     let auth =
       (loadState() || { auth: { token: '' } } || { auth: { token: '' } })
         .auth || '';
     if (!this.props.token) {
-      return auth.token;
+      return { token: auth.token, opus1_token: auth.opus1_token };
     } else {
-      return this.props.token;
+      return { token: this.props.token, opus1_token: this.props.opus1_token };
     }
   };
-  initialize = token => {
-    let { profile, alerts } = this.state;
+
+  initialize = tokens => {
+    let { profile, alerts, crops } = this.state;
+    let { token, opus1_token } = tokens;
     if (Object.values(profile).length > 0) {
       return Promise(resolve => resolve({ profile }));
     }
-    // if (alerts.length > 0) {
-    //   return Promise(resolve => resolve({ alerts }));
-    // }
+    if (alerts.length > 0) {
+      return Promise(resolve => resolve({ alerts }));
+    }
+    if (crops.length > 0) {
+      return Promise(resolve => resolve({ crops }));
+    }
     return Promise.all([
-      this.getProfile(token),
-      // this.getWhatsappAlerts(token),
+      this.getProfile(opus1_token),
+      this.getWhatsappAlerts(token),
+      this.getCrops(opus1_token),
     ]).then(data => {
+      console.log(data[2]);
       return {
         profile: data[0],
-        // alerts: data[1],
+        alerts: data[1],
+        crops: data[2],
       };
     });
   };
+
   dispatch = ({ type, value }) => {
     let options = {
       [ACTIONS.INITIALIZE]: this.initialize,
@@ -91,6 +103,7 @@ export class DataProvider extends React.Component {
     console.log({ type });
     return options[type](value);
   };
+
   updateState = (state, callback = () => {}) => {
     let { context, ...rest } = this.state;
     let defaults = { ...rest, ...state };
@@ -99,9 +112,11 @@ export class DataProvider extends React.Component {
       callback();
     });
   };
+
   getAdapter = () => {
     return this.props.adapter;
   };
+
   clearAllState = () => {
     this.setState({
       users: [],
@@ -110,6 +125,7 @@ export class DataProvider extends React.Component {
     });
     clearState();
   };
+
   getProfile = token => {
     let { profile = {} } = this.state;
     if (Object.values(profile).length > 0) {
@@ -124,6 +140,7 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
+
   getUsers = token => {
     let { users = [] } = this.state;
     if (users.length > 0) {
@@ -138,6 +155,7 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
+
   getUser = id => {
     let { token } = this.state;
     return this.getAdapter()
@@ -149,6 +167,7 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
+
   createUser = payload => {
     let { token, users } = this.state;
     return this.getAdapter()
@@ -159,6 +178,7 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
+
   adminCreateUser = payload => {
     let { token, users } = this.state;
     return this.getAdapter()
@@ -169,7 +189,8 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
-  updateUser = (payload) => {
+
+  updateUser = payload => {
     let { token, users } = this.state;
     return this.getAdapter()
       .updateUser(token, payload)
@@ -185,7 +206,8 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
-  patchUser = (payload) => {
+
+  patchUser = payload => {
     let { token, users } = this.state;
     return this.getAdapter()
       .patchUser(token, payload)
@@ -201,6 +223,7 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
+
   deleteUser = id => {
     let { token, users } = this.state;
     return this.getAdapter()
@@ -211,6 +234,7 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
+
   getWhatsappAlerts = () => {
     let { token } = this.state;
     return this.getAdapter()
@@ -220,6 +244,7 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
+
   sendWhatsappAlert = payload => {
     let { token, alerts } = this.state;
     return this.getAdapter()
@@ -230,6 +255,7 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
+
   getContacts = token => {
     let { contacts = [] } = this.state;
     if (contacts.length > 0) {
@@ -244,6 +270,7 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
+
   getContact = id => {
     let { token } = this.state;
     return this.getAdapter()
@@ -252,22 +279,22 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
-  createUser = payload => {
+
+  createContact = payload => {
     let { token, contacts } = this.state;
     return this.getAdapter()
       .createContact(token, payload)
       .then(data => {
-        console.log(data);
         this.updateState({ contacts: [data, ...contacts] });
         return data;
       });
   };
-  updateContact = (payload) => {
+
+  updateContact = payload => {
     let { token, contacts } = this.state;
     return this.getAdapter()
       .updateContact(token, payload)
       .then(data => {
-        console.log(data);
         let result = contacts.map(contact => {
           if (contact.id === payload.id) {
             return data;
@@ -275,9 +302,10 @@ export class DataProvider extends React.Component {
           return contact;
         });
         this.updateState({ contacts: result });
-        return data;
+        return result;
       });
   };
+
   deleteContact = id => {
     let { token, contacts } = this.state;
     return this.getAdapter()
@@ -288,11 +316,21 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
+
   getWeatherForecastLogs = () => {
     let { token } = this.state;
     return this.getAdapter()
       .getWeatherForecastLogs(token)
       .then(data => data);
+  };
+
+  getCrops = token => {
+    return this.getAdapter()
+      .getCrops(token)
+      .then(data => {
+        this.updateState({ crops: data });
+        return data;
+      });
   };
 
   render() {
