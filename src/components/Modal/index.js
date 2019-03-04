@@ -102,10 +102,8 @@ export class Modal extends React.Component {
 }
 
 Modal.defaultProps = {
-  // heading: "Modal Heading",
   children: <Text>This is the default Modal content</Text>,
   isFullScreenOnMobile: true,
-  // size: "regular",
   bgColor: '#f5f6fa',
   closeIconColor: '#273444',
   showCloseIcon: false,

@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import adapter from './adapter';
 import { ACTIONS } from './actions';
 import { DataContext } from './context';
@@ -55,7 +56,7 @@ export class DataProvider extends React.Component {
   };
 
   initialize = tokens => {
-    let { profile, alerts, crops } = this.state;
+    let { profile, alerts, crops, contacts } = this.state;
     let { token, opus1_token } = tokens;
     if (Object.values(profile).length > 0) {
       return Promise(resolve => resolve({ profile }));
@@ -66,16 +67,20 @@ export class DataProvider extends React.Component {
     if (crops.length > 0) {
       return Promise(resolve => resolve({ crops }));
     }
+    if (contacts.length > 0) {
+      return Promise(resolve => resolve({ contacts }));
+    }
     return Promise.all([
       this.getProfile(opus1_token),
       this.getWhatsappAlerts(token),
       this.getCrops(opus1_token),
+      this.getContacts(token),
     ]).then(data => {
-      console.log(data[2]);
       return {
         profile: data[0],
         alerts: data[1],
         crops: data[2],
+        contacts: data[3],
       };
     });
   };
@@ -247,10 +252,19 @@ export class DataProvider extends React.Component {
 
   sendWhatsappAlert = payload => {
     let { token, alerts } = this.state;
+    let { phone_number, message, type } = payload;
     return this.getAdapter()
       .sendWhatsappAlert(token, payload)
       .then(data => {
-        let result = [data, ...alerts];
+        let result = [
+          ...alerts,
+          {
+            phone_number,
+            message,
+            type,
+            created_at: moment(new Date()).format(),
+          },
+        ];
         this.updateState({ alerts: result });
         return data;
       });

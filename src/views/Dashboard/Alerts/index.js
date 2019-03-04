@@ -16,26 +16,57 @@ class Alerts extends React.Component {
   state = {
     loading: false,
   };
-  sendWhatsappAlert = values => {
+  sendWhatsappAlert = (values, callback) => {
     const { dispatch, actions } = this.props;
+    const payload = { ...values, phone_number: values.phone_number[0] };
     this.setState({
       loading: true,
     });
-    dispatch({ type: actions.SEND_WHATSAPP_ALERT, values }).then(data => {
-      console.log(data);
+    dispatch({ type: actions.SEND_WHATSAPP_ALERT, value: payload }).then(() => {
       this.setState({
         loading: false,
       });
+      callback();
     });
   };
+  getAlertContacts = alert => {
+    const { contacts } = this.props;
+    let phone_number = alert.phone_number || alert.request_data.phone_number;
+    let contact = contacts.find(contact =>
+      contact.phone_numbers.includes(phone_number)
+    );
+    if (contact) {
+      return contact;
+    }
+    return {};
+  };
   render() {
-    const { alerts } = this.props;
+    const { alerts, contacts } = this.props;
     const { loading } = this.state;
+    const formatContacts = contacts.map(contact => ({
+      label: `${contact.first_name} ${contact.last_name}`,
+      value: contact.phone_numbers[0],
+    }));
+    const formatAlerts = alerts.map(alert => {
+      if(alert.request_data) {
+        return {
+          ...alert.request_data,
+          type: 'whatsapp',
+          to: this.getAlertContacts(alert),
+          created_at: alert.created_at,
+        }
+      }
+      return {
+        ...alert,
+        type: 'whatsapp',
+        to: this.getAlertContacts(alert),
+      }
+    });
     return (
       <div style={{ padding: '40px' }}>
         <Box className="row" mb="40px">
           <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
-            <SearchInput placeholder="Search messages" />
+            <SearchInput placeholder="Search messages" mb="8px" />
           </div>
           <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
             <ToggleModal>
@@ -63,6 +94,7 @@ class Alerts extends React.Component {
                               <ManualAlertForm
                                 onCancel={closeModal}
                                 isLoading={loading}
+                                contacts={formatContacts}
                                 onSubmit={this.sendWhatsappAlert}
                               />
                             </Box>
@@ -102,7 +134,7 @@ class Alerts extends React.Component {
         </Box>
         <Box>
           {alerts.length > 0 ? (
-            <AlertTables alerts={alerts} />
+            <AlertTables alerts={formatAlerts} />
           ) : (
             <EmptyState
               image={emptyStateImage}

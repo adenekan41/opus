@@ -14,6 +14,7 @@ const DatePickerContainer = styled.div`
   box-sizing: border-box;
   background-color: #ffffff;
   border-radius: 3px;
+  border: solid 0.5px rgba(18,18,18,0.11);
   ${props => (props.isInvalid ? 'border: solid 0.5px #f66262 ' : '')};
   ${props =>
     props.disabled &&

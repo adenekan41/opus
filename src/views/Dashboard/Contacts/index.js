@@ -4,7 +4,6 @@ import SearchInput from '../../../components/SearchInput';
 import EmptyState from '../../../components/EmptyState';
 import emptyStateImage from '../../../assets/img/empty-states/contacts.png';
 import CreateContactButton from './components/CreateContactButton';
-import { FullScreenSpinner } from '../../../components/Spinner';
 import { countries, getCitites } from '../../../helpers/countries';
 
 class Contacts extends React.Component {
@@ -12,37 +11,14 @@ class Contacts extends React.Component {
     super();
     this.state = {
       buttonLoading: false,
-      loading: false,
       cities: [],
     };
-  }
-
-  componentDidMount() {
-    this.getContacts();
   }
 
   getCountryCities = country => {
     this.setState({
       cities: getCitites(country.toLowerCase()),
     });
-  };
-
-  getContacts = () => {
-    const { dispatch, actions } = this.props;
-    this.setState({
-      loading: true,
-    });
-    dispatch({ type: actions.GET_CONTACTS })
-      .then(() => {
-        this.setState({
-          loading: false,
-        });
-      })
-      .catch(() => {
-        this.setState({
-          loading: false,
-        });
-      });
   };
 
   onContactCreate = (values, callback) => {
@@ -140,9 +116,7 @@ class Contacts extends React.Component {
               />
             </div>
           </div>
-          {loading ? (
-            <FullScreenSpinner />
-          ) : contacts.length > 0 ? (
+          {contacts.length > 0 ? (
             <ContactTable
               cities={cities}
               isAdmin={isAdmin}

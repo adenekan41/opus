@@ -83,6 +83,7 @@ const contact_columns = data => {
       id: 'actions',
       Cell: ({ original }) => (
         <TableActions
+          data={original}
           model="contact"
           isLoading={isLoading}
           onDelete={onContactDelete}
@@ -124,7 +125,7 @@ const ContactTable = ({
   onFetchData,
   onContactEdit,
   onContactDelete,
-  getCountryCities
+  getCountryCities,
 }) => {
   return (
     <Table
