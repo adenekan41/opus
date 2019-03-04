@@ -55,16 +55,16 @@ export class DataProvider extends React.Component {
     if (Object.values(profile).length > 0) {
       return Promise(resolve => resolve({ profile }));
     }
-    // if (alerts.length > 0) {
-    //   return Promise(resolve => resolve({ alerts }));
-    // }
+    if (alerts.length > 0) {
+      return Promise(resolve => resolve({ alerts }));
+    }
     return Promise.all([
       this.getProfile(token),
-      // this.getWhatsappAlerts(token),
+      this.getWhatsappAlerts(token),
     ]).then(data => {
       return {
         profile: data[0],
-        // alerts: data[1],
+        alerts: data[1],
       };
     });
   };

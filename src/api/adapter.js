@@ -35,7 +35,7 @@ export const makeApiCall = async ({
   }
 };
 const login = payload => {
-  return makeApiCall({ url: `/token/login/`, method: 'POST', data: payload });
+  return makeApiCall({ baseURL: BASE_URL_TWO, url: `/token/`, method: 'POST', data: payload });
 };
 
 const resetPassword = payload => {
