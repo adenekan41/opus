@@ -7,28 +7,103 @@ import ContactForm from './components/ContactForm';
 import { Icon } from '../../../components/Icon';
 import EmptyState from '../../../components/EmptyState';
 import emptyStateImage from '../../../assets/img/empty-states/contacts.png';
+import CreateContactButton from './components/CreateContactButton';
+import { FullScreenSpinner } from '../../../components/Spinner';
 
 class Contacts extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      isShowing: false,
-      header: 'Edit Contact',
-      userdata: null,
+      buttonLoading: false,
+      loading: false,
     };
   }
+  componentDidMount() {
+    this.getContacts();
+  }
 
-  onContactEdit = contact => {
-    console.log(contact);
+  getContacts = () => {
+    const { dispatch, actions } = this.props;
+    this.setState({
+      loading: true,
+    });
+    dispatch({ type: actions.GET_CONTACTS })
+      .then(data => {
+        console.log(data);
+        this.setState({
+          loading: false,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+        });
+      });
   };
 
-  onContactDelete = contact => {
-    console.log(contact);
+  onContactCreate = values => {
+    const { dispatch, actions } = this.props;
+    this.setState({
+      buttonLoading: true,
+    });
+    dispatch({ type: actions.CREATE_CONTACT, value: values })
+      .then(data => {
+        console.log(data);
+        this.setState({
+          buttonLoading: false,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          buttonLoading: false,
+        });
+      });
+  };
+
+  onContactEdit = (contact, callback) => {
+    const { dispatch, actions } = this.props;
+    this.setState({
+      buttonLoading: true,
+    });
+    dispatch({ type: actions.UPDATE_CONTACT, value: contact })
+      .then(data => {
+        console.log(data);
+        this.setState({
+          buttonLoading: false,
+        });
+        callback();
+      })
+      .catch(err => {
+        this.setState({
+          buttonLoading: false,
+        });
+      });
+  };
+
+  onContactDelete = (contact, callback) => {
+    const { dispatch, actions } = this.props;
+    this.setState({
+      buttonLoading: true,
+    });
+    dispatch({ type: actions.DELETE_CONTACT, value: contact.id })
+      .then(data => {
+        console.log(data);
+        this.setState({
+          buttonLoading: false,
+        });
+        callback();
+      })
+      .catch(err => {
+        this.setState({
+          buttonLoading: false,
+        });
+      });
   };
 
   render() {
     const { profile, contacts } = this.props;
+    let { buttonLoading, loading } = this.state;
     let isAdmin = profile.username === 'admin';
     return (
       <div>
@@ -38,31 +113,21 @@ class Contacts extends React.Component {
               <SearchInput placeholder="Search contacts" />
             </div>
             <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
-              <ToggleModal>
-                {(show, openModal, closeModal) => (
-                  <>
-                    <Button kind="green" block onClick={openModal}>
-                      <Icon name="add" color="#ffffff" />
-                      &nbsp;&nbsp;Add contact
-                    </Button>
-                    <Modal
-                      size="medium"
-                      showModal={show}
-                      onCloseModal={closeModal}
-                      heading={'Add Contact'}
-                    >
-                      <ContactForm isAdmin={isAdmin} onCancel={closeModal} />
-                    </Modal>
-                  </>
-                )}
-              </ToggleModal>
+              <CreateContactButton
+                isAdmin={isAdmin}
+                isLoading={buttonLoading}
+                onSubmit={this.onContactCreate}
+              />
             </div>
           </div>
-          {contacts.length > 0 ? (
+          {loading ? (
+            <FullScreenSpinner />
+          ) : contacts.length > 0 ? (
             <ContactTable
-              onContactDelete={this.onContactDelete}
-              onContactEdit={this.onContactEdit}
               contacts={contacts}
+              isLoading={buttonLoading}
+              onContactEdit={this.onContactEdit}
+              onContactDelete={this.onContactDelete}
             />
           ) : (
             <EmptyState
@@ -72,23 +137,11 @@ class Contacts extends React.Component {
               helpText="You haven’t added any contacts yet,
               click the button below to add a new one."
               renderButton={() => (
-                <ToggleModal>
-                  {(show, openModal, closeModal) => (
-                    <>
-                      <Button kind="green" block onClick={openModal}>
-                        Add contact
-                      </Button>
-                      <Modal
-                        size="medium"
-                        showModal={show}
-                        onCloseModal={closeModal}
-                        heading={'Add Contact'}
-                      >
-                        <ContactForm isAdmin={isAdmin} onCancel={closeModal} />
-                      </Modal>
-                    </>
-                  )}
-                </ToggleModal>
+                <CreateContactButton
+                  isAdmin={isAdmin}
+                  isLoading={buttonLoading}
+                  onSubmit={this.onContactCreate}
+                />
               )}
             />
           )}

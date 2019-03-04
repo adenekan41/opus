@@ -4,7 +4,7 @@ import Avatar from '../../../../components/Avatar';
 import TableActions from '../../../../components/Table/TableActions';
 import ContactForm from './ContactForm';
 
-const contact_columns = (onContactEdit, onContactDelete) => [
+const contact_columns = (onContactEdit, onContactDelete, isLoading) => [
   {
     Header: '',
     accessor: '',
@@ -72,14 +72,16 @@ const contact_columns = (onContactEdit, onContactDelete) => [
       <TableActions
         model="contact"
         data={original}
+        isLoading={isLoading}
         onEdit={onContactEdit}
         onDelete={onContactDelete}
         editModalHeading="Edit Contact"
         renderEditForm={({ data, onEdit, closeModal }) => (
           <ContactForm
             {...data}
-            onsubmit={onEdit}
+            onSubmit={onEdit}
             onCancel={closeModal}
+            isLoading={isLoading}
           />
         )}
       />
@@ -124,7 +126,6 @@ const ContactTable = ({
         },
       ]}
       onClickRow={onClickRow}
-      isLoading={isLoading}
       hasError={hasError}
       onRefresh={onRefresh}
       onPageChange={onPageChange}
@@ -137,7 +138,7 @@ const ContactTable = ({
       data={contacts}
       noDataText="No Contacts Added Yet"
       errorText="Oops! There was an issue fetching your contacts"
-      columns={contact_columns(onContactEdit, onContactDelete)}
+      columns={contact_columns(onContactEdit, onContactDelete, isLoading)}
     />
   );
 };

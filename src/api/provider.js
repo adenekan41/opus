@@ -55,16 +55,16 @@ export class DataProvider extends React.Component {
     if (Object.values(profile).length > 0) {
       return Promise(resolve => resolve({ profile }));
     }
-    if (alerts.length > 0) {
-      return Promise(resolve => resolve({ alerts }));
-    }
+    // if (alerts.length > 0) {
+    //   return Promise(resolve => resolve({ alerts }));
+    // }
     return Promise.all([
       this.getProfile(token),
-      this.getWhatsappAlerts(token),
+      // this.getWhatsappAlerts(token),
     ]).then(data => {
       return {
         profile: data[0],
-        alerts: data[1],
+        // alerts: data[1],
       };
     });
   };
@@ -81,6 +81,12 @@ export class DataProvider extends React.Component {
       [ACTIONS.DELETE_USER]: this.deleteUser,
       [ACTIONS.GET_WHATSAPP_ALERTS]: this.getWhatsappAlerts,
       [ACTIONS.SEND_WHATSAPP_ALERT]: this.sendWhatsappAlert,
+      [ACTIONS.GET_CONTACTS]: this.getContacts,
+      [ACTIONS.GET_CONTACT]: this.getContact,
+      [ACTIONS.CREATE_CONTACT]: this.createContact,
+      [ACTIONS.UPDATE_CONTACT]: this.updateContact,
+      [ACTIONS.DELETE_CONTACT]: this.deleteContact,
+      [ACTIONS.GET_WEATHER_FORECAST_LOGS]: this.getWeatherForecastLogs,
     };
     console.log({ type });
     return options[type](value);
@@ -163,14 +169,14 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
-  updateUser = (id, payload) => {
+  updateUser = (payload) => {
     let { token, users } = this.state;
     return this.getAdapter()
-      .updateUser(token, id, payload)
+      .updateUser(token, payload)
       .then(data => {
         console.log(data);
         let result = users.map(user => {
-          if (user.id === id) {
+          if (user.id === payload.id) {
             return data;
           }
           return user;
@@ -179,14 +185,14 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
-  patchUser = (id, payload) => {
+  patchUser = (payload) => {
     let { token, users } = this.state;
     return this.getAdapter()
-      .patchUser(token, id, payload)
+      .patchUser(token, payload)
       .then(data => {
         console.log(data);
         let result = users.map(user => {
-          if (user.id === id) {
+          if (user.id === payload.id) {
             return data;
           }
           return user;
@@ -223,6 +229,70 @@ export class DataProvider extends React.Component {
         this.updateState({ alerts: result });
         return data;
       });
+  };
+  getContacts = token => {
+    let { contacts = [] } = this.state;
+    if (contacts.length > 0) {
+      return new Promise(resolve => resolve(contacts));
+    }
+    return this.getAdapter()
+      .getContacts(token)
+      .then(data => {
+        this.updateState({
+          contacts: data,
+        });
+        return data;
+      });
+  };
+  getContact = id => {
+    let { token } = this.state;
+    return this.getAdapter()
+      .getContact(token, id)
+      .then(data => {
+        return data;
+      });
+  };
+  createUser = payload => {
+    let { token, contacts } = this.state;
+    return this.getAdapter()
+      .createContact(token, payload)
+      .then(data => {
+        console.log(data);
+        this.updateState({ contacts: [data, ...contacts] });
+        return data;
+      });
+  };
+  updateContact = (payload) => {
+    let { token, contacts } = this.state;
+    return this.getAdapter()
+      .updateContact(token, payload)
+      .then(data => {
+        console.log(data);
+        let result = contacts.map(contact => {
+          if (contact.id === payload.id) {
+            return data;
+          }
+          return contact;
+        });
+        this.updateState({ contacts: result });
+        return data;
+      });
+  };
+  deleteContact = id => {
+    let { token, contacts } = this.state;
+    return this.getAdapter()
+      .deleteContact(token, id)
+      .then(data => {
+        let result = contacts.filter(user => user.id !== id);
+        this.updateState({ contacts: result });
+        return data;
+      });
+  };
+  getWeatherForecastLogs = () => {
+    let { token } = this.state;
+    return this.getAdapter()
+      .getWeatherForecastLogs(token)
+      .then(data => data);
   };
 
   render() {

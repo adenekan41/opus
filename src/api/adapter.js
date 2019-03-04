@@ -35,7 +35,19 @@ export const makeApiCall = async ({
   }
 };
 const login = payload => {
-  return makeApiCall({ baseURL: BASE_URL_TWO, url: `/token/`, method: 'POST', data: payload });
+  return makeApiCall({
+    url: `/token/login/`,
+    method: 'POST',
+    data: payload,
+  });
+};
+const login2 = payload => {
+  return makeApiCall({
+    baseURL: BASE_URL_TWO,
+    url: `/token/`,
+    method: 'POST',
+    data: payload,
+  });
 };
 
 const resetPassword = payload => {
@@ -75,18 +87,18 @@ const adminCreateUser = (token, payload) => {
   });
 };
 
-const patchUser = (token, id, payload) => {
+const patchUser = (token, payload) => {
   return makeApiCall({
-    url: `/users/${id}/`,
+    url: `/users/${payload.id}/`,
     method: 'PATCH',
     token,
     data: payload,
   });
 };
 
-const updateUser = (token, id, payload) => {
+const updateUser = (token, payload) => {
   return makeApiCall({
-    url: `/users/${id}/`,
+    url: `/users/${payload.id}/`,
     method: 'PUT',
     token,
     data: payload,
@@ -97,18 +109,68 @@ const deleteUser = (token, id) => {
   return makeApiCall({ url: `/users/${id}`, method: 'DELETE', token });
 };
 
+const getContacts = token => {
+  return makeApiCall({ url: `/contacts/`, token, baseURL: BASE_URL_TWO });
+};
+
+const getContact = (token, id) => {
+  return makeApiCall({ url: `/contacts/${id}`, token, baseURL: BASE_URL_TWO });
+};
+
+const createContact = (token, payload) => {
+  return makeApiCall({
+    url: `/contacts/`,
+    method: 'POST',
+    token,
+    data: payload,
+    baseURL: BASE_URL_TWO,
+  });
+};
+
+const updateContact = (token, payload) => {
+  return makeApiCall({
+    url: `/contacts/${payload.id}/`,
+    method: 'PUT',
+    token,
+    data: payload,
+  });
+};
+
+const deleteContact = (token, id) => {
+  return makeApiCall({
+    url: `/contacts/${id}`,
+    method: 'DELETE',
+    token,
+    baseURL: BASE_URL_TWO,
+  });
+};
+
 const getProfile = token => {
   return makeApiCall({ url: `/users/me/`, token });
 };
 
 const getWhatsappAlerts = token => {
-  return makeApiCall({ baseURL: BASE_URL_TWO, url: '/whatsapp', token });
+  return makeApiCall({ baseURL: BASE_URL_TWO, url: '/whatsapp/', token });
 };
 
 const sendWhatsappAlert = (token, payload) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
-    url: '/whatsapp',
+    url: '/whatsapp/',
+    token,
+    method: 'POST',
+    data: payload,
+  });
+};
+
+const getWeatherForecastLogs = token => {
+  return makeApiCall({ baseURL: BASE_URL_TWO, url: '/earthnetworks/', token });
+};
+
+const getWeatherForecast = (token, payload) => {
+  return makeApiCall({
+    baseURL: BASE_URL_TWO,
+    url: '/earthnetworks/',
     token,
     method: 'POST',
     data: payload,
@@ -126,7 +188,14 @@ export default {
   deleteUser,
   newPassword,
   resetPassword,
+  getContacts,
+  getContact,
+  createContact,
+  updateContact,
+  deleteContact,
   adminCreateUser,
   getWhatsappAlerts,
   sendWhatsappAlert,
+  getWeatherForecast,
+  getWeatherForecastLogs,
 };

@@ -15,7 +15,7 @@ const DashboardRoutes = ({ token, ...rest }) => {
   return (
     <DataProvider token={token} history={rest.history}>
       <DataContext.Consumer>
-        {({ state, dispatch }) =>
+        {({ state, dispatch, actions }) =>
           state.fetching ? (
             <FullScreenSpinner />
           ) : (
@@ -26,34 +26,34 @@ const DashboardRoutes = ({ token, ...rest }) => {
             >
               <Switch>
                 <Route path="/dashboard/stats" render={() => (
-                  <Home  {...rest} {...{ ...state, dispatch }}/>
+                  <Home  {...rest} {...{ ...state, dispatch, actions }}/>
                 )}/>
                 <Route
                   path="/dashboard/weather-forecast"
                   render={() => (
-                    <Forecast {...rest} {...{ ...state, dispatch }} />
+                    <Forecast {...rest} {...{ ...state, dispatch, actions, }} />
                   )}
                 />
                 <Route
                   path="/dashboard/contacts"
                   render={() => (
-                    <Contacts {...rest} {...{ ...state, dispatch }} />
+                    <Contacts {...rest} {...{ ...state, dispatch, actions }} />
                   )}
                 />
                 <Route
                   path="/dashboard/alerts"
                   render={() => (
-                    <Alerts {...rest} {...{ ...state, dispatch }} />
+                    <Alerts {...rest} {...{ ...state, dispatch, actions }} />
                   )}
                 />
                 <Route
                   path="/dashboard/team"
-                  render={() => <Teams {...rest} {...{ ...state, dispatch }} />}
+                  render={() => <Teams {...rest} {...{ ...state, dispatch, actions }} />}
                 />
                 <Route
                   path="/dashboard/profile/"
                   render={() => (
-                    <Account {...rest} {...{ ...state, dispatch }} />
+                    <Account {...rest} {...{ ...state, dispatch, actions }} />
                   )}
                 />
               </Switch>

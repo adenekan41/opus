@@ -38,9 +38,10 @@ const ContactForm = ({
   language,
   customer,
   onCancel,
+  isLoading,
 }) => (
   <Formik
-    onSubmit={values => onSubmit(values)}
+    onSubmit={values => onSubmit(values, onCancel)}
     validationSchema={contactFormValidation}
     initialValues={{
       first_name: first_name || '',
@@ -113,7 +114,7 @@ const ContactForm = ({
                     label="Crop managed"
                     touched={touched.crop}
                     value={values.crop}
-                    options={[{value: 'Cashew',label: 'Cashew'}]}
+                    options={[{ value: 'Cashew', label: 'Cashew' }]}
                     errorMessage={errors.crop}
                     isInvalid={errors.crop && touched.crop}
                     onChange={crop => form.setFieldValue('crop', crop)}
@@ -134,7 +135,7 @@ const ContactForm = ({
                     label="Country"
                     touched={touched.country}
                     value={values.country}
-                    options={[{value: 'Ethiopia',label: 'Ethiopia'}]}
+                    options={[{ value: 'Ethiopia', label: 'Ethiopia' }]}
                     errorMessage={errors.country}
                     isInvalid={errors.country && touched.country}
                     onChange={country => form.setFieldValue('country', country)}
@@ -153,7 +154,7 @@ const ContactForm = ({
                     label="City"
                     touched={touched.city}
                     value={values.city}
-                    options={[{value: 'Addis Ababa',label: 'Addis Ababa'}]}
+                    options={[{ value: 'Addis Ababa', label: 'Addis Ababa' }]}
                     errorMessage={errors.city}
                     isInvalid={errors.city && touched.city}
                     onChange={city => form.setFieldValue('city', city)}
@@ -215,7 +216,7 @@ const ContactForm = ({
                       label="Customer"
                       touched={touched.customer}
                       value={values.customer}
-                      options={[{value: 'Daniel Wass',label: 'Daniel Wass'}]}
+                      options={[{ value: 'Daniel Wass', label: 'Daniel Wass' }]}
                       errorMessage={errors.customer}
                       isInvalid={errors.customer && touched.customer}
                       onChange={customer =>
@@ -247,7 +248,7 @@ const ContactForm = ({
             </Button>
           </div>
           <div className="col-md-6">
-            <Button kind="orange" block>
+            <Button kind="orange" block isLoading={isLoading}>
               Save
             </Button>
           </div>
