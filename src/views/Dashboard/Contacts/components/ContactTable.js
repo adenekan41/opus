@@ -4,90 +4,114 @@ import Avatar from '../../../../components/Avatar';
 import TableActions from '../../../../components/Table/TableActions';
 import ContactForm from './ContactForm';
 
-const contact_columns = (onContactEdit, onContactDelete) => [
-  {
-    Header: '',
-    accessor: '',
-    id: 'contact_initals',
-    Cell: ({ original: { first_name, last_name } }) => {
-      return (
-        <Avatar
-          isRound
-          size="38px"
-          photo_url=""
-          color="#ff9901"
-          bgColor="rgba(255,153,1,.15)"
-          initial={`${first_name[0]}${last_name[0]}`}
-        />
-      );
-    },
-  },
-  {
-    Header: 'First Name',
-    accessor: 'first_name',
-    id: 'first_name',
-  },
-  {
-    Header: 'Middle Name',
-    accessor: 'middle_name',
-    id: 'middle_name',
-  },
-  {
-    Header: 'Last Name',
-    accessor: 'last_name',
-    id: 'last_name',
-  },
-  {
-    Header: 'Location',
-    id: 'location',
-    Cell: ({ original }) => (
-      <span>{original.city}, {original.country}</span>
-    ),
-  },
-  {
-    Header: 'Crop',
-    accessor: 'crop',
-    id: 'crop',
-  },
-  {
-    Header: 'Phone',
-    accessor: 'phone_number',
-    id: 'phone_number',
-  },
-  {
-    Header: 'Customer',
-    accessor: 'customer',
-    id: 'customer',
-  },
-  {
-    Header: 'Language',
-    accessor: 'language',
-    id: 'language',
-  },
-  {
-    Header: '',
-    accessor: '',
-    id: 'actions',
-    Cell: ({ original }) => (
-      <TableActions
-        model="contact"
-        data={original}
-        onEdit={onContactEdit}
-        onDelete={onContactDelete}
-        editModalHeading="Edit Contact"
-        renderEditForm={({ data, onEdit, closeModal }) => (
-          <ContactForm
-            {...data}
-            onsubmit={onEdit}
-            onCancel={closeModal}
+const contact_columns = data => {
+  let {
+    onContactEdit,
+    onContactDelete,
+    isLoading,
+    crops,
+    countries,
+    cities,
+    isAdmin,
+    getCountryCities,
+  } = data;
+  return [
+    {
+      Header: '',
+      accessor: '',
+      id: 'contact_initals',
+      Cell: ({ original: { first_name, last_name } }) => {
+        return (
+          <Avatar
+            isRound
+            size="38px"
+            photo_url=""
+            color="#ff9901"
+            bgColor="rgba(255,153,1,.15)"
+            initial={`${first_name[0]}${last_name[0]}`}
           />
-        )}
-      />
-    ),
-  },
-];
+        );
+      },
+    },
+    {
+      Header: 'First Name',
+      accessor: 'first_name',
+      id: 'first_name',
+    },
+    {
+      Header: 'Middle Name',
+      accessor: 'middle_name',
+      id: 'middle_name',
+    },
+    {
+      Header: 'Last Name',
+      accessor: 'last_name',
+      id: 'last_name',
+    },
+    {
+      Header: 'Location',
+      id: 'location',
+      Cell: ({ original }) => (
+        <span>
+          {original.city}, {original.country}
+        </span>
+      ),
+    },
+    {
+      Header: 'Crop',
+      accessor: 'crop_managed',
+      id: 'crop_managed',
+    },
+    {
+      Header: 'Phone',
+      id: 'phone_number',
+      Cell: ({ original }) => <span>{original.phone_numbers[0]}</span>,
+    },
+    {
+      Header: 'Customer',
+      accessor: 'customer',
+      id: 'customer',
+    },
+    {
+      Header: 'Language',
+      accessor: 'language',
+      id: 'language',
+    },
+    {
+      Header: '',
+      accessor: '',
+      id: 'actions',
+      Cell: ({ original }) => (
+        <TableActions
+          data={original}
+          model="contact"
+          isLoading={isLoading}
+          onDelete={onContactDelete}
+          editModalHeading="Edit Contact"
+          renderEditForm={({ closeModal }) => (
+            <ContactForm
+              {...original}
+              crops={crops}
+              cities={cities}
+              onSubmit={onContactEdit}
+              isAdmin={isAdmin}
+              countries={countries}
+              onCancel={closeModal}
+              isLoading={isLoading}
+              getCountryCities={getCountryCities}
+            />
+          )}
+        />
+      ),
+    },
+  ];
+};
 
 const ContactTable = ({
+  crops,
+  countries,
+  cities,
+  isAdmin,
   isLoading,
   pageSize,
   currentPage,
@@ -101,6 +125,7 @@ const ContactTable = ({
   onFetchData,
   onContactEdit,
   onContactDelete,
+  getCountryCities,
 }) => {
   return (
     <Table
@@ -111,12 +136,20 @@ const ContactTable = ({
           value: 80,
         },
         {
+          id: 'middle_name',
+          value: 120,
+        },
+        {
           id: 'location',
-          value: 200,
+          value: 150,
         },
         {
           id: 'language',
           value: 100,
+        },
+        {
+          id: 'phone_number',
+          value: 150,
         },
         {
           id: 'actions',
@@ -124,7 +157,6 @@ const ContactTable = ({
         },
       ]}
       onClickRow={onClickRow}
-      isLoading={isLoading}
       hasError={hasError}
       onRefresh={onRefresh}
       onPageChange={onPageChange}
@@ -137,124 +169,18 @@ const ContactTable = ({
       data={contacts}
       noDataText="No Contacts Added Yet"
       errorText="Oops! There was an issue fetching your contacts"
-      columns={contact_columns(onContactEdit, onContactDelete)}
+      columns={contact_columns({
+        onContactEdit,
+        onContactDelete,
+        getCountryCities,
+        isLoading,
+        crops,
+        countries,
+        cities,
+        isAdmin,
+      })}
     />
   );
 };
 
 export default ContactTable;
-
-ContactTable.defaultProps = {
-  contacts: [
-    {
-      first_name: 'Jessica',
-      middle_name: 'Amanda',
-      last_name: 'Jones',
-      crop: 'Cashew',
-      country: 'Ethiopia',
-      city: 'Addis Ababa',
-      phone_number: '0912345672',
-      customer: 'Daniel Wass',
-      language: 'English',
-    },
-     {
-      first_name: 'Jessica',
-      middle_name: 'Amanda',
-      last_name: 'Jones',
-      crop: 'Cashew',
-      country: 'Ethiopia',
-      city: 'Addis Ababa',
-      phone_number: '0912345672',
-      customer: 'Daniel Wass',
-      language: 'English',
-    },
-     {
-      first_name: 'Jessica',
-      middle_name: 'Amanda',
-      last_name: 'Jones',
-      crop: 'Cashew',
-      country: 'Ethiopia',
-      city: 'Addis Ababa',
-      phone_number: '0912345672',
-      customer: 'Daniel Wass',
-      language: 'English',
-    },
-     {
-      first_name: 'Jessica',
-      middle_name: 'Amanda',
-      last_name: 'Jones',
-      crop: 'Cashew',
-      country: 'Ethiopia',
-      city: 'Addis Ababa',
-      phone_number: '0912345672',
-      customer: 'Daniel Wass',
-      language: 'English',
-    },
-     {
-      first_name: 'Jessica',
-      middle_name: 'Amanda',
-      last_name: 'Jones',
-      crop: 'Cashew',
-      country: 'Ethiopia',
-      city: 'Addis Ababa',
-      phone_number: '0912345672',
-      customer: 'Daniel Wass',
-      language: 'English',
-    },
-     {
-      first_name: 'Jessica',
-      middle_name: 'Amanda',
-      last_name: 'Jones',
-      crop: 'Cashew',
-      country: 'Ethiopia',
-      city: 'Addis Ababa',
-      phone_number: '0912345672',
-      customer: 'Daniel Wass',
-      language: 'English',
-    },
-     {
-      first_name: 'Jessica',
-      middle_name: 'Amanda',
-      last_name: 'Jones',
-      crop: 'Cashew',
-      country: 'Ethiopia',
-      city: 'Addis Ababa',
-      phone_number: '0912345672',
-      customer: 'Daniel Wass',
-      language: 'English',
-    },
-     {
-      first_name: 'Jessica',
-      middle_name: 'Amanda',
-      last_name: 'Jones',
-      crop: 'Cashew',
-      country: 'Ethiopia',
-      city: 'Addis Ababa',
-      phone_number: '0912345672',
-      customer: 'Daniel Wass',
-      language: 'English',
-    },
-    {
-      first_name: 'Jessica',
-      middle_name: 'Amanda',
-      last_name: 'Jones',
-      crop: 'Cashew',
-      country: 'Ethiopia',
-      city: 'Addis Ababa',
-      phone_number: '0912345672',
-      customer: 'Daniel Wass',
-      language: 'English',
-    },
-    {
-      first_name: 'Jessica',
-      middle_name: 'Amanda',
-      last_name: 'Jones',
-      crop: 'Cashew',
-      country: 'Ethiopia',
-      city: 'Addis Ababa',
-      phone_number: '0912345672',
-      customer: 'Daniel Wass',
-      language: 'English',
-    },
-  ],
-};

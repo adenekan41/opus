@@ -1,15 +1,15 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-// import Footer from './Footer';
 import Login from '../../views/Auth/Login/login';
 import Recover from '../../views/Auth/Recover/Recover';
 import DashboardRoutes from '../../shared/Layout/DashboardLayout/routes';
 import AdminDashboardRoutes from '../../shared/Layout/AdminLayout/routes';
 import { ProtectedRoute } from '../../components/Route';
 const PrimaryLayout = ({
-  isLoggedIn,
   token,
   onLogin,
+  isLoggedIn,
+  opus1_token,
   clearAllState,
   onResetPassword,
 }) => (
@@ -33,6 +33,7 @@ const PrimaryLayout = ({
           <DashboardRoutes
             {...props}
             token={token}
+            opus1_token={opus1_token}
             clearAllState={clearAllState}
           />
         )}
