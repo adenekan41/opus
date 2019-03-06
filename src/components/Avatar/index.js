@@ -73,6 +73,7 @@ const StyledAvatar = styled.div`
   align-items: center;
   flex-shrink: 0;
   justify-content: center;
+  text-transform: uppercase;
   font-weight: bold;
   background-color: ${props => props.bgColor};
   background-position: center;
