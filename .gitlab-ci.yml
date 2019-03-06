@@ -1,0 +1,16 @@
+image: ubuntu:16.04
+
+stages:
+  - deploy
+  build_image_dev:
+  image: docker:latest
+  only:
+    - master
+  services:
+    - docker:dind
+  stage: deploy
+  script:
+    - docker login $DOCKER_AZURE_REGISTRY_IMAGE -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker build -t $DOCKER_REGISTRY_IMAGE .
+    - docker tag $(docker images $DOCKER_REGISTRY_IMAGE -q) $DOCKER_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
+    - docker push $DOCKER_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
