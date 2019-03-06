@@ -34,6 +34,7 @@ const StyledTable = styled.div`
     border-bottom: none !important;
     ${props => props.tableHeadCSS};
   }
+  ${sharedProps};
 `;
 
 const Table = ({
@@ -57,7 +58,7 @@ const Table = ({
   ...rest
 }) => {
   return (
-    <StyledTable {...{ tableRowCSS, tableHeadCSS, tableWrapperCSS }}>
+    <StyledTable {...{ tableRowCSS, tableHeadCSS, tableWrapperCSS, ...rest }}>
       <div className="Table__Wrapper">
         <ReactTable
           style={{

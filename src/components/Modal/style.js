@@ -1,96 +1,173 @@
-import styled from 'styled-components';
+import ReactModal from 'react-modal';
+import styled, { css, createGlobalStyle } from 'styled-components';
 
-export const ModalStyleLayout = styled.div`
-  .modal-wrapper {
-    z-index: 999999999999999999999999 !important;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: block !important;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    outline: 0;
-  }
-  .modal-content {
-    border: none !important;
-    border-radius: 5px;
-    background-color: #f5f6fa !important;
-  }
-  .modal-body {
-    padding: 1.5rem 3rem;
-  }
-  .modal-footers button {
-    padding: 8px;
-    border-radius: 3px !important;
-    border: none !important;
-  }
+export const breakpoints = {
+  small_mobile: '360px',
+  mobile: '480px',
+  tablet: '768px',
+  large_tablet: '992px',
+  desktop: '1200px',
+  large_desktop: '1440px',
+};
 
-  .modal-header {
-    -webkit-justify-content: center !important;
-    justify-content: center !important;
-    padding: 3rem 0rem 0rem 0rem !important;
-    border-bottom: none !important;
-    border-top-left-radius: 0.3rem;
-    border-top-right-radius: 0.3rem;
-    h4 {
-      font-size: 22px;
-      font-weight: 900;
-      font-style: normal;
-      font-stretch: normal;
-      line-height: normal;
-      letter-spacing: 0.3px;
-      text-align: center;
-      color: #242424;
+export const GlobalStyle = createGlobalStyle`
+
+.ReactModal__Body--open{
+  overflow: hidden;
+}
+
+.ReactModalPortal{
+  & .ReactModal__Content {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity .3s ease-in-out, transform .6s cubic-bezier(0,0,0,1);
+    
+    &--after-open {
+      transform: scale(1);
+      opacity: 1;
+    }
+    
+    &--before-close {
+      transform: scale(1);
+      opacity: 0;
     }
   }
-  .modal-lg {
-    max-width: 729px !important;
+  
+  & .ReactModal__Overlay {
+    opacity: 0;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.6) !important;
+    transition: opacity 200ms ease-in-out;
+    padding: 40px 0;
+    z-index: 999999999999;
+
+    &--after-open {
+      opacity: 1;
+    }
+
+    &--before-close {
+      opacity: 0;
+    }
+
   }
 
-  .back-drop {
-    background-color: rgba(48, 49, 48, 0.42);
-    height: 100%;
-    position: fixed;
-    transition: all 1.3s;
-    left: 0;
-    width: 100%;
-    z-index: 99;
-    top: 0;
-    right: 0;
-    bottom: 0;
-  }
-  .div_input label {
-    margin-bottom: 0;
-    color: #252b33;
-    margin-left: 1rem;
-    font-size: 13px;
-    margin-top: 0.5rem;
-    opacity: 0.5;
-  }
-  .div_input input {
-    border: none;
-    color: #000000;
+  .confirm{
+    &__btn-group {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
 
-    box-shadow: none !important;
-    padding: 6px 17px !important;
+      &__primary-btn {
+        margin-left: 16px;
+      }
+    }
+  }  
+}
+`;
+
+export const modalSize = {
+  big: '800px',
+  medium: '640px',
+  default: '560px',
+  small: '480px',
+};
+
+const fullWidthModal = `
+  border-radius: 0;
+    max-width: 100%;
+    height: 100vh;
+    margin: -40px 0;
+`;
+
+export const StyledModal = styled(ReactModal)`
+  background: ${props => props.bgColor};
+  position: relative;
+  top: 10%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: none;
+  overflow: ${props => props.overflow || 'auto'};
+  margin: 0 auto;
+  max-width: ${props => modalSize[props.size || 'default']};
+
+  @media screen and (min-width: ${breakpoints.mobile}) {
+    border-radius: 4px;
   }
 
-  .div_input {
-    padding: 1px;
-    background: #fff;
-    margin-bottom: 3%;
-    box-shadow: 0 10px 14px -4px rgba(70, 70, 70, 0.06);
-    border-top: 1px solid #e9e9e9 !important;
+  &:focus {
+    outline: none;
   }
-  .div_input:hover {
-    border-left: 3px solid #19272d !important;
+
+  ${props =>
+    props.isFullScreenOnMobile &&
+    css`
+      @media (max-width: ${breakpoints.mobile}) {
+        ${fullWidthModal};
+      }
+    `};
+
+  ${props =>
+    props.isFullScreen &&
+    `
+      ${fullWidthModal}
+  `};
+
+  & .Modal__Header {
+    display: flex;
+    align-items: center;
+    flex-flow: row nowrap;
+    height: 60px;
+    padding: 0 32px !important;
+    padding-top: 48px !important;
+    padding-bottom: 24px !important;
+
+    position: relative;
+
+    ${props => props.headingCSS};
+
+    &__title {
+      flex: 1;
+      font-size: 20px;
+    }
+
+    &__close-btn {
+      border-radius: 100%;
+      padding: 8px;
+      position: absolute;
+      right: 24px;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      &:focus {
+        outline: 0;
+      }
+
+      ${props =>
+        (props.isFullScreen || !props.removeHeading) &&
+        css`
+          position: absolute;
+          z-index: 200;
+          right: 24px;
+          top: 24px;
+        `};
+
+      ${props =>
+        !props.showCloseIcon &&
+        css`
+          display: none;
+        `};
+    }
   }
-  .open-modal-btn {
-    margin: 15px;
-    padding: 10px;
-    font-weight: bold;
-  }
+
+  ${props =>
+    !props.isFullScreen &&
+    css`
+      & .Modal__Body {
+        padding: 16px 32px 32px;
+        padding-top: 0;
+      }
+    `};
 `;

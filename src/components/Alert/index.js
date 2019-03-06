@@ -1,55 +1,56 @@
 import React from 'react';
 import styled from 'styled-components';
-
-
+import moment from 'moment';
 import { Icon } from '../Icon';
 import Button from '../Button';
 import { Spinner } from '../Spinner';
 
-
 const StyledTable = styled.div`
-.alert__card{
-  border-radius:2px !important;
-  border:none;
-  .alert__message{
-    font-size: 16px !important;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: 0.2px;
-  color: #707070 !important;
-  }
-  p{
+  .alert__card {
+    border-radius: 2px !important;
+    border: none;
+    .alert__message {
+      font-size: 16px !important;
+      font-weight: normal;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: 0.2px;
+      color: #707070 !important;
+    }
+    .alert__type {
+      span {
+        text-transform: capitalize;
+      }
+    }
+    p {
       font-size: 15px;
-    
-    font-style: normal;
-    font-stretch: normal;
-    line-height: normal;
-    letter-spacing: 0.2px;
-    color: #242424;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: 0.2px;
+      color: #242424;
+    }
+    h4 {
+      font-size: 18px;
+      font-weight: 900;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: 0.3px;
+      color: #242424;
+      b {
+        font-size: 15px !important;
+        font-weight: 500 !important;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: 0.2px;
+        float: right;
+        color: #8c8c8c;
+      }
+    }
   }
-  h4 {
-    font-size: 18px;
-  font-weight: 900;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: 0.3px;
-  color: #242424;
-  b{
-
-  font-size: 15px !important;
-  font-weight: 500 !important; 
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: 0.2px;
-  float: right;
-  color:#8c8c8c;
-  }
-  }
-}
 `;
 
 const Alert = ({
@@ -70,14 +71,13 @@ const Alert = ({
   ...rest
 }) => {
   return (
-    <StyledTable {...{  }}>
+    <StyledTable {...{}}>
       <div className="Table__Wrapper">
-       <div className="Table"
-         
+        <div
+          className="Table"
           loading={isLoading}
           columns={columns}
           resizable={false}
-         
           pages={totalPages}
           page={currentPage}
           pageSize={pageSize}
@@ -87,23 +87,29 @@ const Alert = ({
           }
           onPageSizeChange={onPageSizeChange}
           showPagination={showPagination}
-          //   PaginationComponent={props => {
-          //     console.log(props);
-          //     return <div />;
-          //   }}
-          {...rest}>
-         {data.map((alert, i) => (
+          {...rest}
+        >
+          {data.map((alert, i) => (
             <div className="alert__card card mb-2" key={i.toString()}>
               <div className="card-body">
-                <h4>{alert.title} <b className="alert__date">{alert.date}</b></h4>
-                <p><b>Type</b>:{alert.type}</p>
-                <p><b>To</b>: {alert.to}</p>
+                <h4>
+                  {alert.subject}{' '}
+                  <b className="alert__date">
+                    {moment(alert.created_at).format('hh:mm a - MMM DD, YYYY')}
+                  </b>
+                </h4>
+                <p className="alert__type">
+                  <b>Type</b>: <span>{alert.type}</span>
+                </p>
+                <p>
+                  <b>To</b>: <span>{alert.to.first_name} {alert.to.last_name}</span>
+                </p>
                 <hr />
                 <p className="alert__message">{alert.message}</p>
               </div>
             </div>
           ))}
-       </div>
+        </div>
         {hasError && (
           <ErrorOverlay onRefresh={onRefresh}>{errorText}</ErrorOverlay>
         )}

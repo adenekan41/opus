@@ -10,8 +10,8 @@ import Button from '../../../../components/Button';
 const manualAlertFormValidation = yup.object().shape({
   subject: yup.string().required('Subject is required'),
   message: yup.string().required('Message is required'),
-  recipients: yup.object().required('Recipients is required'),
-  type: yup.object().required('Message type is required'),
+  phone_number: yup.array().required('Recipients is required'),
+  type: yup.string().required('Message type is required'),
 });
 
 const ManualAlertForm = ({
@@ -19,17 +19,18 @@ const ManualAlertForm = ({
   onCancel,
   subject,
   type,
-  recipients,
+  phone_number,
   message,
   isLoading,
+  contacts,
 }) => (
   <Formik
-    onSubmit={values => onSubmit(values)}
+    onSubmit={values => onSubmit(values, onCancel)}
     initialValues={{
       subject: subject || '',
       type: type || 'whatsapp',
       message: message || '',
-      recipients: recipients || '',
+      phone_number: phone_number || '',
     }}
     validationSchema={manualAlertFormValidation}
   >
@@ -61,8 +62,7 @@ const ManualAlertForm = ({
                   label="Message type"
                   options={[{ value: 'whatsapp', label: 'Whatsapp' }]}
                   touched={touched.type}
-                  value={values.type}
-                  onChange={type => form.setFieldValue('type', type)}
+                  onChange={type => form.setFieldValue('type', type.value)}
                   errorMessage={errors.type}
                   isInvalid={errors.type && touched.type}
                 />
@@ -73,23 +73,22 @@ const ManualAlertForm = ({
         <div className="row">
           <div className="col-md-12">
             <Field
-              name="recipients"
+              name="phone_number"
               render={({ form, field }) => (
                 <Dropdown
                   {...field}
                   isMulti
                   mb="20px"
-                  id="recipients"
-                  name="recipients"
+                  id="phone_number"
+                  name="phone_number"
                   label="Recipients"
-                  options={[]}
-                  touched={touched.recipients}
-                  value={values.recipients}
-                  onChange={recipients =>
-                    form.setFieldValue('recipients', recipients)
-                  }
-                  errorMessage={errors.recipients}
-                  isInvalid={errors.recipients && touched.recipients}
+                  options={contacts}
+                  touched={touched.phone_number}
+                  errorMessage={errors.phone_number}
+                  onChange={recipients => {
+                    form.setFieldValue('phone_number', recipients.map(recipient => recipient.value));
+                  }}
+                  isInvalid={errors.phone_number && touched.phone_number}
                 />
               )}
             />
@@ -98,6 +97,7 @@ const ManualAlertForm = ({
         <div className="row">
           <div className="col-md-12">
             <TextArea
+              rows={5}
               id="message"
               placeholder="Message"
               name="message"
@@ -110,12 +110,12 @@ const ManualAlertForm = ({
         </div>
         <Box className="row" mt="24px">
           <div className="col-md-6">
-            <Button kind="gray" block onClick={onCancel} type="button">
+            <Button kind="gray" block onClick={onCancel} type="button" mb="8px">
               Cancel
             </Button>
           </div>
           <div className="col-md-6">
-            <Button kind="orange" block isLoading={isLoading}>
+            <Button kind="orange" block isLoading={isLoading} mb="8px">
               Save
             </Button>
           </div>
