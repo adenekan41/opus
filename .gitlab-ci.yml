@@ -2,7 +2,8 @@ image: ubuntu:16.04
 
 stages:
   - deploy
-  build_image_dev:
+ 
+build_image_dev:
   image: docker:latest
   only:
     - master
