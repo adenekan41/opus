@@ -13,6 +13,8 @@ RUN npm install
 ADD src /usr/src/app/src
 ADD public /usr/src/app/public
 
+RUN npm install webpack@4.19.1 
+
 RUN npm run build
 
 CMD ["npm", "start"]
