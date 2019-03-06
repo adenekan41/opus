@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment } from 'react';
 
 export class ToggleHandler extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: true
+      isOpen: true,
     };
   }
 
@@ -18,19 +18,19 @@ export class ToggleHandler extends Component {
 
   onToggle = () => {
     this.setState(({ isOpen }) => ({
-      isOpen: !isOpen
+      isOpen: !isOpen,
     }));
   };
 
   render() {
     return (
       <Fragment>
-        {this.props.children(
-          this.state.isOpen,
-          this.onOpen,
-          this.onClose,
-          this.onToggle
-        )}
+        {this.props.children({
+          isOpen: this.state.isOpen,
+          onOpen: this.onOpen,
+          onClose: this.onClose,
+          onToggle: this.onToggle,
+        })}
       </Fragment>
     );
   }

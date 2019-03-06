@@ -56,31 +56,20 @@ export class DataProvider extends React.Component {
   };
 
   initialize = tokens => {
-    let { profile, alerts, crops, contacts } = this.state;
     let { token, opus1_token } = tokens;
-    if (Object.values(profile).length > 0) {
-      return Promise(resolve => resolve({ profile }));
-    }
-    if (alerts.length > 0) {
-      return Promise(resolve => resolve({ alerts }));
-    }
-    if (crops.length > 0) {
-      return Promise(resolve => resolve({ crops }));
-    }
-    if (contacts.length > 0) {
-      return Promise(resolve => resolve({ contacts }));
-    }
     return Promise.all([
       this.getProfile(opus1_token),
       this.getWhatsappAlerts(token),
       this.getCrops(opus1_token),
       this.getContacts(token),
+      this.getUsers(opus1_token)
     ]).then(data => {
       return {
         profile: data[0],
         alerts: data[1],
         crops: data[2],
         contacts: data[3],
+        users: data[4]
       };
     });
   };
@@ -162,9 +151,9 @@ export class DataProvider extends React.Component {
   };
 
   getUser = id => {
-    let { token } = this.state;
+    let { opus1_token } = this.state;
     return this.getAdapter()
-      .getUser(token, id)
+      .getUser(opus1_token, id)
       .then(data => {
         this.updateState({
           user: data,
@@ -174,20 +163,19 @@ export class DataProvider extends React.Component {
   };
 
   createUser = payload => {
-    let { token, users } = this.state;
+    let { opus1_token, users } = this.state;
     return this.getAdapter()
-      .createUser(token, payload)
+      .createUser(opus1_token, payload)
       .then(data => {
-        console.log(data);
         this.updateState({ users: [data, ...users] });
         return data;
       });
   };
 
   adminCreateUser = payload => {
-    let { token, users } = this.state;
+    let { opus1_token, users } = this.state;
     return this.getAdapter()
-      .adminCreateUser(token, payload)
+      .adminCreateUser(opus1_token, payload)
       .then(data => {
         console.log(data);
         this.updateState({ users: [data, ...users] });
@@ -196,11 +184,10 @@ export class DataProvider extends React.Component {
   };
 
   updateUser = payload => {
-    let { token, users } = this.state;
+    let { opus1_token, users } = this.state;
     return this.getAdapter()
-      .updateUser(token, payload)
+      .updateUser(opus1_token, payload)
       .then(data => {
-        console.log(data);
         let result = users.map(user => {
           if (user.id === payload.id) {
             return data;
@@ -213,11 +200,10 @@ export class DataProvider extends React.Component {
   };
 
   patchUser = payload => {
-    let { token, users } = this.state;
+    let { opus1_token, users } = this.state;
     return this.getAdapter()
-      .patchUser(token, payload)
+      .patchUser(opus1_token, payload)
       .then(data => {
-        console.log(data);
         let result = users.map(user => {
           if (user.id === payload.id) {
             return data;
@@ -230,9 +216,9 @@ export class DataProvider extends React.Component {
   };
 
   deleteUser = id => {
-    let { token, users } = this.state;
+    let { opus1_token, users } = this.state;
     return this.getAdapter()
-      .deleteUser(token, id)
+      .deleteUser(opus1_token, id)
       .then(data => {
         let result = users.filter(user => user.id !== id);
         this.updateState({ users: result });
@@ -241,7 +227,10 @@ export class DataProvider extends React.Component {
   };
 
   getWhatsappAlerts = () => {
-    let { token } = this.state;
+    let { token, alerts } = this.state;
+    if (alerts.length > 0) {
+      return Promise(resolve => resolve({ alerts }));
+    }
     return this.getAdapter()
       .getWhatsappAlerts(token)
       .then(data => {
@@ -339,6 +328,10 @@ export class DataProvider extends React.Component {
   };
 
   getCrops = token => {
+    let { crops } = this.state;
+    if (crops.length > 0) {
+      return Promise(resolve => resolve({ crops }));
+    }
     return this.getAdapter()
       .getCrops(token)
       .then(data => {

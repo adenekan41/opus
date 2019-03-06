@@ -5,11 +5,10 @@ import CombinedSidebar from '../../../components/Sidebar';
 class DashboardLayout extends React.Component {
   state = {
     showSidebar: false,
-    showDetailView: false,
   };
 
   openSideBar = () => {
-    this.setState(({ showSidebar, isCollapsed }) => ({
+    this.setState(({ showSidebar }) => ({
       showSidebar: !showSidebar,
     }));
   };
@@ -23,6 +22,7 @@ class DashboardLayout extends React.Component {
         <CombinedSidebar
           useNavlink={Boolean(this.props.NavLink)}
           showGetStarted={showGetStarted}
+          openSideBar={this.openSideBar}
           isCollapsed={!showSidebar}
           history={history}
           user={profile}

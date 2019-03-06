@@ -90,7 +90,7 @@ class Contacts extends React.Component {
 
   render() {
     const { profile, contacts, crops } = this.props;
-    let { buttonLoading, loading, cities } = this.state;
+    let { buttonLoading, cities } = this.state;
     let isAdmin = profile.username === 'admin';
     let formatCrops = crops.map(crop => ({
       label: crop.name,
