@@ -71,6 +71,7 @@ export default class ForecastMap extends Component {
     this.props.history.push('/dashboard/weather-forecast/bulletin/charts');
   };
   render() {
+    const { weatherData } = this.props;
     return (
       <ForecastContainer>
         <div className="SearchInput__wrapper">
@@ -79,6 +80,7 @@ export default class ForecastMap extends Component {
         <WeatherMap
           zoom={10}
           center={[51.5, -0.1]}
+          markers={weatherData}
           goToBulletinPage={this.goToBulletinPage}
         />
         <Flex className="TemperatureRange__wrapper">

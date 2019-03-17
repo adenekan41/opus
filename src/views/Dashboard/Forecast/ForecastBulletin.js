@@ -8,6 +8,7 @@ import ForecastTable from './ForecastTable';
 
 export default class ForecastBulletin extends Component {
   render() {
+    const { weatherStation } = this.props;
     return (
       <Box py="40px" px="40px">
         <Box mb="40px">
@@ -15,7 +16,7 @@ export default class ForecastBulletin extends Component {
             <BreadcrumbItem url="/dashboard/weather-forecast/map" useNavlink>
               Map
             </BreadcrumbItem>
-            <BreadcrumbItem isActive>LCM Apapa</BreadcrumbItem>
+            <BreadcrumbItem isActive>{weatherStation.station_name}</BreadcrumbItem>
           </Breadcrumbs>
         </Box>
         <Box>
@@ -39,7 +40,7 @@ export default class ForecastBulletin extends Component {
             <>
               <Route
                 path="/dashboard/weather-forecast/bulletin/charts"
-                render={props => <ForecastCharts {...props} />}
+                render={props => <ForecastCharts {...props} weatherStation={weatherStation} />}
               />
               <Route
                 path="/dashboard/weather-forecast/bulletin/weather-data"

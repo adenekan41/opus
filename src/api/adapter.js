@@ -176,11 +176,15 @@ const getCrops = token => {
   return makeApiCall({ url: `/crops/`, token });
 };
 
+const getWeatherData = token => {
+  return makeApiCall({ baseURL: BASE_URL_TWO, url: `/weatherlink/`, token})
+}
+
 export default {
   login,
   getUser,
   getUsers,
-  getProfile,
+getProfile,
   patchUser,
   updateUser,
   createUser,
@@ -198,4 +202,5 @@ export default {
   getWeatherForecast,
   getWeatherForecastLogs,
   getCrops,
+  getWeatherData
 };

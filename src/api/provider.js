@@ -18,6 +18,8 @@ export class DataProvider extends React.Component {
       contacts: [],
       alerts: [],
       crops: [],
+      weatherStations: [],
+      weatherStation: {},
       user: {},
       profile: {},
       ...this.loadTokenFromStorage(),
@@ -59,17 +61,19 @@ export class DataProvider extends React.Component {
     let { token, opus1_token } = tokens;
     return Promise.all([
       this.getProfile(opus1_token),
-      this.getWhatsappAlerts(token),
-      this.getCrops(opus1_token),
-      this.getContacts(token),
-      this.getUsers(opus1_token)
+      // this.getWhatsappAlerts(token),
+      // this.getCrops(opus1_token),
+      // this.getContacts(token),
+      // this.getUsers(opus1_token),
+      this.getWeatherData(token),
     ]).then(data => {
       return {
         profile: data[0],
-        alerts: data[1],
-        crops: data[2],
-        contacts: data[3],
-        users: data[4]
+        // alerts: data[1],
+        // crops: data[2],
+        // contacts: data[3],
+        // users: data[4],
+        weatherStations: data[1]
       };
     });
   };
@@ -93,6 +97,8 @@ export class DataProvider extends React.Component {
       [ACTIONS.UPDATE_CONTACT]: this.updateContact,
       [ACTIONS.DELETE_CONTACT]: this.deleteContact,
       [ACTIONS.GET_WEATHER_FORECAST_LOGS]: this.getWeatherForecastLogs,
+      [ACTIONS.GET_WEATHER_DATA]: this.getWeatherData,
+      [ACTIONS.GET_WEATHER_STATION_DATA]: this.getWeatherStationData
     };
     console.log({ type });
     return options[type](value);
@@ -177,7 +183,6 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .adminCreateUser(opus1_token, payload)
       .then(data => {
-        console.log(data);
         this.updateState({ users: [data, ...users] });
         return data;
       });
@@ -339,6 +344,24 @@ export class DataProvider extends React.Component {
         return data;
       });
   };
+
+  getWeatherData = token => {
+    let { weatherStations } = this.state;
+    if(weatherStations.length > 0) {
+      return Promise(resolve => resolve({ weatherStations }));
+    }
+    return this.getAdapter().getWeatherData(token).then(data => {
+      console.log(data);
+      this.updateState({ weatherStations: data });
+      return data;
+    })
+  }
+
+  getWeatherStationData = (id) => {
+    let { weatherStations } = this.state;
+    let weatherStation = weatherStations.find(weatherStation => weatherStation.id === id);
+    this.updateState({ weatherStation });
+  }
 
   render() {
     return (
