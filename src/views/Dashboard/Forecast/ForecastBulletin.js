@@ -13,7 +13,7 @@ export default class ForecastBulletin extends Component {
       <Box py="40px" px="40px">
         <Box mb="40px">
           <Breadcrumbs>
-            <BreadcrumbItem url="/dashboard/weather-forecast/map" useNavlink>
+            <BreadcrumbItem url="/dashboard/weather-data/map" useNavlink>
               Map
             </BreadcrumbItem>
             <BreadcrumbItem isActive>{weatherStation.station_name}</BreadcrumbItem>
@@ -23,14 +23,14 @@ export default class ForecastBulletin extends Component {
           <TabNav
             links={[
               {
-                url: '/dashboard/weather-forecast/bulletin/charts',
+                url: '/dashboard/weather-data/bulletin/charts',
                 label: 'Opus snapshots',
                 icon: 'boxes',
                 flex: '0 0 170px',
                 max: '170px',
               },
               {
-                url: '/dashboard/weather-forecast/bulletin/weather-data',
+                url: '/dashboard/weather-data/bulletin/weather-data',
                 label: 'Weather data',
                 icon: 'chart',
               },
@@ -39,11 +39,11 @@ export default class ForecastBulletin extends Component {
           >
             <>
               <Route
-                path="/dashboard/weather-forecast/bulletin/charts"
+                path="/dashboard/weather-data/bulletin/:id/charts"
                 render={props => <ForecastCharts {...props} weatherStation={weatherStation} />}
               />
               <Route
-                path="/dashboard/weather-forecast/bulletin/weather-data"
+                path="/dashboard/weather-data/bulletin/weather-data"
                 render={props => <ForecastTable {...props} />}
               />
             </>

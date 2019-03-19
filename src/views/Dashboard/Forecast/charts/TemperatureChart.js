@@ -1,57 +1,62 @@
 import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import ChartContainer, { barCharOptions } from './ChartContainer';
+import ChartContainer, {
+  barCharOptions,
+  dataToChartFormat,
+} from './ChartContainer';
 
-const options = {
-  ...barCharOptions,
-  series: [
-    {
-      name: '',
-      data: [
-        { y: 26 },
-        { y: 10, color: '#3c464c' },
-        20,
-        { y: 15, color: '#3c464c' },
-      ],
+const getChartOptions = data => {
+  return {
+    ...barCharOptions,
+    series: [
+      {
+        name: '',
+        data,
+      },
+    ],
+    plotOptions: {
+      column: {
+        pointWidth: 70,
+        pointPadding: 0.5,
+      },
     },
-  ],
-  plotOptions: {
-    column: {
-      pointWidth: 70,
-      pointPadding: 0.5,
+    tooltip: {
+      valueSuffix: '\u2103',
+      borderRadius: 4,
+      borderWidth: 0,
     },
-  },
-  tooltip: {
-    valueSuffix: '\u2103',
-    borderRadius: 4,
-    borderWidth: 0,
-  },
-  xAxis: {
-    categories: ['outside temp', 'wind chill', 'heat index', 'dew point'],
-    title: {
-      text: null,
+    xAxis: {
+      categories: ['outside temp', 'wind chill', 'heat index', 'dew point'],
+      title: {
+        text: null,
+      },
+      labels: {
+        overflow: 'justify',
+        style: { color: '#242424' },
+      },
     },
-    labels: {
-      overflow: 'justify',
-      style: { color: '#242424' },
+    yAxis: {
+      min: 0,
+      max: 50,
+      title: {
+        text: null,
+      },
+      labels: {
+        overflow: 'justify',
+        format: '{value} \u2103',
+        style: { color: '#8c8c8c' },
+      },
     },
-  },
-  yAxis: {
-    min: 0,
-    max: 50,
-    title: {
-      text: null,
-    },
-    labels: {
-      overflow: 'justify',
-      format: '{value} \u2103',
-      style: { color: '#8c8c8c' },
-    },
-  },
+  };
 };
 
-export default function TemperatureChart({ hideCard, viewDetails, data }) {
+export default function TemperatureChart({
+  hideCard,
+  viewDetails,
+  temperatureChartData,
+}) {
+  let data = dataToChartFormat(temperatureChartData);
   return (
     <ChartContainer
       width="400px"
@@ -59,7 +64,10 @@ export default function TemperatureChart({ hideCard, viewDetails, data }) {
       hideCard={hideCard}
       viewDetails={viewDetails}
     >
-      <HighchartsReact highcharts={Highcharts} options={options} />
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={getChartOptions(data)}
+      />
     </ChartContainer>
   );
 }

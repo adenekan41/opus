@@ -81,8 +81,8 @@ Sidebar.defaultProps = {
   menus: [
     {
       icon: 'weather',
-      label: 'Weather Forecast',
-      url: '/dashboard/weather-forecast/map',
+      label: 'Weather Data',
+      url: '/dashboard/weather-data/map',
     },
     { icon: 'user', label: 'Contacts', url: '/dashboard/contacts' },
     { icon: 'send', label: 'Alerts', url: '/dashboard/alerts' },

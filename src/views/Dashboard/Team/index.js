@@ -2,7 +2,7 @@ import React from 'react';
 import TeamTable from './components/TeamTable';
 import SearchInput from '../../../components/SearchInput';
 import AdminTeamTable from './components/AdminTeamTable';
-import EmptyState from '../../../components/EmptyState';
+import EmptyState, { ComingSoon } from '../../../components/EmptyState';
 import emptyStateImage from '../../../assets/img/empty-states/contacts.png';
 import CreateButton from './components/CreateButton';
 
@@ -22,8 +22,8 @@ class Teams extends React.Component {
       loading: true,
     });
     dispatch({ type: actions.CREATE_USER, value: payload })
-      .then((data) => {
-        console.log(data)
+      .then(data => {
+        console.log(data);
         this.setState({
           loading: false,
         });
@@ -74,12 +74,12 @@ class Teams extends React.Component {
   };
 
   render() {
-    const { profile, users } = this.props;
-    let isAdmin = profile.username === 'admin';
+    // const { profile, users } = this.props;
+    // let isAdmin = profile.username === 'admin';
     return (
-      <div>
-        <div style={{ padding: '40px' }}>
-          <div className="row">
+      <div style={{ padding: '40px' }}>
+        <ComingSoon />
+        {/* <div className="row">
             <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
               <SearchInput placeholder="Search team members" mb="8px" />
             </div>
@@ -121,8 +121,7 @@ class Teams extends React.Component {
                 />
               )}
             />
-          )}
-        </div>
+          )} */}
       </div>
     );
   }

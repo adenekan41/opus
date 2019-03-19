@@ -10,15 +10,15 @@ export default class Forecast extends Component {
       <>
         <Route
           exact
-          path="/dashboard/weather-forecast/map"
+          path="/dashboard/weather-data/map"
           render={props => <ForecastMap {...props} {...this.props}/>}
         />
         <Route
-          path="/dashboard/weather-forecast/bulletin"
+          path="/dashboard/weather-data/bulletin"
           render={props => <ForecastBulletin {...props} {...this.props} />}
         />
         <Route
-          path="/dashboard/weather-forecast/report"
+          path="/dashboard/weather-data/report"
           render={props => <ForecastReport {...props} {...this.props} />}
         />
       </>

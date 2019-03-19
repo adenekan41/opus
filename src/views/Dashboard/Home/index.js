@@ -7,11 +7,13 @@ import Button from '../../../components/Button';
 import { Icon } from '../../../components/Icon';
 import Card from '../../../components/Card';
 import Avatar from '../../../components/Avatar';
+import { ComingSoon } from '../../../components/EmptyState';
 
 const Home = ({ users, alerts, contacts, advice_models, profile, history }) => {
   return (
     <HomeContainer>
-      <div className="row">
+      <ComingSoon/>
+      {/* <div className="row">
         <Box className="col-md-12" mb="50px">
           <Flex alignItems="center">
             <Icon name="circle" color="#FF9901" />
@@ -225,7 +227,7 @@ const Home = ({ users, alerts, contacts, advice_models, profile, history }) => {
             </div>
           </Card>
         </div>
-      </div>
+      </div> */}
     </HomeContainer>
   );
 };

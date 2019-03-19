@@ -73,7 +73,7 @@ export class DataProvider extends React.Component {
         // crops: data[2],
         // contacts: data[3],
         // users: data[4],
-        weatherStations: data[1]
+        weatherStations: data[1],
       };
     });
   };
@@ -98,7 +98,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.DELETE_CONTACT]: this.deleteContact,
       [ACTIONS.GET_WEATHER_FORECAST_LOGS]: this.getWeatherForecastLogs,
       [ACTIONS.GET_WEATHER_DATA]: this.getWeatherData,
-      [ACTIONS.GET_WEATHER_STATION_DATA]: this.getWeatherStationData
+      [ACTIONS.UPDATE_WEATHER_STATION_DATA]: this.updateWeatherStationData,
     };
     console.log({ type });
     return options[type](value);
@@ -347,21 +347,27 @@ export class DataProvider extends React.Component {
 
   getWeatherData = token => {
     let { weatherStations } = this.state;
-    if(weatherStations.length > 0) {
+    if (weatherStations.length > 0) {
       return Promise(resolve => resolve({ weatherStations }));
     }
-    return this.getAdapter().getWeatherData(token).then(data => {
-      console.log(data);
-      this.updateState({ weatherStations: data });
-      return data;
-    })
-  }
+    return this.getAdapter()
+      .getWeatherData(token)
+      .then(data => {
+        let formatData = data.map(value => value.response_data);
+        this.updateState({ weatherStations: formatData });
+        return data;
+      });
+  };
 
-  getWeatherStationData = (id) => {
+  updateWeatherStationData = station_name => {
     let { weatherStations } = this.state;
-    let weatherStation = weatherStations.find(weatherStation => weatherStation.id === id);
+    let weatherStation = weatherStations.find(
+      weatherStation => weatherStation.station_name === station_name
+    );
     this.updateState({ weatherStation });
-  }
+    let promise = new Promise(resolve => resolve({ weatherStation }));
+    return promise;
+  };
 
   render() {
     return (

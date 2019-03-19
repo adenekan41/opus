@@ -24,7 +24,7 @@ class Login extends Component {
           loading: false,
         });
         if (data) {
-          this.props.history.push('/dashboard/weather-forecast/map');
+          this.props.history.push('/dashboard/weather-data/map');
         }
       });
   };

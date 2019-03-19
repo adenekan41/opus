@@ -17,7 +17,7 @@ const DashboardRoutes = ({token, ...rest}) => {
           <DashboardLayout NavLink={true} {...rest}>
             <Switch>
               <Route
-                path="/admin/dashboard/weather-forecast"
+                path="/admin/dashboard/weather-data"
                 render={() => (
                   <Forecast {...rest} {...{ ...state, dispatch, actions }} />
                 )}

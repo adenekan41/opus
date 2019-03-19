@@ -29,7 +29,7 @@ const DashboardRoutes = ({ token, opus1_token, ...rest }) => {
                   <Home  {...rest} {...{ ...state, dispatch, actions }}/>
                 )}/>
                 <Route
-                  path="/dashboard/weather-forecast"
+                  path="/dashboard/weather-data"
                   render={() => (
                     <Forecast {...rest} {...{ ...state, dispatch, actions, }} />
                   )}

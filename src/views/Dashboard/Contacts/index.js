@@ -1,7 +1,7 @@
 import React from 'react';
 import ContactTable from './components/ContactTable';
 import SearchInput from '../../../components/SearchInput';
-import EmptyState from '../../../components/EmptyState';
+import EmptyState, { ComingSoon } from '../../../components/EmptyState';
 import emptyStateImage from '../../../assets/img/empty-states/contacts.png';
 import CreateContactButton from './components/CreateContactButton';
 import { countries, getCitites } from '../../../helpers/countries';
@@ -89,17 +89,17 @@ class Contacts extends React.Component {
   };
 
   render() {
-    const { profile, contacts, crops } = this.props;
-    let { buttonLoading, cities } = this.state;
-    let isAdmin = profile.username === 'admin';
-    let formatCrops = crops.map(crop => ({
-      label: crop.name,
-      value: crop.name,
-    }));
+    // const { profile, contacts, crops } = this.props;
+    // let { buttonLoading, cities } = this.state;
+    // let isAdmin = profile.username === 'admin';
+    // let formatCrops = crops.map(crop => ({
+    //   label: crop.name,
+    //   value: crop.name,
+    // }));
     return (
-      <div>
-        <div style={{ padding: '40px' }}>
-          <div className="row">
+      <div style={{ padding: '40px' }}>
+        <ComingSoon image={emptyStateImage}/>
+        {/* <div className="row">
             <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
               <SearchInput placeholder="Search contacts" mb="8px" />
             </div>
@@ -147,8 +147,7 @@ class Contacts extends React.Component {
                 />
               )}
             />
-          )}
-        </div>
+          )} */}
       </div>
     );
   }

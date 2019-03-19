@@ -1,17 +1,17 @@
 import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import ChartContainer, { barCharOptions } from './ChartContainer';
+import ChartContainer, {
+  barCharOptions,
+  dataToChartFormat,
+} from './ChartContainer';
 
-const options = {
+const getChartOptions = data => ({
   ...barCharOptions,
   series: [
     {
       name: '',
-      data: [
-        { y: 26 },
-        { y: 10, color: '#3c464c' },
-      ],
+      data,
     },
   ],
   plotOptions: {
@@ -47,9 +47,14 @@ const options = {
       style: { color: '#8c8c8c' },
     },
   },
-};
+});
 
-export default function CurrentRainChart({ hideCard, viewDetails, data }) {
+export default function CurrentRainChart({
+  hideCard,
+  viewDetails,
+  currentRainData,
+}) {
+  let data = dataToChartFormat(currentRainData);
   return (
     <ChartContainer
       width="280px"
@@ -57,7 +62,10 @@ export default function CurrentRainChart({ hideCard, viewDetails, data }) {
       hideCard={hideCard}
       viewDetails={viewDetails}
     >
-      <HighchartsReact highcharts={Highcharts} options={options} />
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={getChartOptions(data)}
+      />
     </ChartContainer>
   );
 }

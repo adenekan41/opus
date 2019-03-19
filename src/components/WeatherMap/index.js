@@ -51,11 +51,11 @@ const MapMarker = ({
   map,
   layerContainer,
   outside_temp,
-  humidity,
+  current_humidity,
   location,
   wind_speed,
   rain_day_in,
-  pressure_mb,
+  pressure_in,
   pressure_tendency_string,
   station_name,
 }) => (
@@ -87,7 +87,7 @@ const MapMarker = ({
           Humidity:
         </Text>
         <Text mb="12px" color="rgba(36,36,36,.5)" fontSize="14px">
-          {humidity}%
+          {current_humidity}%
         </Text>
       </Flex>
       <Flex justifyContent="space-between">
@@ -103,7 +103,7 @@ const MapMarker = ({
           Barometer:
         </Text>
         <Text mb="12px" color="rgba(36,36,36,.5)" fontSize="14px">
-          {pressure_mb} in. Hg {pressure_tendency_string}
+          {pressure_in} in. Hg {pressure_tendency_string}
         </Text>
       </Flex>
       <Flex justifyContent="space-between">
@@ -114,7 +114,12 @@ const MapMarker = ({
           {rain_day_in} in
         </Text>
       </Flex>
-      <Button size="small" kind="orange" onClick={goToBulletin} width={'100%'}>
+      <Button
+        size="small"
+        kind="orange"
+        width={'100%'}
+        onClick={() => goToBulletin(station_name)}
+      >
         view bulletin
       </Button>
     </Popup>

@@ -4,6 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 import ChartContainer from './ChartContainer';
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/solid-gauge')(Highcharts);
+require('highcharts/modules/data')(Highcharts);
 
 const options = {
   data: {
@@ -19,30 +20,10 @@ const options = {
     height: '200px',
   },
   credits: { enabled: false },
-
-  title: {
-    text: 'Wind rose for South Shore Met Station, Oregon',
-  },
-
-  subtitle: {
-    text: 'Source: or.water.usgs.gov',
-  },
-
-  pane: {
-    size: '85%',
-  },
-
-  legend: {
-    align: 'right',
-    verticalAlign: 'top',
-    y: 100,
-    layout: 'vertical',
-  },
-
+  title: null,
   xAxis: {
     tickmarkPlacement: 'on',
   },
-
   yAxis: {
     min: 0,
     endOnTick: false,
