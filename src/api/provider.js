@@ -21,7 +21,12 @@ export class DataProvider extends React.Component {
       weatherStations: [],
       weatherStation: {},
       user: {},
-      profile: {},
+      profile: {
+        username: 'admin',
+        first_name: 'System',
+        last_name: 'Admin',
+        photo: '', 
+      },
       ...this.loadTokenFromStorage(),
     };
     this.state.context = {
@@ -35,12 +40,12 @@ export class DataProvider extends React.Component {
   }
 
   componentDidMount() {
-    const { token, opus1_token } = this.state;
+    const { token } = this.state;
     this.updateState({ fetching: true });
-    this.initialize({ token, opus1_token }).then(data => {
+    this.initialize({ token }).then(() => {
       saveState({
         ...loadState(),
-        auth: { ...loadState().auth, user: data.profile },
+        auth: { ...loadState().auth },
       });
       this.updateState({ fetching: false });
     });
@@ -58,9 +63,9 @@ export class DataProvider extends React.Component {
   };
 
   initialize = tokens => {
-    let { token, opus1_token } = tokens;
+    let { token } = tokens;
     return Promise.all([
-      this.getProfile(opus1_token),
+      // this.getProfile(opus1_token),
       // this.getWhatsappAlerts(token),
       // this.getCrops(opus1_token),
       // this.getContacts(token),
@@ -68,12 +73,12 @@ export class DataProvider extends React.Component {
       this.getWeatherData(token),
     ]).then(data => {
       return {
-        profile: data[0],
+        // profile: data[0],
         // alerts: data[1],
         // crops: data[2],
         // contacts: data[3],
         // users: data[4],
-        weatherStations: data[1],
+        weatherStations: data[0],
       };
     });
   };
@@ -355,7 +360,7 @@ export class DataProvider extends React.Component {
       .then(data => {
         let formatData = data.map(value => value.response_data);
         this.updateState({ weatherStations: formatData });
-        return data;
+        return formatData;
       });
   };
 
@@ -367,6 +372,20 @@ export class DataProvider extends React.Component {
     this.updateState({ weatherStation });
     let promise = new Promise(resolve => resolve({ weatherStation }));
     return promise;
+  };
+
+  getWeatherStationData = station_name => {
+    let { weatherStation } = this.state;
+    if (Object.values(weatherStation).length > 0) {
+      return Promise(resolve => resolve({ weatherStation }));
+    }
+    return this.getAdapter()
+      .getWeatherStationData(station_name)
+      .then(data => {
+        console.log(data);
+        this.updateState({ weatherStation: data });
+        return data;
+      });
   };
 
   render() {

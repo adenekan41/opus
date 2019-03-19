@@ -11,6 +11,7 @@ import WindSpeedChart from './charts/WindSpeedChart';
 import WindRoseChart from './charts/WindRoseChart';
 import WindDirection from './charts/WindDirectionChart';
 import BarometerChart from './charts/BarometerChart';
+import { convertStringToNumber } from '../../../helpers/functions';
 
 const chartMapping = {
   temperature: { label: 'Temperature', Component: TemperatureChart },
@@ -35,7 +36,7 @@ const chartMappingArray = [
     label: 'Wind direction',
     Component: WindDirection,
   },
-  { label: 'Wind rose', Component: WindRoseChart },
+  // { label: 'Wind rose', Component: WindRoseChart },
   { label: 'Barometer', Component: BarometerChart },
 ];
 
@@ -103,17 +104,30 @@ export default class ForecastCharts extends Component {
       rain_year,
       current_humidity,
       wind_speed,
-      pressure_in,
       wind_degrees,
+      davis_current_observation: {
+        pressure_day_high_in,
+        pressure_day_low_in,
+        pressure_month_high_in,
+        pressure_month_low_in,
+        pressure_year_high_in,
+        pressure_year_low_in,
+      } = {},
     } = weatherStation;
-    console.log(weatherStation);
     let temperatureChartData = [outside_temp, windchill, heat_index, dewpoint];
     let currentRainData = [rain_day_in, rain_storm];
     let totalRainData = [rain_month, rain_year];
     let windSpeedData = [wind_speed];
     let humidityData = [current_humidity];
-    let barometerData = [Number(pressure_in)]
-    let windDirectionData = [Number(wind_degrees)]
+    let barometerData = [
+      convertStringToNumber(pressure_day_high_in),
+      convertStringToNumber(pressure_day_low_in),
+      convertStringToNumber(pressure_month_high_in),
+      convertStringToNumber(pressure_month_low_in),
+      convertStringToNumber(pressure_year_high_in),
+      convertStringToNumber(pressure_year_low_in),
+    ];
+    let windDirectionData = [convertStringToNumber(wind_degrees)];
     return (
       <Box>
         <Flex mb="30px">

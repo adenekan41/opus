@@ -17,9 +17,10 @@ export const makeApiCall = async ({
   params,
   data,
   token,
+  headers = { Authorization: `JWT ${token}` },
 }) => {
   const config = {
-    headers: { Authorization: `JWT ${token}` },
+    headers,
     baseURL,
     url,
     method,
@@ -36,11 +37,15 @@ export const makeApiCall = async ({
 };
 
 const login = payload => {
+  let encryt = `${payload.email}:${payload.password}`;
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/token/`,
     method: 'POST',
     data: payload,
+    headers: {
+      Authorization: `Basic ${btoa(encryt)}`,
+    },
   });
 };
 
@@ -177,14 +182,18 @@ const getCrops = token => {
 };
 
 const getWeatherData = token => {
-  return makeApiCall({ baseURL: BASE_URL_TWO, url: `/weatherlink/`, token})
-}
+  return makeApiCall({ baseURL: BASE_URL_TWO, url: `/weatherlink/`, token });
+};
+
+const getWeatherStationData = (token, station_name) => {
+  return makeApiCall({ baseURL: BASE_URL_TWO, url: ``, token });
+};
 
 export default {
   login,
   getUser,
   getUsers,
-getProfile,
+  getProfile,
   patchUser,
   updateUser,
   createUser,
@@ -202,5 +211,6 @@ getProfile,
   getWeatherForecast,
   getWeatherForecastLogs,
   getCrops,
-  getWeatherData
+  getWeatherData,
+  getWeatherStationData,
 };
