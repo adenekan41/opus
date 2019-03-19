@@ -23,7 +23,7 @@ export default class ForecastBulletin extends Component {
           <TabNav
             links={[
               {
-                url: '/dashboard/weather-data/bulletin/charts',
+                url: `/dashboard/weather-data/bulletin/${weatherStation.station_name}/charts`,
                 label: 'Opus snapshots',
                 icon: 'boxes',
                 flex: '0 0 170px',
