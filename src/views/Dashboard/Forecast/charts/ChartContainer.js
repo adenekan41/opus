@@ -14,10 +14,26 @@ const Container = styled.div`
   margin-right: ${props => props.mr || '16px'};
   margin-bottom: 20px;
 
+  .droplist-button {
+    padding: 0;
+  }
+
   .highcharts-legend {
     display: none !important;
   }
 `;
+
+export const dataToChartFormat = (data, color = `#3c464c`) => {
+  if (data.length > 1) {
+    return data.map((value, i) => {
+      if (i % 2 > 0) {
+        return { y: Number(value), color };
+      }
+      return Number(value);
+    });
+  }
+  return data.map(value => ({ y: Number(value), color }));
+};
 
 export const barCharOptions = {
   title: {
@@ -72,23 +88,6 @@ export const semiCircleOptions = {
     },
   },
 
-  series: [
-    {
-      name: 'Humidity',
-      data: [{ y: 80, color: '#4e7ee8' }],
-      dataLabels: {
-        format:
-          '<div style="text-align:center"><span style="font-size:25px;color:' +
-          'black' +
-          '">{y:.1f}</span>' +
-          '<span>%</span></div>',
-      },
-      tooltip: {
-        valueSuffix: '%',
-      },
-    },
-  ],
-
   plotOptions: {
     series: {
       animation: false,
@@ -119,7 +118,7 @@ export default function ChartContainer({
         </Text>
         <Droplist
           trigger={
-            <Button kind="ghost">
+            <Button kind="ghost" className="droplist-button">
               <Icon name="dots" color="rgba(36,36,36,.5)" />
             </Button>
           }
@@ -134,14 +133,14 @@ export default function ChartContainer({
               >
                 hide card
               </Item>
-              <Item
+              {/* <Item
                 onClick={() => {
                   viewDetails(data);
                   onClose();
                 }}
               >
                 view details
-              </Item>
+              </Item> */}
             </>
           )}
         </Droplist>

@@ -4,6 +4,7 @@ export const TableRowItem = styled.div`
   color: #8c8c8c;
   padding: 16px;
   font-size: 14px;
+  width: ${props => props.width || '25%'};
   @media (max-width: ${props => props.hideAt}) {
     display: none;
   }
@@ -32,6 +33,7 @@ export const HomeContainer = styled.div`
   }
 
   .data-summary__table {
+    margin-bottom: 24px;
     &__header {
       padding: 16px;
       border-bottom: 1px solid #e8e8e8;

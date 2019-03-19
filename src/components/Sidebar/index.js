@@ -81,8 +81,8 @@ Sidebar.defaultProps = {
   menus: [
     {
       icon: 'weather',
-      label: 'Weather Forecast',
-      url: '/dashboard/weather-forecast/map',
+      label: 'Weather Data',
+      url: '/dashboard/weather-data/map',
     },
     { icon: 'user', label: 'Contacts', url: '/dashboard/contacts' },
     { icon: 'send', label: 'Alerts', url: '/dashboard/alerts' },
@@ -92,14 +92,14 @@ Sidebar.defaultProps = {
 
 class CombinedSidebar extends React.Component {
   render() {
-    const { user, history, useNavlink, isCollapsed } = this.props;
+    const { user, history, useNavlink, isCollapsed, openSideBar } = this.props;
     return (
       <StyledCombinedSidebar>
         <Media query="(max-width: 1024px)">
           {matches => {
             return (
               <ToggleHandler>
-                {(isOpen, onToggle) => (
+                {({isOpen, onToggle}) => (
                   <React.Fragment>
                     <Sidebar
                       {...{ user, useNavlink, history }}
@@ -109,7 +109,7 @@ class CombinedSidebar extends React.Component {
                           icon={
                             !isOpen ? 'framed-right-arrow' : 'framed-left-arrow'
                           }
-                          onClick={onToggle}
+                          onClick={matches ? openSideBar : onToggle}
                           className="Sidebar__toggle-button"
                           isCollapsed={!isOpen}
                         >

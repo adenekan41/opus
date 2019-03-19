@@ -9,18 +9,22 @@ class Login extends Component {
   state = {
     loading: false,
     error: false,
-    errorMessage: ''
+    errorMessage: '',
   };
   login = payload => {
+    // let requestPayload = {
+    //   email: window.btoa(payload.email),
+    //   password: window.btoa(payload.password),
+    // };
     this.setState({ loading: true, error: false });
     this.props
       .onLogin(payload, () => this.setState({ error: true }))
-      .then((data) => {
+      .then(data => {
         this.setState({
           loading: false,
         });
-        if(data) {
-          this.props.history.push('/dashboard/weather-forecast/map');
+        if (data) {
+          this.props.history.push('/dashboard/weather-data/map');
         }
       });
   };
@@ -54,7 +58,7 @@ class Login extends Component {
             autoClose={false}
             onClose={() => this.setState({ error: false })}
           >
-            {errorMessage || "Unable to log in with provided credentials."}
+            {errorMessage || 'Unable to log in with provided credentials.'}
           </Toast>
         )}
       </>

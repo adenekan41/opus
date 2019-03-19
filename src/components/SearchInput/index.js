@@ -1,78 +1,91 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Icon } from '../Icon';
-import { sharedProps } from '../Avatar';
+import Select from 'react-select';
 
-const SearchInputContainer = styled.div`
-  height: 50px;
-  width: 100%;
-  padding: 0 24px;
-  border-radius: 5px;
-  box-shadow: 0 10px 14px -4px rgba(70, 70, 70, 0.06);
-  background-color: #ffffff;
-  box-sizing: border-box;
-  ${sharedProps};
-  .search-input {
-    display: flex;
-    align-items: center;
-
-    input {
-      border: none;
-      box-shadow: none;
-      background: transparent;
-      outline: none;
-      font-size: 16px;
-      padding-left: 20px;
-      height: 50px;
-      flex: 1;
-      font-family: 'Avenir Opus', sans-serif;
-
-      &::-webkit-input-placeholder {
-        color: #b4b4b4;
-        font-weight: 400;
-      }
-
-      &::-moz-placeholder {
-        color: #b4b4b4;
-        font-weight: 400;
-      }
-
-      &:-moz-placeholder {
-        color: #b4b4b4;
-        font-weight: 400;
-      }
-
-      &:-ms-input-placeholder {
-        color: #b4b4b4;
-        font-weight: 400;
-      }
-    }
+const SelectSearchContainer = styled.div`
+  position: relative;
+  .Icon {
+    position: absolute;
+    z-index: 2;
+    top: 16px;
+    left: 20px;
+  }
+  .select-search-container {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    width: 100%;
+    padding: 0 40px;
+    border-radius: 5px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    box-shadow: 0 10px 14px -4px rgba(70, 70, 70, 0.06);
+    background-color: #ffffff;
+    box-sizing: border-box;
+  }
+  .select-search__control {
+    border: none;
+    position: relative;
+    top: 6px;
+  }
+  .select-search__control--is-focused {
+    border: none;
+    box-shadow: none;
+  }
+  .select-search__indicators {
+    display: none;
+  }
+  .select-search__menu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border: none;
+    margin-top: 0;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    box-shadow: 0 10px 14px -4px rgba(70, 70, 70, 0.06);
+  }
+  .select-search__menu-list {
+    margin-top: 0;
+  }
+  .select-search__option {
+    background-color: transparent;
+  }
+  .select-search__option:active,
+  .select-search__option--is-focused {
+    background-color: #fbfbfb;
+  }
+  .select-search__option--is-selected {
+    color: #000;
   }
 `;
 
-export default class SearchInput extends Component {
-  render() {
-    const { name, type, value, onBlur, onChange, placeholder, ...rest } = this.props;
-    return (
-      <SearchInputContainer className="SearchInput" {...rest}>
-        <div className="search-input">
-          <Icon name="search" color="#000000" />
-          <input
-            name={name}
-            type={type}
-            value={value}
-            onBlur={onBlur}
-            onChange={onChange}
-            placeholder={placeholder}
-          />
-        </div>
-        <div className="search-results" />
-      </SearchInputContainer>
-    );
-  }
-}
-
-SearchInput.defaultProps = {
-  type: 'search',
-  placeholder: 'Search for a Location or Weatherstation',
+const DropdownIndicator = () => {
+  return null;
 };
+
+export const SelectSearch = ({ options, placeholder, className, onChange, ...rest }) => {
+  return (
+    <SelectSearchContainer className={className}>
+      <Icon name="search" color="#000000" />
+      <Select
+        {...rest}
+        options={options}
+        isClearable={false}
+        placeholder={placeholder}
+        onChange={onChange}
+        className="select-search-container"
+        classNamePrefix="select-search"
+        components={{ DropdownIndicator }}
+      />
+    </SelectSearchContainer>
+  );
+};
+
+SelectSearch.defaultProps = {
+  options: [{ label: 'Kola', value: 'Kola' }, { label: 'John', value: 'John' }],
+  placeholder: 'Search for WeatherStation',
+};
+
+export default SelectSearch;

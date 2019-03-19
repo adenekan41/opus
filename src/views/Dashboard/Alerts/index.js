@@ -4,7 +4,7 @@ import AlertTables from './components/alertTables';
 import SearchInput from '../../../components/SearchInput';
 import Button from '../../../components/Button';
 import { Icon } from '../../../components/Icon';
-import EmptyState from '../../../components/EmptyState';
+import EmptyState, { ComingSoon } from '../../../components/EmptyState';
 import emptyStateImage from '../../../assets/img/empty-states/alerts.png';
 import Modal, { ToggleModal } from '../../../components/Modal';
 import ManualAlertForm from './components/ManualAlertForm';
@@ -41,30 +41,31 @@ class Alerts extends React.Component {
     return {};
   };
   render() {
-    const { alerts, contacts } = this.props;
-    const { loading } = this.state;
-    const formatContacts = contacts.map(contact => ({
-      label: `${contact.first_name} ${contact.last_name}`,
-      value: contact.phone_numbers[0],
-    }));
-    const formatAlerts = alerts.map(alert => {
-      if(alert.request_data) {
-        return {
-          ...alert.request_data,
-          type: 'whatsapp',
-          to: this.getAlertContacts(alert),
-          created_at: alert.created_at,
-        }
-      }
-      return {
-        ...alert,
-        type: 'whatsapp',
-        to: this.getAlertContacts(alert),
-      }
-    });
+    // const { alerts, contacts } = this.props;
+    // const { loading } = this.state;
+    // const formatContacts = contacts.map(contact => ({
+    //   label: `${contact.first_name} ${contact.last_name}`,
+    //   value: contact.phone_numbers[0],
+    // }));
+    // const formatAlerts = alerts.map(alert => {
+    //   if (alert.request_data) {
+    //     return {
+    //       ...alert.request_data,
+    //       type: 'whatsapp',
+    //       to: this.getAlertContacts(alert),
+    //       created_at: alert.created_at,
+    //     };
+    //   }
+    //   return {
+    //     ...alert,
+    //     type: 'whatsapp',
+    //     to: this.getAlertContacts(alert),
+    //   };
+    // });
     return (
       <div style={{ padding: '40px' }}>
-        <Box className="row" mb="40px">
+        <ComingSoon />
+        {/* <Box className="row" mb="40px">
           <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
             <SearchInput placeholder="Search messages" mb="8px" />
           </div>
@@ -195,7 +196,7 @@ class Alerts extends React.Component {
               )}
             />
           )}
-        </Box>
+        </Box> */}
       </div>
     );
   }

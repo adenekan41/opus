@@ -14,11 +14,11 @@ export default class ForecastReport extends Component {
       <Box py="40px" px="40px">
         <Box mb="40px">
           <Breadcrumbs>
-            <BreadcrumbItem url="/dashboard/weather-forecast/map" useNavlink>
+            <BreadcrumbItem url="/dashboard/weather-data/map" useNavlink>
               Map
             </BreadcrumbItem>
             <BreadcrumbItem
-              url="/dashboard/weather-forecast/bulletin/charts"
+              url="/dashboard/weather-data/bulletin/charts"
               useNavlink
             >
               LCM Apapa

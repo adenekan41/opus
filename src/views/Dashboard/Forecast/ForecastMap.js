@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Flex, Box } from 'rebass';
 import WeatherMap from '../../../components/WeatherMap';
-import SearchInput from '../../../components/SearchInput';
+import SelectSearch from '../../../components/SearchInput';
 
 const ForecastContainer = styled.div`
   position: relative;
@@ -67,18 +67,54 @@ const ForecastContainer = styled.div`
 `;
 
 export default class ForecastMap extends Component {
-  goToBulletinPage = () => {
-    this.props.history.push('/dashboard/weather-forecast/bulletin/charts');
+  state = { center: [8.7832, 34.5085], zoom: 4 };
+  goToBulletinPage = station_name => {
+    const { dispatch, history, actions } = this.props;
+    dispatch({
+      type: actions.UPDATE_WEATHER_STATION_DATA,
+      value: station_name,
+    }).then(() => {
+      history.push(`/dashboard/weather-data/bulletin/${station_name}/charts`);
+    });
+  };
+  getSearchOptions = () => {
+    const { weatherStations } = this.props;
+    return weatherStations.map(station => ({
+      label: `${station.location} - ${station.station_name}`,
+      value: `${station.station_name}`,
+    }));
+  };
+  findSelectedStation = name => {
+    const { weatherStations } = this.props;
+    return weatherStations.find(
+      station => station.station_name === name
+    );
+  }
+  setMapCenter = name => {
+    let selectedStation = this.findSelectedStation(name);
+    let { latitude, longitude } = selectedStation;
+    let center = [latitude, longitude]
+    this.setState({
+      center,
+      zoom: 12
+    })
   };
   render() {
+    const { weatherStations } = this.props;
+    const { zoom, center } = this.state;
     return (
       <ForecastContainer>
         <div className="SearchInput__wrapper">
-          <SearchInput />
+          <SelectSearch
+            className="SearchInput"
+            options={this.getSearchOptions()}
+            onChange={station => this.setMapCenter(station.value)}
+          />
         </div>
         <WeatherMap
-          zoom={10}
-          center={[51.5, -0.1]}
+          zoom={zoom}
+          center={center}
+          markers={weatherStations}
           goToBulletinPage={this.goToBulletinPage}
         />
         <Flex className="TemperatureRange__wrapper">

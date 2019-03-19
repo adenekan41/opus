@@ -27,7 +27,6 @@ export class ToggleModal extends React.Component {
   }
 }
 
-
 export class Modal extends React.Component {
   render() {
     const {
@@ -111,7 +110,6 @@ Modal.defaultProps = {
   domNode: null,
 };
 
-
 export class Confirm extends React.Component {
   render() {
     const {
@@ -122,7 +120,7 @@ export class Confirm extends React.Component {
       onConfirm,
       isLoading,
       primaryButtonProps,
-      secondaryButtonProps
+      secondaryButtonProps,
     } = this.props;
     return (
       <Modal
@@ -135,6 +133,7 @@ export class Confirm extends React.Component {
           <Text textAlign="center">{description}</Text>
           <div className="confirm__btn-group">
             <Button
+              kind="gray"
               className="confirm__btn-group__secondary-btn"
               onClick={onCloseModal}
               {...secondaryButtonProps}
@@ -161,9 +160,9 @@ export class Confirm extends React.Component {
 }
 
 Confirm.defaultProps = {
-  heading: "Title",
-  description: "Are you sure?",
-  onConfirm: () => {}
+  heading: 'Title',
+  description: 'Are you sure?',
+  onConfirm: () => {},
 };
 
 export default Modal;

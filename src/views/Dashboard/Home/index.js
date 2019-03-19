@@ -7,11 +7,13 @@ import Button from '../../../components/Button';
 import { Icon } from '../../../components/Icon';
 import Card from '../../../components/Card';
 import Avatar from '../../../components/Avatar';
+import { ComingSoon } from '../../../components/EmptyState';
 
 const Home = ({ users, alerts, contacts, advice_models, profile, history }) => {
   return (
     <HomeContainer>
-      <div className="row">
+      <ComingSoon/>
+      {/* <div className="row">
         <Box className="col-md-12" mb="50px">
           <Flex alignItems="center">
             <Icon name="circle" color="#FF9901" />
@@ -128,31 +130,42 @@ const Home = ({ users, alerts, contacts, advice_models, profile, history }) => {
             </Flex>
             <div className="data-summary__table__body">
               {users.length > 0 ? (
-                users.map((user, i) => (
-                  <Flex
-                    justifyContent="space-between"
-                    alignItems="center"
-                    key={i}
-                  >
-                    <TableRowItem>
-                      <Avatar
-                        isRound
-                        size="32px"
-                        color="#ff9901"
-                        bgColor="rgba(255,153,1,.15)"
-                        initial={`${user.first_name[0]}${user.last_name[0]}`}
-                        photo_url=""
-                      />
-                    </TableRowItem>
-                    <TableRowItem>
-                      {user.first_name} {user.last_name}
-                    </TableRowItem>
-                    <TableRowItem shouldTruncate>{user.email}</TableRowItem>
-                    <TableRowItem>
-                      {moment(user.created_at).format('DD MMMM, YYYY')}
-                    </TableRowItem>
-                  </Flex>
-                ))
+                users.map((user, i) => {
+                  if (i < 3) {
+                    return (
+                      <Flex
+                        // justifyContent="space-between"
+                        alignItems="center"
+                        key={i}
+                      >
+                        <TableRowItem width="10%">
+                          <Avatar
+                            isRound
+                            size="32px"
+                            color="#ff9901"
+                            bgColor="rgba(255,153,1,.15)"
+                            initial={
+                              user.first_name && user.last_name
+                                ? `${user.first_name[0]}${user.last_name[0]}`
+                                : `N/A`
+                            }
+                            photo_url=""
+                          />
+                        </TableRowItem>
+                        <TableRowItem width="25%">
+                          {user.first_name && user.last_name
+                            ? `${user.first_name} ${user.last_name}`
+                            : `N/A`}
+                        </TableRowItem>
+                        <TableRowItem shouldTruncate width="35%">{user.email}</TableRowItem>
+                        <TableRowItem width="30%">
+                          {moment(user.created_at).format('DD MMMM, YYYY')}
+                        </TableRowItem>
+                      </Flex>
+                    );
+                  }
+                  return null;
+                })
               ) : (
                 <Box p="16px">
                   <Text color="#8c8c8c" fontSize="14px">
@@ -175,30 +188,35 @@ const Home = ({ users, alerts, contacts, advice_models, profile, history }) => {
             </Flex>
             <div className="data-summary__table__body">
               {contacts.length > 0 ? (
-                contacts.map((contact, i) => (
-                  <Flex
-                    justifyContent="space-between"
-                    alignItems="center"
-                    key={i}
-                  >
-                    <TableRowItem>
-                      <Avatar
-                        isRound
-                        size="32px"
-                        color="#ff9901"
-                        bgColor="rgba(255,153,1,.15)"
-                        initial={`${contact.first_name[0]}${
-                          contact.last_name[0]
-                        }`}
-                        photo_url=""
-                      />
-                    </TableRowItem>
-                    <TableRowItem>{contact.first_name}</TableRowItem>
-                    <TableRowItem>{contact.middle_name}</TableRowItem>
-                    <TableRowItem>{contact.last_name}</TableRowItem>
-                    <TableRowItem>{contact.crop}</TableRowItem>
-                  </Flex>
-                ))
+                contacts.map((contact, i) => {
+                  if (i < 3) {
+                    return (
+                      <Flex
+                        justifyContent="space-between"
+                        alignItems="center"
+                        key={i}
+                      >
+                        <TableRowItem>
+                          <Avatar
+                            isRound
+                            size="32px"
+                            color="#ff9901"
+                            bgColor="rgba(255,153,1,.15)"
+                            initial={`${contact.first_name[0]}${
+                              contact.last_name[0]
+                            }`}
+                            photo_url=""
+                          />
+                        </TableRowItem>
+                        <TableRowItem>{contact.first_name}</TableRowItem>
+                        <TableRowItem>{contact.middle_name}</TableRowItem>
+                        <TableRowItem>{contact.last_name}</TableRowItem>
+                        <TableRowItem>{contact.crop_managed}</TableRowItem>
+                      </Flex>
+                    );
+                  }
+                  return null;
+                })
               ) : (
                 <Box p="16px">
                   <Text color="#8c8c8c" fontSize="14px">
@@ -209,7 +227,7 @@ const Home = ({ users, alerts, contacts, advice_models, profile, history }) => {
             </div>
           </Card>
         </div>
-      </div>
+      </div> */}
     </HomeContainer>
   );
 };

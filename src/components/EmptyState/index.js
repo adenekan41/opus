@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Flex, Image, Heading, Text } from 'rebass';
+import { Icon } from '../Icon';
 
 const EmptyStateContainer = styled.div`
   border-radius: 5px;
@@ -44,3 +45,20 @@ export default function EmptyState({
     </Flex>
   );
 }
+
+const ComingSoonContainer = styled.div`
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ComingSoon = () => {
+  return (
+    <ComingSoonContainer>
+      <Icon name="error" size={80} color="#ff9901" />
+      <Heading mt="16px">Feature Coming Soon.</Heading>
+    </ComingSoonContainer>
+  );
+};

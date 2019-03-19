@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import Table from '../../../../components/Table';
 import Avatar from '../../../../components/Avatar';
 import Button from '../../../../components/Button';
@@ -10,7 +11,7 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
     Header: '',
     accessor: '',
     id: 'contact_initals',
-    Cell: ({ original: { firstName, lastName } }) => {
+    Cell: ({ original: { first_name, last_name } }) => {
       return (
         <Avatar
           isRound
@@ -18,21 +19,21 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
           photo_url=""
           color="#ff9901"
           bgColor="rgba(255,153,1,.15)"
-          initial={`${firstName[0]}${lastName[0]}`}
+          initial={first_name && last_name ? `${first_name[0]}${last_name[0]}` : `U`}
         />
       );
     },
   },
   {
     Header: 'First Name',
-    accessor: 'firstName',
-    id: 'firstName',
+    accessor: 'first_name',
+    id: 'first_name',
   },
 
   {
     Header: 'Last Name',
-    accessor: 'lastName',
-    id: 'lastName',
+    accessor: 'last_name',
+    id: 'last_name',
   },
   {
     Header: 'Email',
@@ -41,7 +42,9 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
   },
   {
     Header: 'Date Added',
-    accessor: 'date',
+    Cell: ({ original: { created_at } }) => (
+      <span>{moment(created_at).format('DD MMMM, YYYY')}</span>
+    ),
     id: 'date',
   },
   {
@@ -99,7 +102,6 @@ const TeamTable = ({
 }) => {
   return (
     <Table
-      mt="50px"
       resized={[
         {
           id: 'contact_initals',

@@ -71,12 +71,12 @@ Sidebar.defaultProps = {
     {
       icon: 'boxes',
       label: 'Dashboard',
-      url: '/admin/dashboard/weather-forecast/map',
+      url: '/admin/dashboard/weather-data/map',
     },
     {
       icon: 'weather',
       label: 'Weather Forecast',
-      url: '/admin/dashboard/weather-forecast/map',
+      url: '/admin/dashboard/weather-data/map',
     },
     { icon: 'user', label: 'Contacts', url: '/admin/dashboard/contacts' },
     { icon: 'send', label: 'Alerts', url: '/admin/dashboard/alerts' },

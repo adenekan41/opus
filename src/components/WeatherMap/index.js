@@ -50,12 +50,14 @@ const MapMarker = ({
   goToBulletin,
   map,
   layerContainer,
-  temperature,
-  humidity,
-  dailyRain,
-  wind,
-  barometer,
-  name,
+  outside_temp,
+  current_humidity,
+  location,
+  wind_speed,
+  rain_day_in,
+  pressure_in,
+  pressure_tendency_string,
+  station_name,
 }) => (
   <Marker
     position={position}
@@ -70,14 +72,14 @@ const MapMarker = ({
         fontSize="16px"
         style={{ textTransform: 'uppercase' }}
       >
-        {name}
+        {location} ({station_name})
       </Text>
       <Flex justifyContent="space-between">
         <Text mb="12px" color="#242424" fontSize="14px">
           Temperature:
         </Text>
         <Text mb="12px" color="rgba(36,36,36,.5)" fontSize="14px">
-          {temperature}&deg;C
+          {outside_temp}&deg;C
         </Text>
       </Flex>
       <Flex justifyContent="space-between">
@@ -85,7 +87,7 @@ const MapMarker = ({
           Humidity:
         </Text>
         <Text mb="12px" color="rgba(36,36,36,.5)" fontSize="14px">
-          {humidity}%
+          {current_humidity}%
         </Text>
       </Flex>
       <Flex justifyContent="space-between">
@@ -93,7 +95,7 @@ const MapMarker = ({
           Wind:
         </Text>
         <Text mb="12px" color="rgba(36,36,36,.5)" fontSize="14px">
-          {wind} mph
+          {wind_speed} mph
         </Text>
       </Flex>
       <Flex justifyContent="space-between">
@@ -101,7 +103,7 @@ const MapMarker = ({
           Barometer:
         </Text>
         <Text mb="12px" color="rgba(36,36,36,.5)" fontSize="14px">
-          {barometer}
+          {pressure_in} in. Hg {pressure_tendency_string}
         </Text>
       </Flex>
       <Flex justifyContent="space-between">
@@ -109,10 +111,15 @@ const MapMarker = ({
           Daily Rain:
         </Text>
         <Text mb="12px" color="rgba(36,36,36,.5)" fontSize="14px">
-          {dailyRain} in
+          {rain_day_in} in
         </Text>
       </Flex>
-      <Button size="small" kind="orange" onClick={goToBulletin} width={'100%'}>
+      <Button
+        size="small"
+        kind="orange"
+        width={'100%'}
+        onClick={() => goToBulletin(station_name)}
+      >
         view bulletin
       </Button>
     </Popup>
@@ -139,7 +146,7 @@ export default class WeatherMap extends Component {
               <MapMarker
                 key={i}
                 {...marker}
-                position={[marker.lat, marker.lng]}
+                position={[marker.latitude, marker.longitude]}
                 goToBulletin={this.props.goToBulletinPage}
               />
             ))}

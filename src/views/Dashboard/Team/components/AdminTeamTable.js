@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { Flex } from 'rebass';
 import styled from 'styled-components';
 import Table from '../../../../components/Table';
@@ -19,7 +20,7 @@ const admin_team_columns = (onTeamEdit, onTeamDelete) => [
     Header: '',
     accessor: '',
     id: 'contact_initals',
-    Cell: ({ original: { firstName, lastName } }) => {
+    Cell: ({ original: { first_name, last_name } }) => {
       return (
         <Avatar
           isRound
@@ -27,21 +28,23 @@ const admin_team_columns = (onTeamEdit, onTeamDelete) => [
           photo_url=""
           color="#ff9901"
           bgColor="rgba(255,153,1,.15)"
-          initial={`${firstName[0]}${lastName[0]}`}
+          initial={
+            first_name && last_name ? `${first_name[0]}${last_name[0]}` : `U`
+          }
         />
       );
     },
   },
   {
     Header: 'FullName',
-    Cell: ({ original: { firstName, lastName } }) => {
+    Cell: ({ original: { first_name, last_name } }) => {
       return (
         <span>
-          {firstName} {lastName}
+          {first_name && last_name ? `${first_name} ${last_name}` : 'N/A'}
         </span>
       );
     },
-    id: 'firstName',
+    id: 'FullName',
   },
   {
     Header: 'Email',
@@ -84,7 +87,9 @@ const admin_team_columns = (onTeamEdit, onTeamDelete) => [
   },
   {
     Header: 'Date Added',
-    accessor: 'date',
+    Cell: ({ original: { created_at } }) => (
+      <span>{moment(created_at).format('DD MMMM, YYYY')}</span>
+    ),
     id: 'date',
   },
   {
@@ -99,11 +104,11 @@ const admin_team_columns = (onTeamEdit, onTeamDelete) => [
         onEdit={onTeamEdit}
         onDelete={onTeamDelete}
         editModalHeading="Edit User"
-        renderEditForm={({ data, onEdit, closeModal }) => (
+        renderEditForm={({ closeModal }) => (
           <TeamForm
-            {...data}
+            {...original}
             isAdd={false}
-            onsubmit={onEdit}
+            onSubmit={onTeamEdit}
             onCancel={closeModal}
           />
         )}
@@ -129,7 +134,6 @@ const AdminTeamTable = ({
 }) => {
   return (
     <Table
-      mt="50px"
       resized={[
         {
           id: 'contact_initals',
@@ -161,52 +165,3 @@ const AdminTeamTable = ({
 };
 
 export default AdminTeamTable;
-
-AdminTeamTable.defaultProps = {
-  teams: [
-    {
-      firstName: 'Faith',
-      lastName: 'Odia',
-      email: 'faithdoe@gmail.com',
-      date: '08 January, 2019',
-      models_permission: true,
-      messages_permission: false,
-    },
-    {
-      firstName: 'Faith',
-      lastName: 'Odia',
-      email: 'faithdoe@gmail.com',
-      date: '08 January, 2019',
-      status: 'pending',
-      models_permission: false,
-      messages_permission: true,
-    },
-    {
-      firstName: 'Faith',
-      lastName: 'Odia',
-      email: 'faithdoe@gmail.com',
-      date: '08 January, 2019',
-      status: 'pending',
-      models_permission: true,
-      messages_permission: false,
-    },
-    {
-      firstName: 'Faith',
-      lastName: 'Odia',
-      email: 'faithdoe@gmail.com',
-      date: '08 January, 2019',
-      status: 'pending',
-      models_permission: false,
-      messages_permission: true,
-    },
-    {
-      firstName: 'Faith',
-      lastName: 'Odia',
-      email: 'faithdoe@gmail.com',
-      date: '08 January, 2019',
-      status: 'assigned',
-      models_permission: true,
-      messages_permission: false,
-    },
-  ],
-};
