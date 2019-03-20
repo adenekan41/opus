@@ -25,7 +25,6 @@ export class DataProvider extends React.Component {
         username: 'admin',
         first_name: 'System',
         last_name: 'Admin',
-        photo: '',
       },
       ...this.loadTokenFromStorage(),
     };
@@ -383,7 +382,6 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .getWeatherStationData(station_name)
       .then(data => {
-        console.log(data);
         this.updateState({ weatherStation: data });
         return data;
       });
@@ -393,7 +391,6 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .exportWeatherData()
       .then(data => {
-        console.log(data);
         return data;
       });
   };

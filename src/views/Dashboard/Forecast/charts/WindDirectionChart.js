@@ -23,7 +23,33 @@ const getChartOptions = data => {
       min: 0,
       max: 360,
       labels: {
-        format: '{value}°',
+        // format: '{value}°',
+        formatter: function() {
+          if (this.value === 0) {
+            return 'N';
+          }
+          if (this.value === 45) {
+            return 'NE';
+          }
+          if (this.value === 90) {
+            return 'E';
+          }
+          if (this.value === 135) {
+            return 'SE';
+          }
+          if (this.value === 180) {
+            return 'S';
+          }
+          if (this.value === 225) {
+            return 'SW';
+          }
+          if (this.value === 270) {
+            return 'W';
+          }
+          if (this.value === 315) {
+            return 'NW';
+          }
+        },
       },
     },
     yAxis: {
@@ -68,7 +94,10 @@ export default function WindDirection({
       hideCard={hideCard}
       viewDetails={viewDetails}
     >
-      <HighchartsReact highcharts={Highcharts} options={getChartOptions(data)} />
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={getChartOptions(data)}
+      />
     </ChartContainer>
   );
 }

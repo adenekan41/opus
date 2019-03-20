@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import PrimaryLayout from './shared/Layout/primaryLayout';
 import { loadState, saveState, clearState } from './localStorage';

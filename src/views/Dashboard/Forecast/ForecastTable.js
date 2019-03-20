@@ -141,7 +141,6 @@ export default class ForecastTable extends Component {
     this.setState({ loading: true });
     dispatch({ type: actions.EXPORT_WEATHER_DATA }).then(data => {
       this.setState({ loading: false });
-      console.log(data)
       this.createCSV(data);
     });
   };
@@ -151,7 +150,7 @@ export default class ForecastTable extends Component {
       <Box mt="32px">
         <Flex flexWrap="wrap">
           <Box width="350px" mr="20px">
-            <DatePicker />
+            <DatePicker enableOutsideDays />
           </Box>
           <Box width="250px" mr="20px">
             <Dropdown
