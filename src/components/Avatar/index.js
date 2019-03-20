@@ -115,7 +115,7 @@ const Avatar = ({
 };
 
 Avatar.defaultProps = {
-  photo_url: 'https://uinames.com/api/photos/female/21.jpg',
+  photo_url: 'static/img/Micha-van-Winkelhof.jpeg',
 };
 
 export default Avatar;

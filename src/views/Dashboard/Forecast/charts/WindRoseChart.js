@@ -28,9 +28,6 @@ const options = {
     min: 0,
     endOnTick: false,
     showLastLabel: true,
-    title: {
-      text: 'Frequency (%)',
-    },
     labels: {
       formatter: function() {
         return this.value + '%';
@@ -70,7 +67,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
               Table of Frequencies (percent)
             </th>
           </tr>
-          <tr nowrap bgcolor="#CCCCFF">
+          {/* <tr nowrap bgcolor="#CCCCFF">
             <th className="freq">Direction</th>
             <th className="freq">&lt; 0.5 m/s</th>
             <th className="freq">0.5-2 m/s</th>
@@ -80,7 +77,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <th className="freq">8-10 m/s</th>
             <th className="freq">&gt; 10 m/s</th>
             <th className="freq">Total</th>
-          </tr>
+          </tr> */}
           <tr nowrap>
             <td className="dir">N</td>
             <td className="data">1.81</td>
@@ -92,7 +89,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">3.75</td>
           </tr>
-          <tr nowrap bgcolor="#DDDDDD">
+          {/* <tr nowrap bgcolor="#DDDDDD">
             <td className="dir">NNE</td>
             <td className="data">0.62</td>
             <td className="data">1.09</td>
@@ -102,7 +99,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">0.00</td>
             <td className="data">1.71</td>
-          </tr>
+          </tr> */}
           <tr nowrap>
             <td className="dir">NE</td>
             <td className="data">0.82</td>
@@ -114,7 +111,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">1.71</td>
           </tr>
-          <tr nowrap bgcolor="#DDDDDD">
+          {/* <tr nowrap bgcolor="#DDDDDD">
             <td className="dir">ENE</td>
             <td className="data">0.59</td>
             <td className="data">1.22</td>
@@ -124,7 +121,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">0.00</td>
             <td className="data">1.88</td>
-          </tr>
+          </tr> */}
           <tr nowrap>
             <td className="dir">E</td>
             <td className="data">0.62</td>
@@ -136,7 +133,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">3.32</td>
           </tr>
-          <tr nowrap bgcolor="#DDDDDD">
+          {/* <tr nowrap bgcolor="#DDDDDD">
             <td className="dir">ESE</td>
             <td className="data">1.22</td>
             <td className="data">2.01</td>
@@ -146,7 +143,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">0.00</td>
             <td className="data">5.20</td>
-          </tr>
+          </tr> */}
           <tr nowrap>
             <td className="dir">SE</td>
             <td className="data">1.61</td>
@@ -158,7 +155,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.13</td>
             <td className="data">11.45</td>
           </tr>
-          <tr nowrap bgcolor="#DDDDDD">
+          {/* <tr nowrap bgcolor="#DDDDDD">
             <td className="dir">SSE</td>
             <td className="data">2.04</td>
             <td className="data">3.42</td>
@@ -168,7 +165,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.49</td>
             <td className="data">0.00</td>
             <td className="data">9.31</td>
-          </tr>
+          </tr> */}
           <tr nowrap>
             <td className="dir">S</td>
             <td className="data">2.66</td>
@@ -180,7 +177,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">7.83</td>
           </tr>
-          <tr nowrap bgcolor="#DDDDDD">
+          {/* <tr nowrap bgcolor="#DDDDDD">
             <td className="dir">SSW</td>
             <td className="data">2.96</td>
             <td className="data">4.14</td>
@@ -190,7 +187,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">0.00</td>
             <td className="data">7.37</td>
-          </tr>
+          </tr> */}
           <tr nowrap>
             <td className="dir">SW</td>
             <td className="data">2.53</td>
@@ -202,7 +199,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">8.39</td>
           </tr>
-          <tr nowrap bgcolor="#DDDDDD">
+          {/* <tr nowrap bgcolor="#DDDDDD">
             <td className="dir">WSW</td>
             <td className="data">1.97</td>
             <td className="data">2.66</td>
@@ -212,7 +209,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">0.00</td>
             <td className="data">7.70</td>
-          </tr>
+          </tr> */}
           <tr nowrap>
             <td className="dir">W</td>
             <td className="data">1.64</td>
@@ -224,7 +221,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">6.09</td>
           </tr>
-          <tr nowrap bgcolor="#DDDDDD">
+          {/* <tr nowrap bgcolor="#DDDDDD">
             <td className="dir">WNW</td>
             <td className="data">1.32</td>
             <td className="data">2.40</td>
@@ -234,7 +231,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.00</td>
             <td className="data">0.00</td>
             <td className="data">6.64</td>
-          </tr>
+          </tr> */}
           <tr nowrap>
             <td className="dir">NW</td>
             <td className="data">1.58</td>
@@ -246,7 +243,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.03</td>
             <td className="data">9.28</td>
           </tr>
-          <tr nowrap bgcolor="#DDDDDD">
+          {/* <tr nowrap bgcolor="#DDDDDD">
             <td className="dir">NNW</td>
             <td className="data">1.51</td>
             <td className="data">5.00</td>
@@ -256,8 +253,8 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="data">0.13</td>
             <td className="data">0.07</td>
             <td className="data">8.39</td>
-          </tr>
-          <tr nowrap>
+          </tr> */}
+          {/* <tr nowrap>
             <td className="totals">Total</td>
             <td className="totals">25.53</td>
             <td className="totals">44.54</td>
@@ -267,7 +264,7 @@ export default function WindRoseChart({ hideCard, viewDetails, data }) {
             <td className="totals">1.81</td>
             <td className="totals">0.23</td>
             <td className="totals">&nbsp;</td>
-          </tr>
+          </tr> */}
         </table>
       </div>
     </ChartContainer>

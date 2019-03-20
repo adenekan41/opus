@@ -23,7 +23,7 @@ const chartMapping = {
     label: 'Wind direction',
     Component: WindDirection,
   },
-  'wind rose': { label: 'Wind rose', Component: WindRoseChart },
+  // 'wind rose': { label: 'Wind rose', Component: WindRoseChart },
   barometer: { label: 'Barometer', Component: BarometerChart },
 };
 const chartMappingArray = [
