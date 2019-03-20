@@ -17,6 +17,11 @@ const StyledTable = styled.div`
     background: transparent !important;
   }
 
+  .rt-noData {
+    top: 75%!important;
+    background: transparent !important;
+  }
+
   .Table__Wrapper {
     overflow: auto;
     position: relative;

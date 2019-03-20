@@ -186,12 +186,25 @@ const getWeatherData = token => {
 };
 
 const getWeatherStationData = (token, station_name) => {
-  return makeApiCall({ baseURL: BASE_URL_TWO, url: ``, token });
+  return makeApiCall({
+    baseURL: BASE_URL_TWO,
+    url: `/weatherlink/readings-from-${station_name.toLowerCase()}/`,
+    token,
+  });
+};
+
+const exportWeatherData = token => {
+  return makeApiCall({
+    baseURL: BASE_URL_TWO,
+    url: `/weatherlink/export/`,
+    token,
+  });
 };
 
 export default {
   login,
   getUser,
+  getCrops,
   getUsers,
   getProfile,
   patchUser,
@@ -210,7 +223,7 @@ export default {
   sendWhatsappAlert,
   getWeatherForecast,
   getWeatherForecastLogs,
-  getCrops,
   getWeatherData,
   getWeatherStationData,
+  exportWeatherData
 };

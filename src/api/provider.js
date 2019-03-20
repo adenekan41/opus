@@ -25,7 +25,7 @@ export class DataProvider extends React.Component {
         username: 'admin',
         first_name: 'System',
         last_name: 'Admin',
-        photo: '', 
+        photo: '',
       },
       ...this.loadTokenFromStorage(),
     };
@@ -104,6 +104,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.GET_WEATHER_FORECAST_LOGS]: this.getWeatherForecastLogs,
       [ACTIONS.GET_WEATHER_DATA]: this.getWeatherData,
       [ACTIONS.UPDATE_WEATHER_STATION_DATA]: this.updateWeatherStationData,
+      [ACTIONS.EXPORT_WEATHER_DATA]: this.exportWeatherData,
     };
     console.log({ type });
     return options[type](value);
@@ -384,6 +385,15 @@ export class DataProvider extends React.Component {
       .then(data => {
         console.log(data);
         this.updateState({ weatherStation: data });
+        return data;
+      });
+  };
+
+  exportWeatherData = () => {
+    return this.getAdapter()
+      .exportWeatherData()
+      .then(data => {
+        console.log(data);
         return data;
       });
   };

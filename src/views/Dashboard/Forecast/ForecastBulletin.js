@@ -8,7 +8,7 @@ import ForecastTable from './ForecastTable';
 
 export default class ForecastBulletin extends Component {
   render() {
-    const { weatherStation } = this.props;
+    const { weatherStation, ...rest } = this.props;
     return (
       <Box py="40px" px="40px">
         <Box mb="40px">
@@ -16,14 +16,18 @@ export default class ForecastBulletin extends Component {
             <BreadcrumbItem url="/dashboard/weather-data/map" useNavlink>
               Map
             </BreadcrumbItem>
-            <BreadcrumbItem isActive>{weatherStation.station_name}</BreadcrumbItem>
+            <BreadcrumbItem isActive>
+              {weatherStation.station_name}
+            </BreadcrumbItem>
           </Breadcrumbs>
         </Box>
         <Box>
           <TabNav
             links={[
               {
-                url: `/dashboard/weather-data/bulletin/${weatherStation.station_name}/charts`,
+                url: `/dashboard/weather-data/bulletin/${
+                  weatherStation.station_name
+                }/charts`,
                 label: 'Opus snapshots',
                 icon: 'boxes',
                 flex: '0 0 170px',
@@ -40,11 +44,15 @@ export default class ForecastBulletin extends Component {
             <>
               <Route
                 path="/dashboard/weather-data/bulletin/:id/charts"
-                render={props => <ForecastCharts {...props} weatherStation={weatherStation} />}
+                render={props => (
+                  <ForecastCharts {...props} weatherStation={weatherStation} />
+                )}
               />
               <Route
                 path="/dashboard/weather-data/bulletin/weather-data"
-                render={props => <ForecastTable {...props} />}
+                render={props => (
+                  <ForecastTable {...props} {...rest} weatherStation={weatherStation} />
+                )}
               />
             </>
           </TabNav>
