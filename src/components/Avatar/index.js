@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import clientPhoto from './Micha-van-Winkelhof.jpeg'
 
 export const sharedProps = css`
   margin: ${props => props.m};
@@ -115,7 +116,7 @@ const Avatar = ({
 };
 
 Avatar.defaultProps = {
-  photo_url: 'static/img/Micha-van-Winkelhof.jpeg',
+  photo_url: clientPhoto,
 };
 
 export default Avatar;
