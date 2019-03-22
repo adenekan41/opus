@@ -185,7 +185,7 @@ const getWeatherData = token => {
   return makeApiCall({ baseURL: BASE_URL_TWO, url: `/weatherlink/`, token });
 };
 
-const getWeatherStationData = (token, station_name) => {
+const getWeatherStationData = (token, station_name="") => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/weatherlink/readings-from-${station_name.toLowerCase()}/`,

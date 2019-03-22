@@ -6,7 +6,7 @@ import Dropdown from '../../../components/Select';
 import Button from '../../../components/Button';
 import { Icon } from '../../../components/Icon';
 import Table from '../../../components/Table';
-import { fahrenheitToCelcius } from '../../../helpers/functions';
+import { fahrenheitToCelcius, createCSV } from '../../../helpers/functions';
 
 const ForecastTableColumns = [
   {
@@ -102,7 +102,7 @@ export default class ForecastTable extends Component {
     }
   }
   getTableData = () => {
-    const { weatherStation } = this.props;
+    const { weatherStation, weatherStationLogs } = this.props;
     const {
       windchill,
       rain_rate,
@@ -129,19 +129,12 @@ export default class ForecastTable extends Component {
       },
     ];
   };
-  createCSV = text => {
-    var hiddenElement = document.createElement('a');
-    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(text);
-    hiddenElement.target = '_blank';
-    hiddenElement.download = 'weather_data.csv';
-    hiddenElement.click();
-  };
   exportWeatherData = () => {
     const { dispatch, actions } = this.props;
     this.setState({ loading: true });
     dispatch({ type: actions.EXPORT_WEATHER_DATA }).then(data => {
       this.setState({ loading: false });
-      this.createCSV(data);
+      createCSV(data);
     });
   };
   render() {

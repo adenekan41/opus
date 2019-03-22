@@ -46,11 +46,28 @@ export default class ForecastCharts extends Component {
     selectedCharts: chartMappingArray,
   };
 
+  getWeatherStationData = id => {
+    this.setState({
+      loading: true,
+    });
+    const { dispatch, actions } = this.props;
+    dispatch({
+      type: actions.GET_WEATHER_STATION_DATA,
+      value: id,
+    }).then(data => {
+      this.setState({
+        weatherStation: data,
+        loading: false,
+      });
+    });
+  };
+
   componentDidMount() {
     const { weatherStation, history } = this.props;
     if (Object.values(weatherStation).length === 0) {
       history.push('/dashboard/weather-data/map');
     }
+
   }
 
   addToSelectedCharts = chart => {
@@ -82,8 +99,8 @@ export default class ForecastCharts extends Component {
     }
   };
 
-  goToReportPage = () => {
-    this.props.history.push('/dashboard/weather-data/report');
+  goToReportPage = (data) => {
+    this.props.history.push(`/dashboard/weather-data/report`);
   };
 
   render() {

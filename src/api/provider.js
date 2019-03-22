@@ -20,6 +20,7 @@ export class DataProvider extends React.Component {
       crops: [],
       weatherStations: [],
       weatherStation: {},
+      weatherStationLogs: [],
       user: {},
       profile: {
         username: 'admin',
@@ -104,6 +105,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.GET_WEATHER_DATA]: this.getWeatherData,
       [ACTIONS.UPDATE_WEATHER_STATION_DATA]: this.updateWeatherStationData,
       [ACTIONS.EXPORT_WEATHER_DATA]: this.exportWeatherData,
+      [ACTIONS.GET_WEATHER_STATION_DATA]: this.getWeatherStationData,
     };
     console.log({ type });
     return options[type](value);
@@ -370,20 +372,18 @@ export class DataProvider extends React.Component {
       weatherStation => weatherStation.station_name === station_name
     );
     this.updateState({ weatherStation });
+    this.getWeatherStationData(station_name);
     let promise = new Promise(resolve => resolve({ weatherStation }));
     return promise;
   };
 
   getWeatherStationData = station_name => {
-    let { weatherStation } = this.state;
-    if (Object.values(weatherStation).length > 0) {
-      return Promise(resolve => resolve({ weatherStation }));
-    }
+    let { token } = this.state;
     return this.getAdapter()
-      .getWeatherStationData(station_name)
+      .getWeatherStationData(token, station_name)
       .then(data => {
-        this.updateState({ weatherStation: data });
-        return data;
+        this.updateState({ weatherStationLogs: data.data });
+        return data.data;
       });
   };
 

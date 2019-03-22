@@ -133,14 +133,14 @@ export default function ChartContainer({
               >
                 hide card
               </Item>
-              {/* <Item
+              <Item
                 onClick={() => {
                   viewDetails(data);
                   onClose();
                 }}
               >
                 view details
-              </Item> */}
+              </Item>
             </>
           )}
         </Droplist>

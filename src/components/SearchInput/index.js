@@ -65,12 +65,27 @@ const DropdownIndicator = () => {
   return null;
 };
 
-export const SelectSearch = ({ options, placeholder, className, onChange, ...rest }) => {
+
+const groupStyles = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+};
+
+const formatGroupLabel = data => (
+  <div style={groupStyles}>
+    <span>{data.label}</span>
+  </div>
+);
+
+export const SelectSearch = ({ options, placeholder, className, onChange, isGrouped, ...rest }) => {
+  let groupedProps = isGrouped ? {formatGroupLabel} : {};
   return (
     <SelectSearchContainer className={className}>
       <Icon name="search" color="#000000" />
       <Select
         {...rest}
+        {...groupedProps}
         options={options}
         isClearable={false}
         placeholder={placeholder}

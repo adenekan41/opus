@@ -8,7 +8,7 @@ import ForecastTable from './ForecastTable';
 
 export default class ForecastBulletin extends Component {
   render() {
-    const { weatherStation, ...rest } = this.props;
+    const { weatherStation, weatherStationLogs, ...rest } = this.props;
     return (
       <Box py="40px" px="40px">
         <Box mb="40px">
@@ -51,7 +51,12 @@ export default class ForecastBulletin extends Component {
               <Route
                 path="/dashboard/weather-data/bulletin/weather-data"
                 render={props => (
-                  <ForecastTable {...props} {...rest} weatherStation={weatherStation} />
+                  <ForecastTable
+                    {...props}
+                    {...rest}
+                    weatherStation={weatherStation}
+                    weatherStationLogs={weatherStationLogs}
+                  />
                 )}
               />
             </>
