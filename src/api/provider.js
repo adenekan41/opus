@@ -382,8 +382,9 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .getWeatherStationData(token, station_name)
       .then(data => {
-        this.updateState({ weatherStationLogs: data.data });
-        return data.data;
+        let formatData = data.map(value => value.response_data);
+        this.updateState({ weatherStationLogs: formatData });
+        return formatData;
       });
   };
 

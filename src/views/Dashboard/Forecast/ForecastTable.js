@@ -92,17 +92,15 @@ const ForecastTableColumns = [
 ];
 
 export default class ForecastTable extends Component {
-  state = {
-    loading: false,
-  };
+
   componentDidMount() {
     const { weatherStation, history } = this.props;
     if (Object.values(weatherStation).length === 0) {
       history.push('/dashboard/weather-data/map');
     }
   }
-  getTableData = () => {
-    const { weatherStation, weatherStationLogs } = this.props;
+
+  getSingleDataPoint = weatherStation => {
     const {
       windchill,
       rain_rate,
@@ -114,21 +112,26 @@ export default class ForecastTable extends Component {
       wind_direction,
       davis_current_observation: { temp_day_low_f, temp_day_high_f } = {},
     } = weatherStation;
-    return [
-      {
-        windchill,
-        wind_speed,
-        rain_rate,
-        wind_direction,
-        barometer: pressure_in,
-        time: observation_time,
-        humidity: current_humidity,
-        temperature: fahrenheitToCelcius(temp_f),
-        low_temperature: fahrenheitToCelcius(temp_day_low_f),
-        high_temperature: fahrenheitToCelcius(temp_day_high_f),
-      },
-    ];
+
+    return {
+      windchill,
+      wind_speed,
+      rain_rate,
+      wind_direction,
+      barometer: pressure_in,
+      time: observation_time,
+      humidity: current_humidity,
+      temperature: fahrenheitToCelcius(temp_f),
+      low_temperature: fahrenheitToCelcius(temp_day_low_f),
+      high_temperature: fahrenheitToCelcius(temp_day_high_f),
+    };
   };
+
+  getTableData = () => {
+    const { weatherStationLogs } = this.props;
+    return weatherStationLogs.map(this.getSingleDataPoint);
+  };
+
   exportWeatherData = () => {
     const { dispatch, actions } = this.props;
     this.setState({ loading: true });
@@ -137,6 +140,7 @@ export default class ForecastTable extends Component {
       createCSV(data);
     });
   };
+
   render() {
     let data = this.getTableData();
     return (

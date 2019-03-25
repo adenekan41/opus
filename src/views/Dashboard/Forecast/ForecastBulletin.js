@@ -45,7 +45,7 @@ export default class ForecastBulletin extends Component {
               <Route
                 path="/dashboard/weather-data/bulletin/:id/charts"
                 render={props => (
-                  <ForecastCharts {...props} weatherStation={weatherStation} />
+                  <ForecastCharts {...props} {...rest} weatherStation={weatherStation} />
                 )}
               />
               <Route
