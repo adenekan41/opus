@@ -71,6 +71,9 @@ export class DataProvider extends React.Component {
       // this.getContacts(token),
       // this.getUsers(opus1_token),
       this.getWeatherData(token),
+      this.getWeatherStationCurrentData('sefwi01'),
+      this.getWeatherStationCurrentData('sefwi02'),
+      this.getWeatherStationCurrentData('sefwi03'),
     ]).then(data => {
       return {
         // profile: data[0],
@@ -394,6 +397,11 @@ export class DataProvider extends React.Component {
       .then(data => {
         return data;
       });
+  };
+
+  getWeatherStationCurrentData = station_name => {
+    let { token } = this.state;
+    return this.getAdapter().getWeatherStationCurrentData(token, station_name);
   };
 
   render() {

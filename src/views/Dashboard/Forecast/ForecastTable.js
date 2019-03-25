@@ -92,6 +92,9 @@ const ForecastTableColumns = [
 ];
 
 export default class ForecastTable extends Component {
+  state = {
+    loading: false,
+  };
 
   componentDidMount() {
     const { weatherStation, history } = this.props;

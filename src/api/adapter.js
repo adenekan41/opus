@@ -185,13 +185,14 @@ const getWeatherData = token => {
   return makeApiCall({ baseURL: BASE_URL_TWO, url: `/weatherlink/`, token });
 };
 
-// const getWeatherStationData = (token, station_name="") => {
-//   return makeApiCall({
-//     baseURL: BASE_URL_TWO,
-//     url: `/weatherlink/readings-from-${station_name.toLowerCase()}/`,
-//     token,
-//   });
-// };
+const getWeatherStationCurrentData = (token, station_name="") => {
+  return makeApiCall({
+    baseURL: BASE_URL_TWO,
+    url: `/weatherlink/readings-from-${station_name.toLowerCase()}/`,
+    token,
+  });
+};
+
 const getWeatherStationData = (token, station_name="") => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
@@ -232,5 +233,6 @@ export default {
   getWeatherForecastLogs,
   getWeatherData,
   getWeatherStationData,
-  exportWeatherData
+  exportWeatherData,
+  getWeatherStationCurrentData
 };
