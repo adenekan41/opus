@@ -4,6 +4,7 @@ import adapter from './adapter';
 import { ACTIONS } from './actions';
 import { DataContext } from './context';
 import { clearState, saveState, loadState } from '../localStorage';
+import { convertStringToNumber } from '../helpers/functions';
 
 export class DataProvider extends React.Component {
   static defaultProps = {
@@ -109,6 +110,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.UPDATE_WEATHER_STATION_DATA]: this.updateWeatherStationData,
       [ACTIONS.EXPORT_WEATHER_DATA]: this.exportWeatherData,
       [ACTIONS.GET_WEATHER_STATION_DATA]: this.getWeatherStationData,
+      [ACTIONS.FILTER_WEATHER_DATA_BY_DATE]: this.filterWeatherLogByDate,
     };
     console.log({ type });
     return options[type](value);
@@ -389,6 +391,34 @@ export class DataProvider extends React.Component {
         this.updateState({ weatherStationLogs: formatData });
         return formatData;
       });
+  };
+
+  filterWeatherLogByDate = dates => {
+    let { weatherStationLogs } = this.state;
+    let { startDate, endDate } = dates;
+    let data = weatherStationLogs;
+    let today = new Date();
+    let todayInSeconds = convertStringToNumber(moment(today).format('X'));
+    let startDateInSeconds = convertStringToNumber(
+      moment(startDate).format('X')
+    );
+    let endDateInSeconds = convertStringToNumber(moment(endDate).format('X'));
+    if (
+      todayInSeconds === startDateInSeconds &&
+      todayInSeconds === endDateInSeconds
+    ) {
+      data = weatherStationLogs;
+    } else {
+      data = weatherStationLogs.filter(station => {
+        let { observation_time } = station;
+        let time = convertStringToNumber(moment(observation_time).format('X'));
+        if (time >= startDateInSeconds && time <= endDateInSeconds) {
+          return station;
+        }
+      });
+    }
+    // this.updateState({ weatherStationLogs: data });
+    return new Promise(resolve => resolve({ data }));
   };
 
   exportWeatherData = () => {

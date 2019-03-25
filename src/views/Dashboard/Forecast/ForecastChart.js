@@ -49,11 +49,13 @@ export default class ForecastCharts extends Component {
   };
 
   componentDidMount() {
-    const { weatherStation, history } = this.props;
+    const { weatherStation, history, weatherStationLogs } = this.props;
     if (Object.values(weatherStation).length === 0) {
       history.push('/dashboard/weather-data/map');
     }
-    this.getWeatherStationData(weatherStation.station_name);
+    if (weatherStationLogs.length === 0) {
+      this.getWeatherStationData(weatherStation.station_name);
+    }
   }
 
   getWeatherStationData = station_name => {
