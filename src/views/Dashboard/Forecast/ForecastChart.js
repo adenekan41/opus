@@ -98,8 +98,10 @@ export default class ForecastCharts extends Component {
     }
   };
 
-  goToReportPage = data => {
-    this.props.history.push(`/dashboard/weather-data/report`);
+  goToReportPage = (station_name, type) => {
+    const { dispatch, actions } = this.props;
+    dispatch({ type: actions.UPDATE_WEATHER_TYPE, value: type });
+    this.props.history.push(`/dashboard/weather-data/${station_name}/report`);
   };
 
   render() {
@@ -170,7 +172,9 @@ export default class ForecastCharts extends Component {
                   <Box key={`${label}-${i}`}>
                     <Component
                       hideCard={() => this.removeFromSelectedCharts(label)}
-                      viewDetails={this.goToReportPage}
+                      viewDetails={() =>
+                        this.goToReportPage(weatherStation.station_name, label)
+                      }
                       {...{
                         humidityData,
                         barometerData,

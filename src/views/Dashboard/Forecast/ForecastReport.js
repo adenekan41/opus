@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Box, Flex, Text } from 'rebass';
-import { Line } from 'react-chartjs-2';
 import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumb';
 import DatePicker from '../../../components/DatePicker';
 import Dropdown from '../../../components/Select';
@@ -13,13 +12,31 @@ import { createCSV } from '../../../helpers/functions';
 export default class ForecastReport extends Component {
   state = {
     loading: false,
+    data: [],
   };
+
   componentDidMount() {
-    const { weatherStation, history } = this.props;
+    const { weatherStation, history, type } = this.props;
+    if (Boolean(type) === false) {
+      history.push('/dashboard/weather-data/map');
+    }
     if (Object.values(weatherStation).length === 0) {
       history.push('/dashboard/weather-data/map');
     }
+    this.getWeatherTypeData(type);
   }
+
+  getWeatherTypeData = type => {
+    const { dispatch, actions } = this.props;
+    let data = dispatch({
+      type: actions.FILTER_WEATHER_DATA_BY_TYPE,
+      value: type,
+    });
+    this.setState({
+      data,
+    });
+  };
+
   exportWeatherData = () => {
     const { dispatch, actions } = this.props;
     this.setState({ loading: true });
@@ -28,8 +45,10 @@ export default class ForecastReport extends Component {
       createCSV(data);
     });
   };
+
   render() {
-    const { weatherStation } = this.props;
+    const { weatherStation, type } = this.props;
+    let { data } = this.state;
     return (
       <Box py="40px" px="40px">
         <Box mb="40px">
@@ -52,17 +71,19 @@ export default class ForecastReport extends Component {
           <Box className="col-md-3">
             <Dropdown
               options={[
-                { value: 'temperature', label: 'Temperature' },
-                { value: 'current rain', label: 'Current rain' },
-                { value: 'total rain', label: 'Total rain' },
-                { value: 'humidity', label: 'Humidity' },
-                { value: 'wind speed', label: 'Wind speed' },
-                { value: 'wind direction', label: 'Wind direction' },
-                { value: 'wind rose', label: 'Wind rose' },
-                { value: 'barometer', label: 'Barometer' },
+                { value: 'Temperature', label: 'Temperature' },
+                { value: 'Current rain', label: 'Current rain' },
+                { value: 'Total rain', label: 'Total rain' },
+                { value: 'Humidity', label: 'Humidity' },
+                { value: 'Wind speed', label: 'Wind speed' },
+                { value: 'Wind direction', label: 'Wind direction' },
+                { value: 'Barometer', label: 'Barometer' },
               ]}
+              onChange={weatherType =>
+                this.getWeatherTypeData(weatherType.value)
+              }
               label="Select graph"
-              value="temperature"
+              value={type}
             />
           </Box>
           <Box className="col-md-4">
@@ -70,9 +91,7 @@ export default class ForecastReport extends Component {
           </Box>
           <Box className="col-md-3">
             <Dropdown
-              options={[
-                { value: '1', label: '1 day' },
-              ]}
+              options={[{ value: '1', label: '1 day' }]}
               label="Span"
               value="1"
             />
@@ -98,13 +117,15 @@ export default class ForecastReport extends Component {
           <Card padding="16px">
             <Flex alignItems="center" justifyContent="space-between" mb="16px">
               <Text fontSize="12px">
-                <span style={{ fontWeight: 'bold' }}>{weatherStation.station_name} - </span>
+                <span style={{ fontWeight: 'bold' }}>
+                  {weatherStation.station_name} -{' '}
+                </span>
                 <span style={{ fontStyle: 'italic' }}>
                   28 Feb, 2019 00:00 to 28 Feb, 2019 00:00
                 </span>
               </Text>
             </Flex>
-            <ReportChart />
+            <ReportChart {...{ type, data }} />
           </Card>
         </Box>
       </Box>

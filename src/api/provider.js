@@ -4,7 +4,7 @@ import adapter from './adapter';
 import { ACTIONS } from './actions';
 import { DataContext } from './context';
 import { clearState, saveState, loadState } from '../localStorage';
-import { convertStringToNumber } from '../helpers/functions';
+import { convertStringToNumber, weatherTypeData } from '../helpers/functions';
 
 export class DataProvider extends React.Component {
   static defaultProps = {
@@ -28,6 +28,7 @@ export class DataProvider extends React.Component {
         first_name: 'System',
         last_name: 'Admin',
       },
+      weatherType: 'Temperature',
       ...this.loadTokenFromStorage(),
     };
     this.state.context = {
@@ -111,6 +112,8 @@ export class DataProvider extends React.Component {
       [ACTIONS.EXPORT_WEATHER_DATA]: this.exportWeatherData,
       [ACTIONS.GET_WEATHER_STATION_DATA]: this.getWeatherStationData,
       [ACTIONS.FILTER_WEATHER_DATA_BY_DATE]: this.filterWeatherLogByDate,
+      [ACTIONS.FILTER_WEATHER_DATA_BY_TYPE]: this.filterWeatherLogByType,
+      [ACTIONS.UPDATE_WEATHER_TYPE]: this.updateWeatherType,
     };
     console.log({ type });
     return options[type](value);
@@ -417,8 +420,24 @@ export class DataProvider extends React.Component {
         }
       });
     }
-    // this.updateState({ weatherStationLogs: data });
     return new Promise(resolve => resolve({ data }));
+  };
+
+  filterWeatherLogByType = type => {
+    if (type) {
+      this.updateWeatherType(type);
+      let { weatherStationLogs } = this.state;
+      let result = [];
+      weatherTypeData[type].forEach(item => {
+        result.push(weatherStationLogs.map(value => value[item]));
+      });
+      console.log(result);
+      return result;
+    }
+  };
+
+  updateWeatherType = type => {
+    this.updateState({ type });
   };
 
   exportWeatherData = () => {
