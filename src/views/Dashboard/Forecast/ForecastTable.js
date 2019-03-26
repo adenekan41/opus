@@ -147,13 +147,12 @@ export default class ForecastTable extends Component {
 
   filterDataByDate = dates => {
     const { dispatch, actions } = this.props;
-    dispatch({
+    let data = dispatch({
       type: actions.FILTER_WEATHER_DATA_BY_DATE,
       value: dates,
-    }).then(data => {
-      this.setState({
-        weatherStationLogs: data.data,
-      });
+    })
+    this.setState({
+      weatherStationLogs: data,
     });
   };
 

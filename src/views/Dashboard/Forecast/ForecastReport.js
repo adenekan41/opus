@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import { Box, Flex, Text } from 'rebass';
 import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumb';
 import DatePicker from '../../../components/DatePicker';
@@ -13,6 +14,8 @@ export default class ForecastReport extends Component {
   state = {
     loading: false,
     data: [],
+    startDate: new Date(),
+    endDate: new Date(),
   };
 
   componentDidMount() {
@@ -23,14 +26,17 @@ export default class ForecastReport extends Component {
     if (Object.values(weatherStation).length === 0) {
       history.push('/dashboard/weather-data/map');
     }
-    this.getWeatherTypeData(type);
+    this.getWeatherTypeData(type, {
+      startDate: new Date(),
+      endDate: new Date(),
+    });
   }
 
-  getWeatherTypeData = type => {
+  getWeatherTypeData = (type, dates) => {
     const { dispatch, actions } = this.props;
     let data = dispatch({
       type: actions.FILTER_WEATHER_DATA_BY_TYPE,
-      value: type,
+      value: { type, dates },
     });
     this.setState({
       data,
@@ -48,7 +54,7 @@ export default class ForecastReport extends Component {
 
   render() {
     const { weatherStation, type } = this.props;
-    let { data } = this.state;
+    let { data, startDate, endDate } = this.state;
     return (
       <Box py="40px" px="40px">
         <Box mb="40px">
@@ -80,14 +86,26 @@ export default class ForecastReport extends Component {
                 { value: 'Barometer', label: 'Barometer' },
               ]}
               onChange={weatherType =>
-                this.getWeatherTypeData(weatherType.value)
+                this.getWeatherTypeData(weatherType.value, {
+                  startDate: new Date(),
+                  endDate: new Date(),
+                })
               }
               label="Select graph"
               value={type}
             />
           </Box>
           <Box className="col-md-4">
-            <DatePicker />
+            <DatePicker
+              isOutsideRange={() => false}
+              onChange={({ startDate, endDate }) => {
+                this.setState({
+                  startDate,
+                  endDate,
+                });
+                this.getWeatherTypeData(type, { startDate, endDate });
+              }}
+            />
           </Box>
           <Box className="col-md-3">
             <Dropdown
@@ -121,7 +139,8 @@ export default class ForecastReport extends Component {
                   {weatherStation.station_name} -{' '}
                 </span>
                 <span style={{ fontStyle: 'italic' }}>
-                  28 Feb, 2019 00:00 to 28 Feb, 2019 00:00
+                  {moment(startDate).format('DD MMM, YYYY hh:mm')} to{' '}
+                  {moment(endDate).format('DD MMM, YYYY hh:mm')}
                 </span>
               </Text>
             </Flex>

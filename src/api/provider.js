@@ -4,7 +4,11 @@ import adapter from './adapter';
 import { ACTIONS } from './actions';
 import { DataContext } from './context';
 import { clearState, saveState, loadState } from '../localStorage';
-import { convertStringToNumber, weatherTypeData } from '../helpers/functions';
+import {
+  convertStringToNumber,
+  weatherTypeData,
+  fahrenheitToCelcius,
+} from '../helpers/functions';
 
 export class DataProvider extends React.Component {
   static defaultProps = {
@@ -420,13 +424,14 @@ export class DataProvider extends React.Component {
         }
       });
     }
-    return new Promise(resolve => resolve({ data }));
+    return data;
   };
 
-  filterWeatherLogByType = type => {
+  filterWeatherLogByType = value => {
+    let { type, dates } = value;
     if (type) {
       this.updateWeatherType(type);
-      let { weatherStationLogs } = this.state;
+      let weatherStationLogs = this.filterWeatherLogByDate(dates);
       let result = [];
       weatherTypeData[type].forEach(item => {
         result.push(weatherStationLogs.map(value => value[item]));

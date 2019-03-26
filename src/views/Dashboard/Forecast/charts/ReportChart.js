@@ -2,7 +2,18 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { getWeatherReportType } from '../../../../helpers/functions';
 
+const labelStringRegister = {
+  Temperature: 'Temperature°C',
+  'Current rain': 'Current rain',
+  'Total rain': 'Total rain',
+  'Wind speed': 'wind_speed',
+  Humidity: 'Humidity',
+  'Wind direction': 'Wind direction',
+  Barometer: 'Barometer',
+};
+
 const ReportChart = ({ type, data }) => {
+  let labelString = labelStringRegister[type];
   return (
     <Line
       width={500}
@@ -44,6 +55,10 @@ const ReportChart = ({ type, data }) => {
             {
               gridLines: {
                 display: true,
+              },
+              scaleLabel: {
+                display: true,
+                labelString,
               },
             },
           ],
