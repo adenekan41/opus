@@ -79,25 +79,37 @@ export default class ForecastMap extends Component {
   };
   getSearchOptions = () => {
     const { weatherStations } = this.props;
-    return weatherStations.map(station => ({
-      label: `${station.location} - ${station.station_name}`,
+    let locations = weatherStations.map(station => ({
+      label: `${station.location}`,
       value: `${station.station_name}`,
     }));
+    let stations = weatherStations.map(station => ({
+      label: `${station.station_name}`,
+      value: `${station.station_name}`,
+    }));
+    return [
+      {
+        label: 'Stations',
+        options: stations,
+      },
+      {
+        label: 'Locations',
+        options: locations,
+      },
+    ];
   };
   findSelectedStation = name => {
     const { weatherStations } = this.props;
-    return weatherStations.find(
-      station => station.station_name === name
-    );
-  }
+    return weatherStations.find(station => station.station_name === name);
+  };
   setMapCenter = name => {
     let selectedStation = this.findSelectedStation(name);
     let { latitude, longitude } = selectedStation;
-    let center = [latitude, longitude]
+    let center = [latitude, longitude];
     this.setState({
       center,
-      zoom: 12
-    })
+      zoom: 12,
+    });
   };
   render() {
     const { weatherStations } = this.props;
@@ -107,6 +119,7 @@ export default class ForecastMap extends Component {
         <div className="SearchInput__wrapper">
           <SelectSearch
             className="SearchInput"
+            openMenuOnClick={false}
             options={this.getSearchOptions()}
             onChange={station => this.setMapCenter(station.value)}
           />

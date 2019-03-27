@@ -18,7 +18,7 @@ export default class Forecast extends Component {
           render={props => <ForecastBulletin {...props} {...this.props} />}
         />
         <Route
-          path="/dashboard/weather-data/report"
+          path="/dashboard/weather-data/:id/report"
           render={props => <ForecastReport {...props} {...this.props} />}
         />
       </>

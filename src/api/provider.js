@@ -4,6 +4,11 @@ import adapter from './adapter';
 import { ACTIONS } from './actions';
 import { DataContext } from './context';
 import { clearState, saveState, loadState } from '../localStorage';
+import {
+  convertStringToNumber,
+  weatherTypeData,
+  fahrenheitToCelcius,
+} from '../helpers/functions';
 
 export class DataProvider extends React.Component {
   static defaultProps = {
@@ -20,12 +25,14 @@ export class DataProvider extends React.Component {
       crops: [],
       weatherStations: [],
       weatherStation: {},
+      weatherStationLogs: [],
       user: {},
       profile: {
         username: 'admin',
         first_name: 'System',
         last_name: 'Admin',
       },
+      weatherType: 'Temperature',
       ...this.loadTokenFromStorage(),
     };
     this.state.context = {
@@ -70,6 +77,9 @@ export class DataProvider extends React.Component {
       // this.getContacts(token),
       // this.getUsers(opus1_token),
       this.getWeatherData(token),
+      this.getWeatherStationCurrentData('sefwi01'),
+      this.getWeatherStationCurrentData('sefwi02'),
+      this.getWeatherStationCurrentData('sefwi03'),
     ]).then(data => {
       return {
         // profile: data[0],
@@ -104,6 +114,10 @@ export class DataProvider extends React.Component {
       [ACTIONS.GET_WEATHER_DATA]: this.getWeatherData,
       [ACTIONS.UPDATE_WEATHER_STATION_DATA]: this.updateWeatherStationData,
       [ACTIONS.EXPORT_WEATHER_DATA]: this.exportWeatherData,
+      [ACTIONS.GET_WEATHER_STATION_DATA]: this.getWeatherStationData,
+      [ACTIONS.FILTER_WEATHER_DATA_BY_DATE]: this.filterWeatherLogByDate,
+      [ACTIONS.FILTER_WEATHER_DATA_BY_TYPE]: this.filterWeatherLogByType,
+      [ACTIONS.UPDATE_WEATHER_TYPE]: this.updateWeatherType,
     };
     console.log({ type });
     return options[type](value);
@@ -370,21 +384,65 @@ export class DataProvider extends React.Component {
       weatherStation => weatherStation.station_name === station_name
     );
     this.updateState({ weatherStation });
+    this.getWeatherStationData(station_name);
     let promise = new Promise(resolve => resolve({ weatherStation }));
     return promise;
   };
 
   getWeatherStationData = station_name => {
-    let { weatherStation } = this.state;
-    if (Object.values(weatherStation).length > 0) {
-      return Promise(resolve => resolve({ weatherStation }));
-    }
+    let { token } = this.state;
     return this.getAdapter()
-      .getWeatherStationData(station_name)
+      .getWeatherStationData(token, station_name)
       .then(data => {
-        this.updateState({ weatherStation: data });
-        return data;
+        let formatData = data.map(value => value.response_data);
+        this.updateState({ weatherStationLogs: formatData });
+        return formatData;
       });
+  };
+
+  filterWeatherLogByDate = dates => {
+    let { weatherStationLogs } = this.state;
+    let { startDate, endDate } = dates;
+    let data = weatherStationLogs;
+    let today = new Date();
+    let todayInSeconds = convertStringToNumber(moment(today).format('X'));
+    let startDateInSeconds = convertStringToNumber(
+      moment(startDate).format('X')
+    );
+    let endDateInSeconds = convertStringToNumber(moment(endDate).format('X'));
+    if (
+      todayInSeconds === startDateInSeconds &&
+      todayInSeconds === endDateInSeconds
+    ) {
+      data = weatherStationLogs;
+    } else {
+      data = weatherStationLogs.filter(station => {
+        let { observation_time } = station;
+        let time = convertStringToNumber(moment(observation_time).format('X'));
+        if (time >= startDateInSeconds && time <= endDateInSeconds) {
+          return station;
+        }
+      });
+    }
+    return data;
+  };
+
+  filterWeatherLogByType = value => {
+    let { type, dates } = value;
+    if (type) {
+      this.updateWeatherType(type);
+      let weatherStationLogs = this.filterWeatherLogByDate(dates);
+      let result = [];
+      weatherTypeData[type].forEach(item => {
+        result.push(weatherStationLogs.map(value => value[item]));
+      });
+      console.log(result);
+      return result;
+    }
+  };
+
+  updateWeatherType = type => {
+    this.updateState({ type });
   };
 
   exportWeatherData = () => {
@@ -393,6 +451,11 @@ export class DataProvider extends React.Component {
       .then(data => {
         return data;
       });
+  };
+
+  getWeatherStationCurrentData = station_name => {
+    let { token } = this.state;
+    return this.getAdapter().getWeatherStationCurrentData(token, station_name);
   };
 
   render() {

@@ -12,6 +12,7 @@ import WindRoseChart from './charts/WindRoseChart';
 import WindDirection from './charts/WindDirectionChart';
 import BarometerChart from './charts/BarometerChart';
 import { convertStringToNumber } from '../../../helpers/functions';
+import { Spinner } from '../../../components/Spinner';
 
 const chartMapping = {
   temperature: { label: 'Temperature', Component: TemperatureChart },
@@ -43,15 +44,30 @@ const chartMappingArray = [
 export default class ForecastCharts extends Component {
   state = {
     charts: chartMapping,
+    loading: false,
     selectedCharts: chartMappingArray,
   };
 
   componentDidMount() {
-    const { weatherStation, history } = this.props;
+    const { weatherStation, history, weatherStationLogs } = this.props;
     if (Object.values(weatherStation).length === 0) {
       history.push('/dashboard/weather-data/map');
     }
+    if (weatherStationLogs.length === 0) {
+      this.getWeatherStationData(weatherStation.station_name);
+    }
   }
+
+  getWeatherStationData = station_name => {
+    const { dispatch, actions } = this.props;
+    this.setState({ loading: true });
+    dispatch({
+      type: actions.GET_WEATHER_STATION_DATA,
+      value: station_name,
+    }).then(() => {
+      this.setState({ loading: false });
+    });
+  };
 
   addToSelectedCharts = chart => {
     let chartToAdd = this.state.charts[chart];
@@ -82,8 +98,10 @@ export default class ForecastCharts extends Component {
     }
   };
 
-  goToReportPage = () => {
-    this.props.history.push('/dashboard/weather-data/report');
+  goToReportPage = (station_name, type) => {
+    const { dispatch, actions } = this.props;
+    dispatch({ type: actions.UPDATE_WEATHER_TYPE, value: type });
+    this.props.history.push(`/dashboard/weather-data/${station_name}/report`);
   };
 
   render() {
@@ -130,47 +148,57 @@ export default class ForecastCharts extends Component {
     let windDirectionData = [convertStringToNumber(wind_degrees)];
     return (
       <Box>
-        <Flex mb="30px">
-          {chartFilter.map((filter, i) => (
-            <TagButton
-              key={i.toString()}
-              style={{ marginRight: '12px' }}
-              isActive={selectedChartsLabels.includes(filter.toLowerCase())}
-              onClick={() => this.onChartFilterClick(filter.toLowerCase())}
-            >
-              {filter}
-            </TagButton>
-          ))}
-        </Flex>
-        {selectedCharts.length > 0 ? (
-          <Flex flexWrap="wrap">
-            {selectedCharts.map(({ Component, label }, i) => (
-              <Box key={`${label}-${i}`}>
-                <Component
-                  hideCard={() => this.removeFromSelectedCharts(label)}
-                  viewDetails={this.goToReportPage}
-                  {...{
-                    humidityData,
-                    barometerData,
-                    windSpeedData,
-                    totalRainData,
-                    currentRainData,
-                    windDirectionData,
-                    temperatureChartData,
-                  }}
-                />
-              </Box>
-            ))}
+        {this.state.loading ? (
+          <Flex alignItems="center" justifyContent="center" py="30vh">
+            <Spinner />
           </Flex>
         ) : (
-          <EmptyState
-            image={emptyStateImage}
-            margin="80px"
-            heading="No Charts"
-            helpText="You haven’t selected any charts, to view a chart
+          <>
+            <Flex mb="30px">
+              {chartFilter.map((filter, i) => (
+                <TagButton
+                  key={i.toString()}
+                  style={{ marginRight: '12px' }}
+                  isActive={selectedChartsLabels.includes(filter.toLowerCase())}
+                  onClick={() => this.onChartFilterClick(filter.toLowerCase())}
+                >
+                  {filter}
+                </TagButton>
+              ))}
+            </Flex>
+            {selectedCharts.length > 0 ? (
+              <Flex flexWrap="wrap">
+                {selectedCharts.map(({ Component, label }, i) => (
+                  <Box key={`${label}-${i}`}>
+                    <Component
+                      hideCard={() => this.removeFromSelectedCharts(label)}
+                      viewDetails={() =>
+                        this.goToReportPage(weatherStation.station_name, label)
+                      }
+                      {...{
+                        humidityData,
+                        barometerData,
+                        windSpeedData,
+                        totalRainData,
+                        currentRainData,
+                        windDirectionData,
+                        temperatureChartData,
+                      }}
+                    />
+                  </Box>
+                ))}
+              </Flex>
+            ) : (
+              <EmptyState
+                image={emptyStateImage}
+                margin="80px"
+                heading="No Charts"
+                helpText="You haven’t selected any charts, to view a chart
           please click on any of the filters above
           to enable it."
-          />
+              />
+            )}
+          </>
         )}
       </Box>
     );

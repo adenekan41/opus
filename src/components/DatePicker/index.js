@@ -90,11 +90,12 @@ class DatePicker extends React.Component {
     focusedInput: null,
   };
   render() {
-    const { label, isInvalid, errorMessage, onChange } = this.props;
+    const { label, isInvalid, errorMessage, onChange, ...rest } = this.props;
     return (
       <DatePickerContainer>
         <Flex>
           <DateRangePicker
+            {...rest}
             showDefaultInputIcon
             customArrowIcon={<CustomArrowIcon />}
             startDate={this.state.startDate}
@@ -105,8 +106,8 @@ class DatePicker extends React.Component {
               this.setState({ startDate, endDate }, () => {
                 if (startDate && endDate) {
                   onChange({
-                    startDate: startDate.toISOString(),
-                    endDate: endDate.toISOString(),
+                    startDate,
+                    endDate,
                   });
                 }
               });

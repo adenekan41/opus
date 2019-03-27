@@ -6,15 +6,15 @@ import Dropdown from '../../../components/Select';
 import Button from '../../../components/Button';
 import { Icon } from '../../../components/Icon';
 import Table from '../../../components/Table';
-import { fahrenheitToCelcius } from '../../../helpers/functions';
+import { fahrenheitToCelcius, createCSV } from '../../../helpers/functions';
 
 const ForecastTableColumns = [
   {
     Header: 'Time',
     id: 'time',
     accessor: 'time',
-    Cell: ({ original: { observation_time } }) => (
-      <span>{moment(observation_time).format('DD/MM/YY - hh:mm')}</span>
+    Cell: ({ original: { time } }) => (
+      <span>{moment(time).format('DD/MM/YY - hh:mm')}</span>
     ),
     style: {
       color: '#8c8c8c',
@@ -94,15 +94,17 @@ const ForecastTableColumns = [
 export default class ForecastTable extends Component {
   state = {
     loading: false,
+    weatherStationLogs: this.props.weatherStationLogs || [],
   };
+
   componentDidMount() {
     const { weatherStation, history } = this.props;
     if (Object.values(weatherStation).length === 0) {
       history.push('/dashboard/weather-data/map');
     }
   }
-  getTableData = () => {
-    const { weatherStation } = this.props;
+
+  getSingleDataPoint = weatherStation => {
     const {
       windchill,
       rain_rate,
@@ -114,43 +116,58 @@ export default class ForecastTable extends Component {
       wind_direction,
       davis_current_observation: { temp_day_low_f, temp_day_high_f } = {},
     } = weatherStation;
-    return [
-      {
-        windchill,
-        wind_speed,
-        rain_rate,
-        wind_direction,
-        barometer: pressure_in,
-        time: observation_time,
-        humidity: current_humidity,
-        temperature: fahrenheitToCelcius(temp_f),
-        low_temperature: fahrenheitToCelcius(temp_day_low_f),
-        high_temperature: fahrenheitToCelcius(temp_day_high_f),
-      },
-    ];
+
+    return {
+      windchill,
+      wind_speed,
+      rain_rate,
+      wind_direction,
+      barometer: pressure_in,
+      time: observation_time,
+      humidity: current_humidity,
+      temperature: fahrenheitToCelcius(temp_f),
+      low_temperature: fahrenheitToCelcius(temp_day_low_f),
+      high_temperature: fahrenheitToCelcius(temp_day_high_f),
+    };
   };
-  createCSV = text => {
-    var hiddenElement = document.createElement('a');
-    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(text);
-    hiddenElement.target = '_blank';
-    hiddenElement.download = 'weather_data.csv';
-    hiddenElement.click();
+
+  getTableData = () => {
+    const { weatherStationLogs } = this.state;
+    return weatherStationLogs.map(this.getSingleDataPoint);
   };
+
   exportWeatherData = () => {
     const { dispatch, actions } = this.props;
     this.setState({ loading: true });
     dispatch({ type: actions.EXPORT_WEATHER_DATA }).then(data => {
       this.setState({ loading: false });
-      this.createCSV(data);
+      createCSV(data);
     });
   };
+
+  filterDataByDate = dates => {
+    const { dispatch, actions } = this.props;
+    let data = dispatch({
+      type: actions.FILTER_WEATHER_DATA_BY_DATE,
+      value: dates,
+    })
+    this.setState({
+      weatherStationLogs: data,
+    });
+  };
+
   render() {
     let data = this.getTableData();
     return (
       <Box mt="32px">
         <Flex flexWrap="wrap">
           <Box width="350px" mr="20px">
-            <DatePicker enableOutsideDays />
+            <DatePicker
+              isOutsideRange={() => false}
+              onChange={({ startDate, endDate }) => {
+                this.filterDataByDate({ startDate, endDate });
+              }}
+            />
           </Box>
           <Box width="250px" mr="20px">
             <Dropdown
@@ -179,7 +196,7 @@ export default class ForecastTable extends Component {
         <Box mt="40px">
           <Table
             data={data}
-            showPagination={false}
+            showPagination={data.length > 20}
             noDataText="No Weather Data"
             columns={ForecastTableColumns}
           />
