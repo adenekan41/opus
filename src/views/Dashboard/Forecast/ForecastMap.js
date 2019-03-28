@@ -68,6 +68,12 @@ const ForecastContainer = styled.div`
 
 export default class ForecastMap extends Component {
   state = { center: [8.7832, 34.5085], zoom: 4 };
+  
+  componentDidMount() {
+    const { dispatch, actions } = this.props;
+    dispatch({ type: actions.CLEAR_WEATHER_LOGS });
+  }
+
   goToBulletinPage = station_name => {
     const { dispatch, history, actions } = this.props;
     dispatch({

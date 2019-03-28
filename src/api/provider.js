@@ -118,6 +118,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.FILTER_WEATHER_DATA_BY_DATE]: this.filterWeatherLogByDate,
       [ACTIONS.FILTER_WEATHER_DATA_BY_TYPE]: this.filterWeatherLogByType,
       [ACTIONS.UPDATE_WEATHER_TYPE]: this.updateWeatherType,
+      [ACTIONS.CLEAR_WEATHER_LOGS]: this.clearWeatherLogs,
     };
     console.log({ type });
     return options[type](value);
@@ -436,7 +437,6 @@ export class DataProvider extends React.Component {
       weatherTypeData[type].forEach(item => {
         result.push(weatherStationLogs.map(value => value[item]));
       });
-      console.log(result);
       return result;
     }
   };
@@ -456,6 +456,10 @@ export class DataProvider extends React.Component {
   getWeatherStationCurrentData = station_name => {
     let { token } = this.state;
     return this.getAdapter().getWeatherStationCurrentData(token, station_name);
+  };
+
+  clearWeatherLogs = () => {
+    this.updateState({ weatherStationLogs: [] });
   };
 
   render() {

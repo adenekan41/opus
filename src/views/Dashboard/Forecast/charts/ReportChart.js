@@ -6,7 +6,7 @@ const labelStringRegister = {
   Temperature: 'Temperature°C',
   'Current rain': 'Current rain',
   'Total rain': 'Total rain',
-  'Wind speed': 'wind_speed',
+  'Wind speed': 'Wind Speed',
   Humidity: 'Humidity',
   'Wind direction': 'Wind direction',
   Barometer: 'Barometer',
