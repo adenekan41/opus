@@ -25,7 +25,7 @@ const reportTypes = {
     {
       label: 'Low Temp',
       backgroundColor: 'transparent',
-      borderColor: '#34485e',
+      borderColor: '#29cb58',
       data: data[1],
       borderWidth: 1
     },
@@ -48,7 +48,7 @@ const reportTypes = {
     {
       label: 'Rain Day',
       backgroundColor: 'transparent',
-      borderColor: '#221e20',
+      borderColor: '#29cb58',
       data: data[0],
       borderWidth: 1
     },
@@ -64,7 +64,7 @@ const reportTypes = {
     {
       label: 'Rain Month',
       backgroundColor: 'transparent',
-      borderColor: '#221e20',
+      borderColor: '#29cb58',
       data: data[0],
       borderWidth: 1
     },
@@ -107,7 +107,7 @@ const reportTypes = {
     {
       label: 'Pressure',
       backgroundColor: 'transparent',
-      borderColor: '#221e20',
+      borderColor: '#29cb58',
       data: data[0],
       borderWidth: 1
     },
