@@ -107,13 +107,6 @@ export default class ForecastReport extends Component {
               }}
             />
           </Box>
-          <Box className="col-md-3">
-            <Dropdown
-              options={[{ value: '1', label: '1 day' }]}
-              label="Span"
-              value="1"
-            />
-          </Box>
           <Box className="col-md-2">
             <Button
               kind="green"

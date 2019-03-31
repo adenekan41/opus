@@ -29,8 +29,8 @@ export class DataProvider extends React.Component {
       user: {},
       profile: {
         username: 'admin',
-        first_name: 'System',
-        last_name: 'Admin',
+        first_name: 'Micha',
+        last_name: 'Van Winkelhof',
       },
       weatherType: 'Temperature',
       ...this.loadTokenFromStorage(),
