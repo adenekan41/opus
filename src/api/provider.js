@@ -7,7 +7,6 @@ import { clearState, saveState, loadState } from '../localStorage';
 import {
   convertStringToNumber,
   weatherTypeData,
-  fahrenheitToCelcius,
 } from '../helpers/functions';
 
 export class DataProvider extends React.Component {
@@ -32,7 +31,7 @@ export class DataProvider extends React.Component {
         first_name: 'Micha',
         last_name: 'Van Winkelhof',
       },
-      weatherType: 'Temperature',
+      type: 'Temperature',
       ...this.loadTokenFromStorage(),
     };
     this.state.context = {

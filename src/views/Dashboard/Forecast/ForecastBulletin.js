@@ -5,6 +5,7 @@ import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumb';
 import TabNav from '../../../components/TabNav';
 import ForecastCharts from './ForecastChart';
 import ForecastTable from './ForecastTable';
+import ForecastReport from './ForecastReport';
 
 export default class ForecastBulletin extends Component {
   render() {
@@ -30,13 +31,24 @@ export default class ForecastBulletin extends Component {
                 }/charts`,
                 label: 'Opus snapshots',
                 icon: 'boxes',
-                flex: '0 0 170px',
-                max: '170px',
+                flex: '0 0 180px',
+                max: '180px',
               },
               {
                 url: '/dashboard/weather-data/bulletin/weather-data',
                 label: 'Weather data',
                 icon: 'chart',
+                flex: '0 0 180px',
+                max: '180px',
+              },
+              {
+                url: `/dashboard/weather-data/${
+                  weatherStation.station_name
+                }/report`,
+                label: 'Weather report',
+                icon: 'doc',
+                flex: '0 0 180px',
+                max: '180px',
               },
             ]}
             useNavLink
@@ -57,10 +69,20 @@ export default class ForecastBulletin extends Component {
                 path="/dashboard/weather-data/bulletin/weather-data"
                 render={props => (
                   <ForecastTable
-                    {...props}
                     {...rest}
+                    {...props}
                     weatherStation={weatherStation}
                     weatherStationLogs={weatherStationLogs}
+                  />
+                )}
+              />
+              <Route
+                path="/dashboard/weather-data/:id/report"
+                render={props => (
+                  <ForecastReport
+                    {...rest}
+                    {...props}
+                    weatherStation={weatherStation}
                   />
                 )}
               />
