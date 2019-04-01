@@ -178,7 +178,7 @@ export default function TabNav({ children, useNavLink, links }) {
           {links.map((link, i) => (
             <li className="TabNav__navigation__tab" style={{flex: link.flex, maxWidth:link.max}} key={i.toString()}>
               <Link to={link.url} href={link.url} activeClassName="active" exact>
-                <Icon name={link.icon} /> {link.label}
+                <Icon name={link.icon} /> <span>{link.label}</span>
               </Link>
             </li>
           ))}

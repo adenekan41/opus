@@ -20,9 +20,6 @@ export default class ForecastReport extends Component {
 
   componentDidMount() {
     const { weatherStation, history, type } = this.props;
-    if (Boolean(type) === false) {
-      history.push('/dashboard/weather-data/map');
-    }
     if (Object.values(weatherStation).length === 0) {
       history.push('/dashboard/weather-data/map');
     }
@@ -105,13 +102,6 @@ export default class ForecastReport extends Component {
                 });
                 this.getWeatherTypeData(type, { startDate, endDate });
               }}
-            />
-          </Box>
-          <Box className="col-md-3">
-            <Dropdown
-              options={[{ value: '1', label: '1 day' }]}
-              label="Span"
-              value="1"
             />
           </Box>
           <Box className="col-md-2">
