@@ -4,10 +4,7 @@ import adapter from './adapter';
 import { ACTIONS } from './actions';
 import { DataContext } from './context';
 import { clearState, saveState, loadState } from '../localStorage';
-import {
-  convertStringToNumber,
-  weatherTypeData,
-} from '../helpers/functions';
+import { convertStringToNumber, weatherTypeData } from '../helpers/functions';
 
 export class DataProvider extends React.Component {
   static defaultProps = {
@@ -76,9 +73,9 @@ export class DataProvider extends React.Component {
       // this.getContacts(token),
       // this.getUsers(opus1_token),
       this.getWeatherData(token),
-      this.getWeatherStationCurrentData('sefwi01'),
-      this.getWeatherStationCurrentData('sefwi02'),
-      this.getWeatherStationCurrentData('sefwi03'),
+      // this.getWeatherStationCurrentData('sefwi01'),
+      // this.getWeatherStationCurrentData('sefwi02'),
+      // this.getWeatherStationCurrentData('sefwi03'),
     ]).then(data => {
       return {
         // profile: data[0],
@@ -431,12 +428,15 @@ export class DataProvider extends React.Component {
     let { type, dates } = value;
     if (type) {
       this.updateWeatherType(type);
-      let weatherStationLogs = this.filterWeatherLogByDate(dates);
       let result = [];
+      let weatherStationLogs = this.filterWeatherLogByDate(dates);
+      let observationTimes = weatherStationLogs.map(value =>
+        moment(value.observation_time).format('DD/MM/YYYY hh:mm')
+      );
       weatherTypeData[type].forEach(item => {
         result.push(weatherStationLogs.map(value => value[item]));
       });
-      return result;
+      return { result, observationTimes };
     }
   };
 

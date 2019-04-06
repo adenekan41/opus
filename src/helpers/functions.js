@@ -16,14 +16,14 @@ export const createCSV = text => {
 const reportTypes = {
   Temperature: data => [
     {
-      label: 'Temp',
+      label: 'Outside Temp',
       backgroundColor: 'transparent',
       borderColor: '#f42534',
       data: data[0],
-      borderWidth: 1
+      borderWidth: 1,
     },
     {
-      label: 'Low Temp',
+      label: 'Wind Chill',
       backgroundColor: 'transparent',
       borderColor: '#29cb58',
       data: data[1],
@@ -37,7 +37,7 @@ const reportTypes = {
       borderWidth: 1
     },
     {
-      label: 'Wind Chill',
+      label: 'Heat Index',
       backgroundColor: 'transparent',
       borderColor: '#3188c2',
       data: data[3],
@@ -109,7 +109,7 @@ const reportTypes = {
       backgroundColor: 'transparent',
       borderColor: '#29cb58',
       data: data[0],
-      borderWidth: 1
+      borderWidth: 1,
     },
   ],
 };

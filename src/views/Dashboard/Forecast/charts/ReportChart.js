@@ -12,28 +12,14 @@ const labelStringRegister = {
   Barometer: 'Barometer',
 };
 
-const ReportChart = ({ type, data }) => {
+const ReportChart = ({ type, data, observationTimes }) => {
   let labelString = labelStringRegister[type];
   return (
     <Line
       width={500}
       height={240}
       data={{
-        labels: [
-          '00:00',
-          '02:00',
-          '04:00',
-          '06:00',
-          '08:00',
-          '10:00',
-          '12:00',
-          '14:00',
-          '16:00',
-          '18:00',
-          '20:00',
-          '22:00',
-          '00:00',
-        ],
+        labels: observationTimes,
         datasets: getWeatherReportType(type, data),
       }}
       legend={{
@@ -43,6 +29,10 @@ const ReportChart = ({ type, data }) => {
       }}
       options={{
         maintainAspectRatio: true,
+        elements: {
+          point: {radius: 0},
+          // line: {tension: 0.9, borderJoinStyle:'round'}
+        },
         scales: {
           xAxes: [
             {

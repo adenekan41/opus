@@ -12,10 +12,11 @@ import { createCSV } from '../../../helpers/functions';
 
 export default class ForecastReport extends Component {
   state = {
-    loading: false,
     data: [],
-    startDate: new Date(),
-    endDate: new Date(),
+    loading: false,
+    observationTimes: [],
+    startDate: moment(new Date()),
+    endDate: moment(new Date()),
   };
 
   componentDidMount() {
@@ -35,8 +36,10 @@ export default class ForecastReport extends Component {
       type: actions.FILTER_WEATHER_DATA_BY_TYPE,
       value: { type, dates },
     });
+    let { result, observationTimes } = data
     this.setState({
-      data,
+      data: result,
+      observationTimes
     });
   };
 
@@ -51,7 +54,7 @@ export default class ForecastReport extends Component {
 
   render() {
     const { weatherStation, type } = this.props;
-    let { data, startDate, endDate } = this.state;
+    let { data, startDate, endDate, observationTimes } = this.state;
     return (
       <Box py="40px" px="40px">
         <Box mb="40px">
@@ -134,7 +137,13 @@ export default class ForecastReport extends Component {
                 </span>
               </Text>
             </Flex>
-            <ReportChart {...{ type, data }} />
+            <ReportChart
+              {...{
+                type,
+                data,
+                observationTimes
+              }}
+            />
           </Card>
         </Box>
       </Box>
