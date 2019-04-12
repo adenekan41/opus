@@ -10,10 +10,11 @@ import { DataProvider } from '../../../api/provider';
 import { DataContext } from '../../../api/context';
 import { FullScreenSpinner } from '../../../components/Spinner';
 import Home from '../../../views/Dashboard/Home';
+import Compare from '../../../views/Dashboard/Compare';
 
-const DashboardRoutes = ({ token, opus1_token, ...rest }) => {
+const DashboardRoutes = ({ token, ...rest }) => {
   return (
-    <DataProvider token={token} opus1_token={opus1_token} history={rest.history}>
+    <DataProvider token={token} history={rest.history}>
       <DataContext.Consumer>
         {({ state, dispatch, actions }) =>
           state.fetching ? (
@@ -54,6 +55,12 @@ const DashboardRoutes = ({ token, opus1_token, ...rest }) => {
                   path="/dashboard/profile/"
                   render={() => (
                     <Account {...rest} {...{ ...state, dispatch, actions }} />
+                  )}
+                />
+                <Route
+                  path="/dashboard/compare/"
+                  render={() => (
+                    <Compare {...rest} {...{ ...state, dispatch, actions }} />
                   )}
                 />
               </Switch>

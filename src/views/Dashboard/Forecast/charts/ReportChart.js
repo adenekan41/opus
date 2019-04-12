@@ -1,16 +1,7 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { getWeatherReportType } from '../../../../helpers/functions';
-
-const labelStringRegister = {
-  Temperature: 'Temperature°C',
-  'Current rain': 'Current rain',
-  'Total rain': 'Total rain',
-  'Wind speed': 'Wind Speed',
-  Humidity: 'Humidity',
-  'Wind direction': 'Wind direction',
-  Barometer: 'Barometer',
-};
+import { labelStringRegister } from '../../../../helpers/constants';
 
 const ReportChart = ({ type, data, observationTimes }) => {
   let labelString = labelStringRegister[type];
@@ -31,7 +22,6 @@ const ReportChart = ({ type, data, observationTimes }) => {
         maintainAspectRatio: true,
         elements: {
           point: {radius: 0},
-          // line: {tension: 0.9, borderJoinStyle:'round'}
         },
         scales: {
           xAxes: [

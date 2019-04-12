@@ -8,7 +8,6 @@ import CurrentRainChart from './charts/CurrentRainChart';
 import TotalRainChart from './charts/TotalRainChart';
 import HumidityChart from './charts/HumidityChart';
 import WindSpeedChart from './charts/WindSpeedChart';
-import WindRoseChart from './charts/WindRoseChart';
 import WindDirection from './charts/WindDirectionChart';
 import BarometerChart from './charts/BarometerChart';
 import { convertStringToNumber } from '../../../helpers/functions';
@@ -24,7 +23,6 @@ const chartMapping = {
     label: 'Wind direction',
     Component: WindDirection,
   },
-  // 'wind rose': { label: 'Wind rose', Component: WindRoseChart },
   barometer: { label: 'Barometer', Component: BarometerChart },
 };
 const chartMappingArray = [
@@ -37,7 +35,6 @@ const chartMappingArray = [
     label: 'Wind direction',
     Component: WindDirection,
   },
-  // { label: 'Wind rose', Component: WindRoseChart },
   { label: 'Barometer', Component: BarometerChart },
 ];
 

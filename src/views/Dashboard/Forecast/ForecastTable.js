@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Flex, Box } from 'rebass';
 import moment from 'moment';
 import DatePicker from '../../../components/DatePicker';
-import Dropdown from '../../../components/Select';
 import Button from '../../../components/Button';
 import { Icon } from '../../../components/Icon';
 import Table from '../../../components/Table';

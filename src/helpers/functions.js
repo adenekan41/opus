@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const convertStringToNumber = string => Number(string);
 
 export const fahrenheitToCelcius = value => {
@@ -13,7 +15,79 @@ export const createCSV = text => {
   hiddenElement.click();
 };
 
-const reportTypes = {
+const compareChartDataset = {
+  Temperature: data => [
+    {
+      label: null,
+      backgroundColor: 'transparent',
+      borderColor: '#f42534',
+      data: data && data[0] && data[0].data,
+      borderWidth: 1,
+    },
+  ],
+  'Current rain': data => [
+    {
+      label: null,
+      backgroundColor: 'transparent',
+      borderColor: '#29cb58',
+      data: data && data[0] && data[0].data,
+      borderWidth: 1,
+    },
+  ],
+  'Total rain': data => [
+    {
+      label: null,
+      backgroundColor: 'transparent',
+      borderColor: '#29cb58',
+      data: data && data[0] && data[0].data,
+      borderWidth: 1,
+    },
+  ],
+  'Wind speed': data => [
+    {
+      label: null,
+      backgroundColor: 'transparent',
+      borderColor: '#221e20',
+      data: data && data[0] && data[0].data,
+      borderWidth: 1,
+    },
+  ],
+  Humidity: data => [
+    {
+      label: null,
+      backgroundColor: 'transparent',
+      borderColor: '#3188c2',
+      data: data && data[0] && data[0].data,
+      borderWidth: 1,
+    },
+  ],
+  'Wind direction': data => [
+    {
+      label: null,
+      backgroundColor: 'transparent',
+      borderColor: '#34485e',
+      data: data && data[0] && data[0].data,
+      borderWidth: 1,
+    },
+  ],
+  Barometer: data => [
+    {
+      label: null,
+      backgroundColor: 'transparent',
+      borderColor: '#29cb58',
+      data: data && data[0] && data[0].data,
+      borderWidth: 1,
+    },
+  ],
+};
+
+export const getCompareReportType = (type, data) => {
+  if (type) {
+    return compareChartDataset[type](data);
+  }
+};
+
+const reportChartDataset = {
   Temperature: data => [
     {
       label: 'Outside Temp',
@@ -27,21 +101,21 @@ const reportTypes = {
       backgroundColor: 'transparent',
       borderColor: '#29cb58',
       data: data[1],
-      borderWidth: 1
+      borderWidth: 1,
     },
     {
       label: 'Dew Point',
       backgroundColor: 'transparent',
       borderColor: '#221e20',
       data: data[2],
-      borderWidth: 1
+      borderWidth: 1,
     },
     {
       label: 'Heat Index',
       backgroundColor: 'transparent',
       borderColor: '#3188c2',
       data: data[3],
-      borderWidth: 1
+      borderWidth: 1,
     },
   ],
   'Current rain': data => [
@@ -50,14 +124,14 @@ const reportTypes = {
       backgroundColor: 'transparent',
       borderColor: '#29cb58',
       data: data[0],
-      borderWidth: 1
+      borderWidth: 1,
     },
     {
       label: 'Rain Storm',
       backgroundColor: 'transparent',
       borderColor: '#34485e',
       data: data[1],
-      borderWidth: 1
+      borderWidth: 1,
     },
   ],
   'Total rain': data => [
@@ -66,14 +140,14 @@ const reportTypes = {
       backgroundColor: 'transparent',
       borderColor: '#29cb58',
       data: data[0],
-      borderWidth: 1
+      borderWidth: 1,
     },
     {
       label: 'Rain Year',
       backgroundColor: 'transparent',
       borderColor: '#34485e',
       data: data[1],
-      borderWidth: 1
+      borderWidth: 1,
     },
   ],
   'Wind speed': data => [
@@ -82,7 +156,7 @@ const reportTypes = {
       backgroundColor: 'transparent',
       borderColor: '#221e20',
       data: data[0],
-      borderWidth: 1
+      borderWidth: 1,
     },
   ],
   Humidity: data => [
@@ -91,7 +165,7 @@ const reportTypes = {
       backgroundColor: 'transparent',
       borderColor: '#3188c2',
       data: data[0],
-      borderWidth: 1
+      borderWidth: 1,
     },
   ],
   'Wind direction': data => [
@@ -100,7 +174,7 @@ const reportTypes = {
       backgroundColor: 'transparent',
       borderColor: '#34485e',
       data: data[0],
-      borderWidth: 1
+      borderWidth: 1,
     },
   ],
   Barometer: data => [
@@ -116,7 +190,7 @@ const reportTypes = {
 
 export const getWeatherReportType = (type, data) => {
   if (type) {
-    return reportTypes[type](data);
+    return reportChartDataset[type](data);
   }
 };
 
@@ -128,4 +202,27 @@ export const weatherTypeData = {
   Humidity: ['current_humidity'],
   'Wind direction': ['wind_degrees'],
   Barometer: ['pressure_in'],
+};
+
+
+export const compareTypeData = {
+  Temperature: ['outside_temp'],
+  'Current rain': ['rain_storm'],
+  'Total rain': ['rain_month', 'rain_year'],
+  'Wind speed': ['wind_speed'],
+  Humidity: ['current_humidity'],
+  'Wind direction': ['wind_degrees'],
+  Barometer: ['pressure_in'],
+};
+
+export const formatDate = (date, format) => {
+  return moment(date).format(format);
+};
+
+export const getDatesForFilter = ({ startDate, endDate }) => {
+  let today = new Date();
+  let todayInSeconds = convertStringToNumber(formatDate(today, 'X'));
+  let startDateInSeconds = convertStringToNumber(formatDate(startDate, 'X'));
+  let endDateInSeconds = convertStringToNumber(formatDate(endDate, 'X'));
+  return { todayInSeconds, startDateInSeconds, endDateInSeconds };
 };

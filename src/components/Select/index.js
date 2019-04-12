@@ -36,6 +36,9 @@ const StyledSelect = styled(Select)`
   .select-inner__menu {
     top: 50px;
     z-index: 100000000;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    box-shadow: 0 10px 14px -4px rgba(70, 70, 70, 0.06);
   }
   .select-inner__indicator-separator {
     display: none;
@@ -182,6 +185,7 @@ const Dropdown = ({
 Dropdown.defaultProps = {
   label: 'Label',
   placeholder: '',
+  options: []
 };
 
 export default Dropdown;
