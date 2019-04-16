@@ -45,9 +45,12 @@ export default class ForecastReport extends Component {
   };
 
   exportWeatherData = () => {
-    const { dispatch, actions } = this.props;
+    const { dispatch, actions, weatherStation } = this.props;
     this.setState({ loading: true });
-    dispatch({ type: actions.EXPORT_WEATHER_DATA }).then(data => {
+    dispatch({
+      type: actions.EXPORT_WEATHER_DATA,
+      value: weatherStation.station_name,
+    }).then(data => {
       this.setState({ loading: false });
       createCSV(data);
     });

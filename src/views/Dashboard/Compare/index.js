@@ -41,6 +41,7 @@ class Compare extends React.Component {
       value: { type, dates },
     });
     let { result, observationTimes } = data;
+    console.log(result)
     this.setState({
       data: result,
       observationTimes,

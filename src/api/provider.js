@@ -535,9 +535,11 @@ export class DataProvider extends React.Component {
     this.updateState({ type });
   };
 
-  exportWeatherData = () => {
+  exportWeatherData = (station_name) => {
+    let { token } = this.state;
+    console.log(station_name)
     return this.getAdapter()
-      .exportWeatherData()
+      .exportWeatherData(token, station_name)
       .then(data => {
         return data;
       });

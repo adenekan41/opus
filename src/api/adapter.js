@@ -201,11 +201,13 @@ const getWeatherStationData = (token, station_name="") => {
   });
 };
 
-const exportWeatherData = token => {
+const exportWeatherData = (token, station_name) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/weatherlink/export/`,
     token,
+    method: 'POST',
+    data: {station: station_name}
   });
 };
 

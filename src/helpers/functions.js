@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { COMPARE_STATION_CHART_COLORS } from './constants';
 
 export const convertStringToNumber = string => Number(string);
 
@@ -16,15 +17,17 @@ export const createCSV = text => {
 };
 
 const compareChartDataset = {
-  Temperature: data => [
-    {
-      label: null,
-      backgroundColor: 'transparent',
-      borderColor: '#f42534',
-      data: data && data[0] && data[0].data,
-      borderWidth: 1,
-    },
-  ],
+  Temperature: data => {
+    return data.map(({ station, data }) => {
+      return {
+        label: null,
+        backgroundColor: 'transparent',
+        borderColor: COMPARE_STATION_CHART_COLORS[station],
+        data,
+        borderWidth: 1,
+      };
+    });
+  },
   'Current rain': data => [
     {
       label: null,
@@ -203,7 +206,6 @@ export const weatherTypeData = {
   'Wind direction': ['wind_degrees'],
   Barometer: ['pressure_in'],
 };
-
 
 export const compareTypeData = {
   Temperature: ['outside_temp'],
