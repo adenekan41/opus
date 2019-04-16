@@ -16,72 +16,61 @@ export const createCSV = text => {
   hiddenElement.click();
 };
 
-const compareChartDataset = {
-  Temperature: data => {
-    return data.map(({ station, data }) => {
-      return {
-        label: null,
-        backgroundColor: 'transparent',
-        borderColor: COMPARE_STATION_CHART_COLORS[station],
-        data,
-        borderWidth: 1,
-      };
+export const generateCSVFile = data => {
+  let csvContent = 'data:text/csv;charset=utf-8,';
+  let row = "";
+  data.forEach(rowArray => {
+    rowArray.forEach(item => {
+      row = row + JSON.stringify(item)
     });
-  },
-  'Current rain': data => [
-    {
-      label: null,
+    csvContent += row + '\r\n';
+  });
+  csvContent.replace('/[!@#$%^&*]/g', '');
+  createCSV(csvContent)
+};
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+const colors = ['#f42534', '#33475c', '#3589c3', '#29cb98'];
+
+function getStationLabelColor(data) {
+  let result = {};
+  data
+    .map(item => item.station)
+    .forEach((element, index) => {
+      result[element] = colors[index];
+      // result[element] = getRandomColor();
+    });
+  return result;
+}
+
+function generateChartOptions(list) {
+  return list.map(({ station, data }) => {
+    return {
+      label: station,
       backgroundColor: 'transparent',
-      borderColor: '#29cb58',
-      data: data && data[0] && data[0].data,
+      borderColor: getStationLabelColor(list)[station],
+      data,
       borderWidth: 1,
-    },
-  ],
-  'Total rain': data => [
-    {
-      label: null,
-      backgroundColor: 'transparent',
-      borderColor: '#29cb58',
-      data: data && data[0] && data[0].data,
-      borderWidth: 1,
-    },
-  ],
-  'Wind speed': data => [
-    {
-      label: null,
-      backgroundColor: 'transparent',
-      borderColor: '#221e20',
-      data: data && data[0] && data[0].data,
-      borderWidth: 1,
-    },
-  ],
-  Humidity: data => [
-    {
-      label: null,
-      backgroundColor: 'transparent',
-      borderColor: '#3188c2',
-      data: data && data[0] && data[0].data,
-      borderWidth: 1,
-    },
-  ],
-  'Wind direction': data => [
-    {
-      label: null,
-      backgroundColor: 'transparent',
-      borderColor: '#34485e',
-      data: data && data[0] && data[0].data,
-      borderWidth: 1,
-    },
-  ],
-  Barometer: data => [
-    {
-      label: null,
-      backgroundColor: 'transparent',
-      borderColor: '#29cb58',
-      data: data && data[0] && data[0].data,
-      borderWidth: 1,
-    },
-  ],
+    };
+  });
+}
+
+const compareChartDataset = {
+  Temperature: data => generateChartOptions(data),
+  'Current rain': data => generateChartOptions(data),
+  'Total rain': data => generateChartOptions(data),
+  'Wind speed': data => generateChartOptions(data),
+  Humidity: data => generateChartOptions(data),
+  'Wind direction': data => generateChartOptions(data),
+  Barometer: data => generateChartOptions(data),
 };
 
 export const getCompareReportType = (type, data) => {
