@@ -1,17 +1,18 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { getWeatherReportType } from '../../../../helpers/functions';
-import { labelStringRegister } from '../../../../helpers/constants';
+import { getCompareReportType } from '../../../helpers/functions';
+import { labelStringRegister } from '../../../helpers/constants';
 
-const ReportChart = ({ type, data, observationTimes }) => {
+const CompareChart = ({ type, data, observationTimes }) => {
   let labelString = labelStringRegister[type];
+  console.log(data)
   return (
     <Line
       width={500}
       height={240}
       data={{
         labels: observationTimes,
-        datasets: getWeatherReportType(type, data),
+        datasets: getCompareReportType(type, data),
       }}
       legend={{
         labels: {
@@ -21,7 +22,7 @@ const ReportChart = ({ type, data, observationTimes }) => {
       options={{
         maintainAspectRatio: true,
         elements: {
-          point: {radius: 0},
+          point: { radius: 0 },
         },
         scales: {
           xAxes: [
@@ -48,4 +49,4 @@ const ReportChart = ({ type, data, observationTimes }) => {
   );
 };
 
-export default ReportChart;
+export default CompareChart;

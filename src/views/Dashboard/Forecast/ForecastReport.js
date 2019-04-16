@@ -9,6 +9,7 @@ import Card from '../../../components/Card';
 import { Icon } from '../../../components/Icon';
 import ReportChart from './charts/ReportChart';
 import { createCSV } from '../../../helpers/functions';
+import { WEATHER_OPTIONS } from '../../../helpers/constants';
 
 export default class ForecastReport extends Component {
   state = {
@@ -36,17 +37,20 @@ export default class ForecastReport extends Component {
       type: actions.FILTER_WEATHER_DATA_BY_TYPE,
       value: { type, dates },
     });
-    let { result, observationTimes } = data
+    let { result, observationTimes } = data;
     this.setState({
       data: result,
-      observationTimes
+      observationTimes,
     });
   };
 
   exportWeatherData = () => {
-    const { dispatch, actions } = this.props;
+    const { dispatch, actions, weatherStation } = this.props;
     this.setState({ loading: true });
-    dispatch({ type: actions.EXPORT_WEATHER_DATA }).then(data => {
+    dispatch({
+      type: actions.EXPORT_WEATHER_DATA,
+      value: weatherStation.station_name,
+    }).then(data => {
       this.setState({ loading: false });
       createCSV(data);
     });
@@ -76,15 +80,7 @@ export default class ForecastReport extends Component {
         <Box className="row">
           <Box className="col-md-3">
             <Dropdown
-              options={[
-                { value: 'Temperature', label: 'Temperature' },
-                { value: 'Current rain', label: 'Current rain' },
-                { value: 'Total rain', label: 'Total rain' },
-                { value: 'Humidity', label: 'Humidity' },
-                { value: 'Wind speed', label: 'Wind speed' },
-                { value: 'Wind direction', label: 'Wind direction' },
-                { value: 'Barometer', label: 'Barometer' },
-              ]}
+              options={WEATHER_OPTIONS}
               onChange={weatherType =>
                 this.getWeatherTypeData(weatherType.value, {
                   startDate: new Date(),
@@ -141,7 +137,7 @@ export default class ForecastReport extends Component {
               {...{
                 type,
                 data,
-                observationTimes
+                observationTimes,
               }}
             />
           </Card>

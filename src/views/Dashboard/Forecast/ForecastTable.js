@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Flex, Box } from 'rebass';
 import moment from 'moment';
 import DatePicker from '../../../components/DatePicker';
-import Dropdown from '../../../components/Select';
 import Button from '../../../components/Button';
 import { Icon } from '../../../components/Icon';
 import Table from '../../../components/Table';
@@ -137,9 +136,12 @@ export default class ForecastTable extends Component {
   };
 
   exportWeatherData = () => {
-    const { dispatch, actions } = this.props;
+    const { dispatch, actions, weatherStation } = this.props;
     this.setState({ loading: true });
-    dispatch({ type: actions.EXPORT_WEATHER_DATA }).then(data => {
+    dispatch({
+      type: actions.EXPORT_WEATHER_DATA,
+      value: weatherStation.station_name,
+    }).then(data => {
       this.setState({ loading: false });
       createCSV(data);
     });
@@ -150,7 +152,7 @@ export default class ForecastTable extends Component {
     let data = dispatch({
       type: actions.FILTER_WEATHER_DATA_BY_DATE,
       value: dates,
-    })
+    });
     this.setState({
       weatherStationLogs: data,
     });
