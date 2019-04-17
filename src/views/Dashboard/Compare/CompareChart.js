@@ -5,7 +5,6 @@ import { labelStringRegister } from '../../../helpers/constants';
 
 const CompareChart = ({ type, data, observationTimes }) => {
   let labelString = labelStringRegister[type];
-  console.log(data)
   return (
     <Line
       width={500}

@@ -10,7 +10,7 @@ import { Icon } from '../../../components/Icon';
 import CheckboxSelect from '../../../components/CheckboxSelect';
 import { WEATHER_OPTIONS } from '../../../helpers/constants';
 import CompareChart from './CompareChart';
-import { createCSV } from '../../../helpers/functions';
+import { createCSV, generateCSVFile } from '../../../helpers/functions';
 import { Spinner } from '../../../components/Spinner';
 
 class Compare extends React.Component {
@@ -20,7 +20,7 @@ class Compare extends React.Component {
     buttonLoading: false,
     observationTimes: [],
     endDate: moment(new Date()),
-    startDate: moment(new Date()),
+    startDate: moment(new Date()).subtract(1, 'day')._d,
     selectedStations: ['SEFWI01'],
   };
 
@@ -41,30 +41,31 @@ class Compare extends React.Component {
       value: { type, dates },
     });
     let { result, observationTimes } = data;
-    console.log(result)
     this.setState({
       data: result,
       observationTimes,
     });
   };
 
-  exportWeatherData = () => {
-    const { dispatch, actions } = this.props;
-    this.setState({ buttonLoading: true });
-    dispatch({ type: actions.EXPORT_WEATHER_DATA }).then(data => {
-      this.setState({ buttonLoading: false });
-      createCSV(data);
-    });
+  exportDataToCsv = () => {
+    const { dispatch, actions, compareStationCsvData } = this.props;
+    let data = compareStationCsvData.map(value => value.data);
+    generateCSVFile(data);
+
+    // dispatch({ type: actions.EXPORT_WEATHER_DATA }).then(data => {
+    //   this.setState({ buttonLoading: false });
+    //   generateCSVFile(data);
+    // });
   };
 
   utilityCallback = ({ actionType, station, startDate, endDate }) => {
-    let { dispatch, type } = this.props;
+    let { dispatch, compareType } = this.props;
     dispatch({
       type: actionType,
       value: station,
     }).then(() => {
       this.setState({ loading: false });
-      this.getWeatherTypeData(type, {
+      this.getWeatherTypeData(compareType, {
         startDate,
         endDate,
       });
@@ -109,7 +110,7 @@ class Compare extends React.Component {
   };
 
   render() {
-    const { type, weatherStations } = this.props;
+    const { compareType, weatherStations } = this.props;
     let {
       data,
       endDate,
@@ -148,23 +149,25 @@ class Compare extends React.Component {
               options={WEATHER_OPTIONS}
               onChange={weatherType =>
                 this.getWeatherTypeData(weatherType.value, {
-                  startDate: new Date(),
-                  endDate: new Date(),
+                  startDate,
+                  endDate,
                 })
               }
               label="Select graph"
-              value={type}
+              value={compareType}
             />
           </Box>
           <Box className="col-md-4">
             <DatePicker
               isOutsideRange={() => false}
+              startDate={startDate}
+              endDate={endDate}
               onChange={({ startDate, endDate }) => {
                 this.setState({
                   startDate,
                   endDate,
                 });
-                this.getWeatherTypeData(type, { startDate, endDate });
+                this.getWeatherTypeData(compareType, { startDate, endDate });
               }}
             />
           </Box>
@@ -178,7 +181,7 @@ class Compare extends React.Component {
                 align-items: center;
               `}
               isLoading={buttonLoading}
-              onClick={this.exportWeatherData}
+              onClick={this.exportDataToCsv}
             >
               <Icon name="asset" color="#fff" size={24} />
               Export CSV
@@ -205,7 +208,7 @@ class Compare extends React.Component {
             ) : (
               <CompareChart
                 {...{
-                  type,
+                  type: compareType,
                   data,
                   observationTimes,
                 }}

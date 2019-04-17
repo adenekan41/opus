@@ -29,6 +29,7 @@ export class DataProvider extends React.Component {
       weatherStation: {},
       weatherStationLogs: [],
       compareStationLogs: [],
+      compareStationCsvData: [],
       user: {},
       profile: {
         username: 'admin',
@@ -515,6 +516,7 @@ export class DataProvider extends React.Component {
       this.updateState({ compareType: type });
       let result = [];
       let weatherStationLogs = this.filterCompareLogByDate(dates);
+      this.updateState({ compareStationCsvData: weatherStationLogs });
       let observationTimes =
         weatherStationLogs &&
         weatherStationLogs[0] &&
@@ -535,9 +537,9 @@ export class DataProvider extends React.Component {
     this.updateState({ type });
   };
 
-  exportWeatherData = (station_name) => {
+  exportWeatherData = station_name => {
     let { token } = this.state;
-    console.log(station_name)
+    console.log(station_name);
     return this.getAdapter()
       .exportWeatherData(token, station_name)
       .then(data => {

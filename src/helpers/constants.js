@@ -22,4 +22,5 @@ export const COMPARE_STATION_CHART_COLORS = {
   SEFWI01: '#f42534',
   SEFWI02: '#33475c',
   SEFWI03: '#3589c3',
+  CRIG01: '#29cb98',
 };
