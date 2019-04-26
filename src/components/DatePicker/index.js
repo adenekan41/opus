@@ -53,6 +53,10 @@ const DatePickerContainer = styled.div`
       }
     }
   }
+  
+  .DateRangePickerInput_calendarIcon {
+    margin: 0 0 0 10px;
+  }
 
   .label {
     display: inline-block;

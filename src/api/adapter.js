@@ -211,6 +211,16 @@ const exportWeatherData = (token, station_name) => {
   });
 };
 
+const exportCompareData = (token, station_names, weather_type) => {
+  return makeApiCall({
+    baseURL: BASE_URL_TWO,
+    url: `/weatherlink/compared/`,
+    token,
+    method: 'POST',
+    data: {station_names, weather_type}
+  });
+};
+
 export default {
   login,
   getUser,
@@ -236,5 +246,6 @@ export default {
   getWeatherData,
   getWeatherStationData,
   exportWeatherData,
+  exportCompareData,
   getWeatherStationCurrentData
 };

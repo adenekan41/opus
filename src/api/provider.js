@@ -127,6 +127,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.GET_COMPARE_STATION_DATA]: this.getCompareStationData,
       [ACTIONS.REMOVE_COMPARE_STATION_DATA]: this.removeCompareStationData,
       [ACTIONS.FILTER_COMPARE_LOGS_BY_TYPE]: this.filterCompareLogByType,
+      [ACTIONS.EXPORT_COMPARE_DATA_CSV]: this.exportCompareData,
     };
     console.log({ type });
     return options[type](value);
@@ -539,9 +540,17 @@ export class DataProvider extends React.Component {
 
   exportWeatherData = station_name => {
     let { token } = this.state;
-    console.log(station_name);
     return this.getAdapter()
       .exportWeatherData(token, station_name)
+      .then(data => {
+        return data;
+      });
+  };
+
+  exportCompareData = ({station_names, weather_type}) => {
+    let { token } = this.state;
+    return this.getAdapter()
+      .exportCompareData(token, station_names, weather_type)
       .then(data => {
         return data;
       });
