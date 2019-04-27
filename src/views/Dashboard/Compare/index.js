@@ -48,14 +48,20 @@ class Compare extends React.Component {
   };
 
   exportDataToCsv = () => {
-    const { dispatch, actions, compareStationCsvData } = this.props;
-    let data = compareStationCsvData.map(value => value.data);
-    generateCSVFile(data);
+    const { dispatch, actions, compareType } = this.props;
+    const { selectedStations } = this.state;
 
-    // dispatch({ type: actions.EXPORT_WEATHER_DATA }).then(data => {
-    //   this.setState({ buttonLoading: false });
-    //   generateCSVFile(data);
-    // });
+
+    this.setState({ buttonLoading: true });
+    console.log({selectedStations, compareType})
+
+    dispatch({
+      type: actions.EXPORT_COMPARE_DATA_CSV,
+      value: { station_names: selectedStations, weather_type: compareType },
+    }).then(data => {
+      this.setState({ buttonLoading: false });
+      createCSV(data);
+    });
   };
 
   utilityCallback = ({ actionType, station, startDate, endDate }) => {

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import L from 'leaflet';
+import isEqual from 'lodash.isequal';
 import { Flex, Text } from 'rebass';
 import styled from 'styled-components';
-import { Map, Marker, Popup, LayersControl } from 'react-leaflet';
-import L from 'leaflet';
+import Control from 'react-leaflet-control';
 import { GoogleLayer } from 'react-leaflet-google';
+import { Map, Marker, Popup, LayersControl, ZoomControl } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import Button from '../Button';
 import 'react-leaflet-markercluster/dist/styles.min.css';
@@ -38,11 +40,12 @@ const MapContainer = styled.div`
   .marker-cluster-small {
     background-color: rgba(181, 226, 140, 1);
   }
-  /* .leaflet-control-container {
-    .leaflet-control-zoom {
-      display: none;
-    }
-  } */
+  .leaflet-control-layers.leaflet-control {
+    display: none;
+  }
+  .leaflet-top.leaflet-left {
+    z-index: 1000000000;
+  }
 `;
 
 const MapMarker = ({
@@ -127,17 +130,36 @@ const MapMarker = ({
 );
 
 export default class WeatherMap extends Component {
+  state = {
+    zoom: this.props.zoom,
+  };
+
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.zoom, this.props.zoom)) {
+      this.setState({ zoom: this.props.zoom });
+    }
+  }
+
+  zoomIn = () => this.setState({ zoom: this.state.zoom + 1 });
+  zoomOut = () => this.setState({ zoom: this.state.zoom - 1 });
+
   render() {
-    const { center, zoom, markers } = this.props;
+    const { center, markers } = this.props;
+    const { zoom } = this.state;
     return (
       <MapContainer>
-        <Map center={center} zoom={zoom}>
-          <LayersControl position="bottomleft">
+        <Map center={center} zoom={zoom} zoomControl={false}>
+          <LayersControl position="bottomleft" collapsed>
             <BaseLayer checked name="Google layer">
               <GoogleLayer
                 googlekey={process.env.REACT_APP_GOOGLE_KEY}
                 maptype={'ROADMAP'}
               />
+              <ZoomControl position="topleft" />
+              <Control position="topleft">
+                <button onClick={this.zoomIn} style={{display: 'none'}}>Zoom in</button>
+                <button onClick={this.zoomOut} style={{display: 'none'}}>Zoom out</button>
+              </Control>
             </BaseLayer>
           </LayersControl>
 
