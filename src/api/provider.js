@@ -514,10 +514,9 @@ export class DataProvider extends React.Component {
   filterCompareLogByType = value => {
     let { type, dates } = value;
     if (type) {
-      this.updateState({ compareType: type });
       let result = [];
       let weatherStationLogs = this.filterCompareLogByDate(dates);
-      this.updateState({ compareStationCsvData: weatherStationLogs });
+      this.updateState({ compareStationCsvData: weatherStationLogs, compareType: type });
       let observationTimes =
         weatherStationLogs &&
         weatherStationLogs[0] &&

@@ -14,7 +14,7 @@ const DatePickerContainer = styled.div`
   box-sizing: border-box;
   background-color: #ffffff;
   border-radius: 3px;
-  border: solid 0.5px rgba(18,18,18,0.11);
+  border: solid 0.5px rgba(18, 18, 18, 0.11);
   ${props => (props.isInvalid ? 'border: solid 0.5px #f66262 ' : '')};
   ${props =>
     props.disabled &&
@@ -43,17 +43,20 @@ const DatePickerContainer = styled.div`
   }
   .DateInput {
     background: transparent;
+    width: 100px !important;
 
     &_input {
       background: transparent;
       font-size: 16px;
+      padding-left: 0;
+      padding-right: 0;
 
       &__focused {
         border-bottom: none;
       }
     }
   }
-  
+
   .DateRangePickerInput_calendarIcon {
     margin: 0 0 0 10px;
   }
@@ -102,7 +105,7 @@ class DatePicker extends React.Component {
             {...rest}
             showDefaultInputIcon
             customArrowIcon={<CustomArrowIcon />}
-            startDate={this.state.startDate}
+            startoDate={this.state.startDate}
             startDateId="your_unique_start_date_id"
             endDate={this.state.endDate}
             endDateId="your_unique_end_date_id"
