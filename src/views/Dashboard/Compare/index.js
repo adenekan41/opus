@@ -20,7 +20,7 @@ class Compare extends React.Component {
     buttonLoading: false,
     observationTimes: [],
     endDate: moment(new Date()),
-    startDate: moment(new Date()).subtract(1, 'day')._d,
+    startDate: moment(new Date()),
     selectedStations: ['SEFWI01'],
   };
 
@@ -29,7 +29,7 @@ class Compare extends React.Component {
     this.setState({ loading: true });
     this.utilityCallback({
       actionType: actions.GET_COMPARE_STATION_DATA,
-      startDate: moment(new Date()).subtract(1, 'day')._d,
+      startDate: moment(new Date()),
       endDate: new Date(),
     });
   }
@@ -51,9 +51,7 @@ class Compare extends React.Component {
     const { dispatch, actions, compareType } = this.props;
     const { selectedStations } = this.state;
 
-
     this.setState({ buttonLoading: true });
-    console.log({selectedStations, compareType})
 
     dispatch({
       type: actions.EXPORT_COMPARE_DATA_CSV,
@@ -88,7 +86,6 @@ class Compare extends React.Component {
           selectedStations: selectedStations.filter(item => item !== station),
         }),
         () => {
-          //make call to get stations data
           this.utilityCallback({
             station,
             endDate,
@@ -103,7 +100,6 @@ class Compare extends React.Component {
           selectedStations: [station, ...selectedStations],
         }),
         () => {
-          //make call to get stations data
           this.utilityCallback({
             station,
             endDate,
