@@ -1,11 +1,14 @@
 import React from 'react';
-import './styles.css';
+import './style.css';
 
 export default class WindyMap extends React.Component {
+  componentDidMount() {
+    this.initializeWindy();
+  }
+
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.weatherStations.length !== this.state.weatherStations.length
-    ) {
+    if (prevProps.markers.length !== this.props.markers.length) {
+      console.log(this.props.markers);
       this.initializeWindy();
     }
   }
@@ -16,44 +19,38 @@ export default class WindyMap extends React.Component {
 
   initializeWindy = () => {
     const { zoom, lat, lon } = this.props;
-    if (window.L && window.W) {
-      windyInit(
-        {
-          key: 'Q5rNkEUDbzfdFDwuFZKnsH8psCBuVuUm',
-          lat,
-          lon,
-          zoom,
-        },
-        windyAPI => {
-          const { map, store } = windyAPI;
-          const { weatherStations } = this.props;
-          const levels = store.getAllowed('availLevels');
-          var i = 0;
+    window.windyInit(
+      {
+        key: 'Q5rNkEUDbzfdFDwuFZKnsH8psCBuVuUm',
+        lat,
+        lon,
+        zoom,
+      },
+      windyAPI => {
+        const { map, store } = windyAPI;
+        const { markers } = this.props;
+        const levels = store.getAllowed('availLevels');
+        var i = 0;
 
-          setInterval(() => {
-            i = i === levels.length - 1 ? 0 : i + 1;
-            store.set('level', levels[i]);
-          }, 500);
+        this.props.setMap(map)
 
-          store.on('level', level => {
-            console.log(`Level was changed: ${level}`);
-          });
+        setInterval(() => {
+          i = i === levels.length - 1 ? 0 : i + 1;
+          store.set('level', levels[i]);
+        }, 500);
 
-          if (weatherStations.length > 0) {
-            weatherStations.forEach(station => {
-              var pointerIcon = new window.L.Icon({
-                iconUrl: './map-marker.svg',
-                iconSize: [38, 95],
-                iconAnchor: [22, 94],
-              });
-              var marker = new window.L.marker(
-                [station.latitude, station.longitude],
-                {
-                  icon: pointerIcon,
-                }
-              ).addTo(map);
-              marker.bindPopup(
-                `
+        store.on('level', level => {
+          console.log(`Level was changed: ${level}`);
+        });
+
+        if (markers.length > 0) {
+          markers.forEach(station => {
+            var marker = new window.L.marker([
+              station.latitude,
+              station.longitude,
+            ]).addTo(map);
+            marker.bindPopup(
+              `
                   <h3>${station.location} (${station.station_name})</h3>
                   <div class="station-data">
                     <p>Temperature:</p>
@@ -70,8 +67,8 @@ export default class WindyMap extends React.Component {
                   <div class="station-data">
                     <p>Barometer:</p>
                     <p>${station.pressure_in} in. Hg ${
-                  station.pressure_tendency_string
-                }</p>
+                station.pressure_tendency_string
+              }</p>
                   </div>
                   <div class="station-data">
                     <p>Daily Rain:</p>
@@ -79,17 +76,16 @@ export default class WindyMap extends React.Component {
                   </div>
                   <button class="station-data__button" onclick="this.onClick()">view bulletin</button>
                   `,
-                {
-                  className: 'pop-up',
-                  closeButton: false,
-                  maxWidth: 200,
-                }
-              );
-            });
-          }
+              {
+                className: 'pop-up',
+                closeButton: false,
+                maxWidth: 200,
+              }
+            );
+          });
         }
-      );
-    }
+      }
+    );
   };
 
   render() {

@@ -7,6 +7,11 @@
   border-radius: 4px !important;
 }
 
+#windy .leaflet-popup-content h3 {
+  font-weight: bold;
+  font-size: 16px;
+}
+
 #windy .leaflet-popup-content p {
   margin: 8px 0 !important;
 }
@@ -34,4 +39,11 @@
   background: #ff9901;
   box-shadow: none;
   cursor: pointer;
+}
+
+#windy #bottom,
+#windy #embed-zoom,
+#windy #plugin-menu,
+#windy #mobile-ovr-select {
+  z-index: 10000;
 }

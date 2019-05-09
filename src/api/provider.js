@@ -25,6 +25,7 @@ export class DataProvider extends React.Component {
       contacts: [],
       alerts: [],
       crops: [],
+      map: null,
       weatherStations: [],
       weatherStation: {},
       weatherStationLogs: [],
@@ -128,6 +129,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.REMOVE_COMPARE_STATION_DATA]: this.removeCompareStationData,
       [ACTIONS.FILTER_COMPARE_LOGS_BY_TYPE]: this.filterCompareLogByType,
       [ACTIONS.EXPORT_COMPARE_DATA_CSV]: this.exportCompareData,
+      [ACTIONS.SET_WINDY_MAP]: this.setWindyMap,
     };
     console.log({ type });
     return options[type](value);
@@ -563,6 +565,10 @@ export class DataProvider extends React.Component {
   clearWeatherLogs = () => {
     this.updateState({ weatherStationLogs: [] });
   };
+
+  setWindyMap = (map) => {
+    this.updateState({ map })
+  }
 
   render() {
     return (

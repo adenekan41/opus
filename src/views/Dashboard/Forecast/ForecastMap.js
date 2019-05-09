@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Flex, Box } from 'rebass';
-import WeatherMap from '../../../components/WeatherMap';
 import SelectSearch from '../../../components/SearchInput';
+import WindyMap from '../../../components/WindyMap';
 
 const ForecastContainer = styled.div`
   position: relative;
@@ -12,63 +11,18 @@ const ForecastContainer = styled.div`
   .SearchInput__wrapper {
     position: absolute;
     width: 100%;
-    z-index: 100000;
+    z-index: 1000;
 
     .SearchInput {
       margin: 40px auto;
       max-width: 500px;
     }
   }
-
-  .TemperatureRange__wrapper {
-    background: #ffffff;
-    position: absolute;
-    height: 100vh;
-    padding: 40px 16px;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 100000;
-  }
-
-  .TemperatureRange__bar {
-    width: 6px;
-    height: 100%;
-    border-radius: 4px;
-    background-image: linear-gradient(
-      to top,
-      #29343c,
-      #39638d 9%,
-      #2682bb 16%,
-      #319daf 25%,
-      #0cb295 35%,
-      #46a145 45%,
-      #c0c040 54%,
-      #f6b931 68%,
-      #dd5724 78%,
-      #cb4326 88%,
-      #89282b
-    );
-  }
-
-  .TemperatureRange__values {
-    font-size: 10px;
-    margin-right: 12px;
-
-    p {
-      margin-bottom: 31px;
-      &:first-child {
-        display: flex;
-        justify-content: flex-end;
-        margin-bottom: 40px;
-      }
-    }
-  }
 `;
 
 export default class ForecastMap extends Component {
   state = { center: [8.7832, 34.5085], zoom: 4 };
-  
+
   componentDidMount() {
     const { dispatch, actions } = this.props;
     dispatch({ type: actions.CLEAR_WEATHER_LOGS });
@@ -83,6 +37,7 @@ export default class ForecastMap extends Component {
       history.push(`/dashboard/weather-data/bulletin/${station_name}/charts`);
     });
   };
+
   getSearchOptions = () => {
     const { weatherStations } = this.props;
     let locations = weatherStations.map(station => ({
@@ -104,19 +59,26 @@ export default class ForecastMap extends Component {
       },
     ];
   };
+
   findSelectedStation = name => {
     const { weatherStations } = this.props;
     return weatherStations.find(station => station.station_name === name);
   };
+
+  setMap = map => {
+    const { dispatch, actions } = this.props;
+    dispatch({ type: actions.SET_WINDY_MAP, value: map });
+  };
+
   setMapCenter = name => {
     let selectedStation = this.findSelectedStation(name);
     let { latitude, longitude } = selectedStation;
+    let { map } = this.props;
     let center = [latitude, longitude];
-    this.setState({
-      center,
-      zoom: 12,
-    });
+
+    map.setView(center, 12);
   };
+
   render() {
     const { weatherStations } = this.props;
     const { zoom, center } = this.state;
@@ -125,37 +87,25 @@ export default class ForecastMap extends Component {
         <div className="SearchInput__wrapper">
           <SelectSearch
             className="SearchInput"
-            openMenuOnClick={false}
+            openMenuOnClick={true}
             options={this.getSearchOptions()}
             onChange={station => this.setMapCenter(station.value)}
           />
         </div>
-        <WeatherMap
+        <WindyMap
+          zoom={zoom}
+          lat={center[0]}
+          lon={center[1]}
+          setMap={this.setMap}
+          markers={weatherStations}
+          goToBulletinPage={this.goToBulletinPage}
+        />
+        {/* <WeatherMap
           zoom={zoom}
           center={center}
           markers={weatherStations}
           goToBulletinPage={this.goToBulletinPage}
-        />
-        <Flex className="TemperatureRange__wrapper">
-          <Flex className="TemperatureRange__values" flexDirection="column">
-            <p>&#94;</p>
-            <p>38&deg;C</p>
-            <p>35&deg;C</p>
-            <p>30&deg;C</p>
-            <p>27&deg;C</p>
-            <p>21&deg;C</p>
-            <p>15&deg;C</p>
-            <p>10&deg;C</p>
-            <p>5&deg;C</p>
-            <p>0&deg;C</p>
-            <p>-7&deg;C</p>
-            <p>-12&deg;C</p>
-            <p>-18&deg;C</p>
-            <p>-23&deg;C</p>
-            <p style={{ transform: 'rotate(180deg)' }}>&#94;</p>
-          </Flex>
-          <Box className="TemperatureRange__bar" />
-        </Flex>
+        /> */}
       </ForecastContainer>
     );
   }
