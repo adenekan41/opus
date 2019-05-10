@@ -100,12 +100,6 @@ export default class ForecastMap extends Component {
           markers={weatherStations}
           goToBulletinPage={this.goToBulletinPage}
         />
-        {/* <WeatherMap
-          zoom={zoom}
-          center={center}
-          markers={weatherStations}
-          goToBulletinPage={this.goToBulletinPage}
-        /> */}
       </ForecastContainer>
     );
   }

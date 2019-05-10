@@ -473,7 +473,7 @@ export class DataProvider extends React.Component {
       let result = [];
       let weatherStationLogs = this.filterWeatherLogByDate(dates);
       let observationTimes = weatherStationLogs.map(value =>
-        formatDate(value.observation_time, 'DD/MM/YYYY hh:mm')
+        formatDate(value.observation_time, 'DD/MM')
       );
       weatherTypeData[type].forEach(item => {
         result.push(weatherStationLogs.map(value => value[item]));
@@ -523,7 +523,7 @@ export class DataProvider extends React.Component {
         weatherStationLogs &&
         weatherStationLogs[0] &&
         weatherStationLogs[0].data.map(value =>
-          moment(value.observation_time).format('DD/MM/YYYY hh:mm')
+          moment(value.observation_time).format('DD/MM')
         );
       compareTypeData[type].forEach(item => {
         result = weatherStationLogs.map(({ station, data }) => ({

@@ -13,8 +13,8 @@ export default class WindyMap extends React.Component {
     }
   }
 
-  onClick = () => {
-    console.log('hello');
+  onClick = name => {
+    this.props.goToBulletinPage(name);
   };
 
   initializeWindy = () => {
@@ -32,7 +32,7 @@ export default class WindyMap extends React.Component {
         const levels = store.getAllowed('availLevels');
         var i = 0;
 
-        this.props.setMap(map)
+        this.props.setMap(map);
 
         setInterval(() => {
           i = i === levels.length - 1 ? 0 : i + 1;
@@ -74,7 +74,7 @@ export default class WindyMap extends React.Component {
                     <p>Daily Rain:</p>
                     <p>${station.rain_day_in} in</p>
                   </div>
-                  <button class="station-data__button" onclick="this.onClick()">view bulletin</button>
+                  <button id="view-bulletin" class="station-data__button" onclick="this.onClick()">view bulletin</button>
                   `,
               {
                 className: 'pop-up',
