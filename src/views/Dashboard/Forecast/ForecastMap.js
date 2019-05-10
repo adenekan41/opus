@@ -100,7 +100,6 @@ export default class ForecastMap extends Component {
           markers={weatherStations.map(station => ({
             ...station,
             onClick: () => {
-              console.log(station.station_name)
               this.goToBulletinPage(station.station_name);
             },
           }))}
