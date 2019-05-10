@@ -39,11 +39,17 @@
   background: #ff9901;
   box-shadow: none;
   cursor: pointer;
+  outline: none;
+}
+
+#windy #logo {
+  left: 60px!important;
 }
 
 #windy #bottom,
 #windy #embed-zoom,
 #windy #plugin-menu,
+#windy #logo-wrapper,
 #windy #mobile-ovr-select {
   z-index: 10000;
 }

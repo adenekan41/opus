@@ -97,7 +97,13 @@ export default class ForecastMap extends Component {
           lat={center[0]}
           lon={center[1]}
           setMap={this.setMap}
-          markers={weatherStations}
+          markers={weatherStations.map(station => ({
+            ...station,
+            onClick: () => {
+              console.log(station.station_name)
+              this.goToBulletinPage(station.station_name);
+            },
+          }))}
           goToBulletinPage={this.goToBulletinPage}
         />
       </ForecastContainer>

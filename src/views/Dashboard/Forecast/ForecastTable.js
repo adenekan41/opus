@@ -93,6 +93,8 @@ const ForecastTableColumns = [
 export default class ForecastTable extends Component {
   state = {
     loading: false,
+    endDate: moment(new Date()),
+    startDate: moment(new Date()),
     weatherStationLogs: this.props.weatherStationLogs || [],
   };
 
@@ -166,8 +168,16 @@ export default class ForecastTable extends Component {
           <Box width="350px" mr="20px">
             <DatePicker
               isOutsideRange={() => false}
+              startDate={this.state.startDate}
+              endDate={this.state.endDate}
               onChange={({ startDate, endDate }) => {
-                this.filterDataByDate({ startDate, endDate });
+                this.setState(
+                  {
+                    startDate,
+                    endDate,
+                  },
+                  () => this.filterDataByDate({ startDate, endDate })
+                );
               }}
             />
           </Box>
