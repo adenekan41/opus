@@ -49,17 +49,26 @@ class Compare extends React.Component {
 
   exportDataToCsv = () => {
     const { dispatch, actions, compareType } = this.props;
-    const { selectedStations } = this.state;
+    const { selectedStations, startDate, endDate } = this.state;
 
     this.setState({ buttonLoading: true });
 
     dispatch({
       type: actions.EXPORT_COMPARE_DATA_CSV,
-      value: { station_names: selectedStations, weather_type: compareType },
-    }).then(data => {
-      this.setState({ buttonLoading: false });
-      createCSV(data);
-    });
+      value: {
+        station_names: selectedStations,
+        weather_type: compareType,
+        start_date: startDate,
+        end_date: endDate,
+      },
+    })
+      .then(data => {
+        this.setState({ buttonLoading: false });
+        createCSV(data);
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+      });
   };
 
   utilityCallback = ({ actionType, station, startDate, endDate }) => {
@@ -191,23 +200,27 @@ class Compare extends React.Component {
           </Box>
         </Box>
         <Box mt="30px">
-          <Card padding="16px">
-            <Flex alignItems="center" justifyContent="space-between" mb="16px">
-              <Text fontSize="12px">
-                <span style={{ fontWeight: 'bold' }}>
-                  Weather Station Comparism -
-                </span>
-                <span style={{ fontStyle: 'italic' }}>
-                  {moment(startDate).format('DD MMM, YYYY hh:mm')} to{' '}
-                  {moment(endDate).format('DD MMM, YYYY hh:mm')}
-                </span>
-              </Text>
+          {loading ? (
+            <Flex alignItems="center" justifyContent="center" py="30vh">
+              <Spinner />
             </Flex>
-            {loading ? (
-              <Flex alignItems="center" justifyContent="center">
-                <Spinner />
+          ) : (
+            <Card padding="16px">
+              <Flex
+                alignItems="center"
+                justifyContent="space-between"
+                mb="16px"
+              >
+                <Text fontSize="12px">
+                  <span style={{ fontWeight: 'bold' }}>
+                    Weather Station Comparism -
+                  </span>
+                  <span style={{ fontStyle: 'italic' }}>
+                    {moment(startDate).format('DD MMM, YYYY hh:mm')} to{' '}
+                    {moment(endDate).format('DD MMM, YYYY hh:mm')}
+                  </span>
+                </Text>
               </Flex>
-            ) : (
               <CompareChart
                 {...{
                   type: compareType,
@@ -215,8 +228,8 @@ class Compare extends React.Component {
                   observationTimes,
                 }}
               />
-            )}
-          </Card>
+            </Card>
+          )}
         </Box>
       </Box>
     );

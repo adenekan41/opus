@@ -82,6 +82,9 @@ export default class ForecastMap extends Component {
   render() {
     const { weatherStations } = this.props;
     const { zoom, center } = this.state;
+
+    window.onStationClick = station => this.goToBulletinPage(station);
+
     return (
       <ForecastContainer>
         <div className="SearchInput__wrapper">
@@ -97,13 +100,7 @@ export default class ForecastMap extends Component {
           lat={center[0]}
           lon={center[1]}
           setMap={this.setMap}
-          markers={weatherStations.map(station => ({
-            ...station,
-            onClick: () => {
-              this.goToBulletinPage(station.station_name);
-            },
-          }))}
-          goToBulletinPage={this.goToBulletinPage}
+          markers={weatherStations}
         />
       </ForecastContainer>
     );

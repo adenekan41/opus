@@ -518,7 +518,10 @@ export class DataProvider extends React.Component {
     if (type) {
       let result = [];
       let weatherStationLogs = this.filterCompareLogByDate(dates);
-      this.updateState({ compareStationCsvData: weatherStationLogs, compareType: type });
+      this.updateState({
+        compareStationCsvData: weatherStationLogs,
+        compareType: type,
+      });
       let observationTimes =
         weatherStationLogs &&
         weatherStationLogs[0] &&
@@ -539,19 +542,30 @@ export class DataProvider extends React.Component {
     this.updateState({ type });
   };
 
-  exportWeatherData = station_name => {
+  exportWeatherData = ({ station_name, start_date, end_date }) => {
     let { token } = this.state;
     return this.getAdapter()
-      .exportWeatherData(token, station_name)
+      .exportWeatherData(token, station_name, start_date, end_date)
       .then(data => {
         return data;
       });
   };
 
-  exportCompareData = ({station_names, weather_type}) => {
+  exportCompareData = ({
+    station_names,
+    weather_type,
+    start_date,
+    end_date,
+  }) => {
     let { token } = this.state;
     return this.getAdapter()
-      .exportCompareData(token, station_names, weather_type)
+      .exportCompareData(
+        token,
+        station_names,
+        weather_type,
+        start_date,
+        end_date
+      )
       .then(data => {
         return data;
       });
@@ -566,9 +580,9 @@ export class DataProvider extends React.Component {
     this.updateState({ weatherStationLogs: [] });
   };
 
-  setWindyMap = (map) => {
-    this.updateState({ map })
-  }
+  setWindyMap = map => {
+    this.updateState({ map });
+  };
 
   render() {
     return (

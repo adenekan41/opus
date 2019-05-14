@@ -139,14 +139,25 @@ export default class ForecastTable extends Component {
 
   exportWeatherData = () => {
     const { dispatch, actions, weatherStation } = this.props;
+    const { startDate, endDate } = this.state;
+
     this.setState({ loading: true });
+
     dispatch({
       type: actions.EXPORT_WEATHER_DATA,
-      value: weatherStation.station_name,
-    }).then(data => {
-      this.setState({ loading: false });
-      createCSV(data);
-    });
+      value: {
+        station_name: weatherStation.station_name,
+        start_date: startDate,
+        end_date: endDate,
+      },
+    })
+      .then(data => {
+        this.setState({ loading: false });
+        createCSV(data);
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+      });
   };
 
   filterDataByDate = dates => {
