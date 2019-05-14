@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { formatDate } from '../helpers/functions';
 
 const BASE_URL_ONE =
   process.env.NODE_ENV === 'production'
@@ -185,7 +186,7 @@ const getWeatherData = token => {
   return makeApiCall({ baseURL: BASE_URL_TWO, url: `/weatherlink/`, token });
 };
 
-const getWeatherStationCurrentData = (token, station_name="") => {
+const getWeatherStationCurrentData = (token, station_name = '') => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/weatherlink/${station_name.toLowerCase()}/`,
@@ -193,7 +194,7 @@ const getWeatherStationCurrentData = (token, station_name="") => {
   });
 };
 
-const getWeatherStationData = (token, station_name="") => {
+const getWeatherStationData = (token, station_name = '') => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/weatherlink/${station_name}/`,
@@ -201,23 +202,38 @@ const getWeatherStationData = (token, station_name="") => {
   });
 };
 
-const exportWeatherData = (token, station_name) => {
+const exportWeatherData = (token, station_name, start_date, end_date) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/weatherlink/export/`,
     token,
     method: 'POST',
-    data: {station: station_name}
+    data: {
+      station: station_name,
+      start_date: formatDate(start_date, 'M/D/YYYY'),
+      end_date: formatDate(end_date, 'M/D/YYYY'),
+    },
   });
 };
 
-const exportCompareData = (token, station_names, weather_type) => {
+const exportCompareData = (
+  token,
+  station_names,
+  weather_type,
+  start_date,
+  end_date
+) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/weatherlink/compared/`,
     token,
     method: 'POST',
-    data: {station_names, weather_type}
+    data: {
+      station_names,
+      weather_type,
+      start_date: formatDate(start_date, 'M/D/YYYY'),
+      end_date: formatDate(end_date, 'M/D/YYYY'),
+    },
   });
 };
 
@@ -247,5 +263,5 @@ export default {
   getWeatherStationData,
   exportWeatherData,
   exportCompareData,
-  getWeatherStationCurrentData
+  getWeatherStationCurrentData,
 };

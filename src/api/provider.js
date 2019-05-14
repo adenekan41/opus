@@ -25,6 +25,7 @@ export class DataProvider extends React.Component {
       contacts: [],
       alerts: [],
       crops: [],
+      map: null,
       weatherStations: [],
       weatherStation: {},
       weatherStationLogs: [],
@@ -128,6 +129,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.REMOVE_COMPARE_STATION_DATA]: this.removeCompareStationData,
       [ACTIONS.FILTER_COMPARE_LOGS_BY_TYPE]: this.filterCompareLogByType,
       [ACTIONS.EXPORT_COMPARE_DATA_CSV]: this.exportCompareData,
+      [ACTIONS.SET_WINDY_MAP]: this.setWindyMap,
     };
     console.log({ type });
     return options[type](value);
@@ -471,7 +473,7 @@ export class DataProvider extends React.Component {
       let result = [];
       let weatherStationLogs = this.filterWeatherLogByDate(dates);
       let observationTimes = weatherStationLogs.map(value =>
-        formatDate(value.observation_time, 'DD/MM/YYYY hh:mm')
+        formatDate(value.observation_time, 'DD/MM')
       );
       weatherTypeData[type].forEach(item => {
         result.push(weatherStationLogs.map(value => value[item]));
@@ -516,12 +518,15 @@ export class DataProvider extends React.Component {
     if (type) {
       let result = [];
       let weatherStationLogs = this.filterCompareLogByDate(dates);
-      this.updateState({ compareStationCsvData: weatherStationLogs, compareType: type });
+      this.updateState({
+        compareStationCsvData: weatherStationLogs,
+        compareType: type,
+      });
       let observationTimes =
         weatherStationLogs &&
         weatherStationLogs[0] &&
         weatherStationLogs[0].data.map(value =>
-          moment(value.observation_time).format('DD/MM/YYYY hh:mm')
+          moment(value.observation_time).format('DD/MM')
         );
       compareTypeData[type].forEach(item => {
         result = weatherStationLogs.map(({ station, data }) => ({
@@ -537,19 +542,30 @@ export class DataProvider extends React.Component {
     this.updateState({ type });
   };
 
-  exportWeatherData = station_name => {
+  exportWeatherData = ({ station_name, start_date, end_date }) => {
     let { token } = this.state;
     return this.getAdapter()
-      .exportWeatherData(token, station_name)
+      .exportWeatherData(token, station_name, start_date, end_date)
       .then(data => {
         return data;
       });
   };
 
-  exportCompareData = ({station_names, weather_type}) => {
+  exportCompareData = ({
+    station_names,
+    weather_type,
+    start_date,
+    end_date,
+  }) => {
     let { token } = this.state;
     return this.getAdapter()
-      .exportCompareData(token, station_names, weather_type)
+      .exportCompareData(
+        token,
+        station_names,
+        weather_type,
+        start_date,
+        end_date
+      )
       .then(data => {
         return data;
       });
@@ -562,6 +578,10 @@ export class DataProvider extends React.Component {
 
   clearWeatherLogs = () => {
     this.updateState({ weatherStationLogs: [] });
+  };
+
+  setWindyMap = map => {
+    this.updateState({ map });
   };
 
   render() {
