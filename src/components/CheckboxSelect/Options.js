@@ -22,13 +22,16 @@ const CheckboxSelectOption = ({ value, selectProps, children }) => {
       alignItems="center"
       justifyContent="space-between"
       isSelected={checked}
-      onClick={() => {
-        setChecked(!checked);
-        selectProps.onChange(value);
-      }}
     >
       <Text>{children}</Text>
-      <Checkbox size="12px" checked={checked} />
+      <Checkbox
+        size="12px"
+        checked={checked}
+        onChange={() => {
+          setChecked(!checked);
+          selectProps.onChange(value);
+        }}
+      />
     </Container>
   );
 };

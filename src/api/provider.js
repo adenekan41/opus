@@ -20,25 +20,25 @@ export class DataProvider extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      fetching: false,
-      users: [],
-      contacts: [],
-      alerts: [],
-      crops: [],
+      user: {},
       map: null,
-      weatherStations: [],
+      users: [],
+      crops: [],
+      alerts: [],
+      contacts: [],
+      fetching: false,
       weatherStation: {},
+      weatherStations: [],
+      type: 'Temperature',
       weatherStationLogs: [],
       compareStationLogs: [],
       compareStationCsvData: [],
-      user: {},
+      compareType: 'Temperature',
       profile: {
         username: 'admin',
         first_name: 'Micha',
         last_name: 'Van Winkelhof',
       },
-      type: 'Temperature',
-      compareType: 'Temperature',
       ...this.loadTokenFromStorage(),
     };
     this.state.context = {
@@ -138,7 +138,9 @@ export class DataProvider extends React.Component {
   updateState = (state, callback = () => {}) => {
     let { context, ...rest } = this.state;
     let defaults = { ...rest, ...state };
+
     defaults.context = { ...context, state: defaults };
+
     this.setState(defaults, () => {
       callback();
     });
@@ -159,6 +161,7 @@ export class DataProvider extends React.Component {
 
   getProfile = token => {
     let { profile = {} } = this.state;
+
     if (Object.values(profile).length > 0) {
       return new Promise(resolve => resolve(profile));
     }
@@ -174,6 +177,7 @@ export class DataProvider extends React.Component {
 
   getUsers = token => {
     let { users = [] } = this.state;
+
     if (users.length > 0) {
       return new Promise(resolve => resolve(users));
     }
@@ -189,6 +193,7 @@ export class DataProvider extends React.Component {
 
   getUser = id => {
     let { opus1_token } = this.state;
+
     return this.getAdapter()
       .getUser(opus1_token, id)
       .then(data => {
@@ -201,6 +206,7 @@ export class DataProvider extends React.Component {
 
   createUser = payload => {
     let { opus1_token, users } = this.state;
+
     return this.getAdapter()
       .createUser(opus1_token, payload)
       .then(data => {
@@ -211,6 +217,7 @@ export class DataProvider extends React.Component {
 
   adminCreateUser = payload => {
     let { opus1_token, users } = this.state;
+
     return this.getAdapter()
       .adminCreateUser(opus1_token, payload)
       .then(data => {
@@ -221,6 +228,7 @@ export class DataProvider extends React.Component {
 
   updateUser = payload => {
     let { opus1_token, users } = this.state;
+
     return this.getAdapter()
       .updateUser(opus1_token, payload)
       .then(data => {
@@ -237,6 +245,7 @@ export class DataProvider extends React.Component {
 
   patchUser = payload => {
     let { opus1_token, users } = this.state;
+
     return this.getAdapter()
       .patchUser(opus1_token, payload)
       .then(data => {
@@ -253,6 +262,7 @@ export class DataProvider extends React.Component {
 
   deleteUser = id => {
     let { opus1_token, users } = this.state;
+
     return this.getAdapter()
       .deleteUser(opus1_token, id)
       .then(data => {
@@ -264,9 +274,11 @@ export class DataProvider extends React.Component {
 
   getWhatsappAlerts = () => {
     let { token, alerts } = this.state;
+
     if (alerts.length > 0) {
       return new Promise(resolve => resolve({ alerts }));
     }
+
     return this.getAdapter()
       .getWhatsappAlerts(token)
       .then(data => {
@@ -278,6 +290,7 @@ export class DataProvider extends React.Component {
   sendWhatsappAlert = payload => {
     let { token, alerts } = this.state;
     let { phone_number, message, type } = payload;
+
     return this.getAdapter()
       .sendWhatsappAlert(token, payload)
       .then(data => {
@@ -297,9 +310,11 @@ export class DataProvider extends React.Component {
 
   getContacts = token => {
     let { contacts = [] } = this.state;
+
     if (contacts.length > 0) {
       return new Promise(resolve => resolve(contacts));
     }
+
     return this.getAdapter()
       .getContacts(token)
       .then(data => {
@@ -312,6 +327,7 @@ export class DataProvider extends React.Component {
 
   getContact = id => {
     let { token } = this.state;
+
     return this.getAdapter()
       .getContact(token, id)
       .then(data => {
@@ -321,6 +337,7 @@ export class DataProvider extends React.Component {
 
   createContact = payload => {
     let { token, contacts } = this.state;
+
     return this.getAdapter()
       .createContact(token, payload)
       .then(data => {
@@ -331,6 +348,7 @@ export class DataProvider extends React.Component {
 
   updateContact = payload => {
     let { token, contacts } = this.state;
+
     return this.getAdapter()
       .updateContact(token, payload)
       .then(data => {
@@ -347,6 +365,7 @@ export class DataProvider extends React.Component {
 
   deleteContact = id => {
     let { token, contacts } = this.state;
+
     return this.getAdapter()
       .deleteContact(token, id)
       .then(data => {
@@ -358,6 +377,7 @@ export class DataProvider extends React.Component {
 
   getWeatherForecastLogs = () => {
     let { token } = this.state;
+
     return this.getAdapter()
       .getWeatherForecastLogs(token)
       .then(data => data);
@@ -365,9 +385,11 @@ export class DataProvider extends React.Component {
 
   getCrops = token => {
     let { crops } = this.state;
+
     if (crops.length > 0) {
       return new Promise(resolve => resolve({ crops }));
     }
+
     return this.getAdapter()
       .getCrops(token)
       .then(data => {
@@ -378,9 +400,11 @@ export class DataProvider extends React.Component {
 
   getWeatherData = token => {
     let { weatherStations } = this.state;
+
     if (weatherStations.length > 0) {
       return Promise(resolve => resolve({ weatherStations }));
     }
+
     return this.getAdapter()
       .getWeatherData(token)
       .then(data => {
@@ -395,14 +419,17 @@ export class DataProvider extends React.Component {
     let weatherStation = weatherStations.find(
       weatherStation => weatherStation.station_name === station_name
     );
+
     this.updateState({ weatherStation });
     this.getWeatherStationData(station_name);
+
     let promise = new Promise(resolve => resolve({ weatherStation }));
     return promise;
   };
 
   getWeatherStationData = station_name => {
     let { token } = this.state;
+
     return this.getAdapter()
       .getWeatherStationData(token, station_name)
       .then(data => {
@@ -412,20 +439,22 @@ export class DataProvider extends React.Component {
       });
   };
 
-  getCompareStationData = (station_name = 'SEFWI01') => {
-    let { token, compareStationLogs } = this.state;
+  getCompareStationData = station_name => {
+    let { token, compareStationLogs, observationTimes } = this.state;
+
     return this.getAdapter()
       .getWeatherStationData(token, station_name)
       .then(data => {
-        let formatData = data.map(value => value.response_data);
+        let formattedData = data.map(value => value.response_data);
+
         this.updateState({
           compareStationLogs: [
-            { station: station_name, data: formatData },
+            { station: station_name, data: formattedData },
             ...compareStationLogs,
           ],
         });
         return [
-          { station: station_name, data: formatData },
+          { station: station_name, data: formattedData },
           ...compareStationLogs,
         ];
       });
@@ -437,18 +466,20 @@ export class DataProvider extends React.Component {
       item => item.station !== station_name
     );
     this.updateState({ compareStationLogs: newData });
+
     return new Promise(resolve => resolve({ compareStationLogs: newData }));
   };
 
   filterWeatherLogByDate = dates => {
     let { weatherStationLogs } = this.state;
     let { startDate, endDate } = dates;
-    let data = weatherStationLogs;
     let {
       todayInSeconds,
       endDateInSeconds,
       startDateInSeconds,
     } = getDatesForFilter({ startDate, endDate });
+    let data = weatherStationLogs;
+
     if (
       todayInSeconds === startDateInSeconds &&
       todayInSeconds === endDateInSeconds
@@ -485,12 +516,13 @@ export class DataProvider extends React.Component {
   filterCompareLogByDate = dates => {
     let { compareStationLogs } = this.state;
     let { startDate, endDate } = dates;
-    let data = compareStationLogs;
     let {
       todayInSeconds,
       startDateInSeconds,
       endDateInSeconds,
     } = getDatesForFilter({ startDate, endDate });
+    let data = compareStationLogs;
+
     if (
       todayInSeconds === startDateInSeconds &&
       todayInSeconds === endDateInSeconds
@@ -510,11 +542,13 @@ export class DataProvider extends React.Component {
       });
       data = result;
     }
+
     return data;
   };
 
   filterCompareLogByType = value => {
     let { type, dates } = value;
+
     if (type) {
       let result = [];
       let weatherStationLogs = this.filterCompareLogByDate(dates);
@@ -534,7 +568,7 @@ export class DataProvider extends React.Component {
           data: data.map(value => value[item]),
         }));
       });
-      return { result, observationTimes };
+      return { result, observationTimes: observationTimes || [] };
     }
   };
 
@@ -544,6 +578,7 @@ export class DataProvider extends React.Component {
 
   exportWeatherData = ({ station_name, start_date, end_date }) => {
     let { token } = this.state;
+
     return this.getAdapter()
       .exportWeatherData(token, station_name, start_date, end_date)
       .then(data => {
@@ -558,6 +593,7 @@ export class DataProvider extends React.Component {
     end_date,
   }) => {
     let { token } = this.state;
+
     return this.getAdapter()
       .exportCompareData(
         token,
@@ -573,6 +609,7 @@ export class DataProvider extends React.Component {
 
   getWeatherStationCurrentData = station_name => {
     let { token } = this.state;
+
     return this.getAdapter().getWeatherStationCurrentData(token, station_name);
   };
 

@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 export const SidebarContainer = styled.div`
   width: ${props => (props.isCollapsed ? '64px' : '264px')};
   height: 100vh;
-  position: relative;
+  position: fixed;
   transition: all 0.3s;
   z-index: 51;
   left: 0;

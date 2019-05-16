@@ -29,10 +29,6 @@ const CompareChart = ({ type, data, observationTimes }) => {
               gridLines: {
                 display: false,
               },
-              ticks: {
-                min: observationTimes[0],
-                max: observationTimes[observationTimes.length -1]
-              }
             },
           ],
           yAxes: [
