@@ -129,11 +129,11 @@ export default class ForecastCharts extends Component {
         pressure_year_low_in,
       } = {},
     } = weatherStation;
-    let temperatureChartData = [outside_temp, windchill, heat_index, dewpoint];
-    let currentRainData = [rain_day_in, rain_storm];
-    let totalRainData = [rain_month, rain_year];
-    let windSpeedData = [wind_speed];
-    let humidityData = [current_humidity];
+    let temperatureChartData = [outside_temp || "0", windchill || "0", heat_index || "0", dewpoint || "0"];
+    let currentRainData = [rain_day_in || "0", rain_storm || "0"];
+    let totalRainData = [rain_month || "0", rain_year || "0"];
+    let windSpeedData = [wind_speed || "0"];
+    let humidityData = [current_humidity || "0"];
     let barometerData = [
       convertStringToNumber(pressure_day_high_in),
       convertStringToNumber(pressure_day_low_in),

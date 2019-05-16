@@ -1,7 +1,8 @@
 import moment from 'moment';
 import { COMPARE_STATION_CHART_COLORS } from './constants';
 
-export const convertStringToNumber = string => Number(string);
+export const convertStringToNumber = string => string ? Number(string) : 0;
+;
 
 export const fahrenheitToCelcius = value => {
   value = parseFloat(value);
