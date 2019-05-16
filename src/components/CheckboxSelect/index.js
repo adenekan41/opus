@@ -28,7 +28,6 @@ const CheckboxSelect = ({ options, ...rest }) => {
         placeholder=""
         options={options}
         components={{ Option: CheckboxSelectOption }}
-        defaultValue={`${rest.selected.length} Selected`}
       />
       <Text className="selected-count__text">{`${
         rest.selected.length

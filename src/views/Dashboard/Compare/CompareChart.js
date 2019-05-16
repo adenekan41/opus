@@ -30,9 +30,9 @@ const CompareChart = ({ type, data, observationTimes }) => {
                 display: false,
               },
               ticks: {
-                min: observationTimes[0],
-                max: observationTimes[observationTimes.length -1]
-              }
+                maxRotation: 90,
+                minRotation: 90,
+              },
             },
           ],
           yAxes: [

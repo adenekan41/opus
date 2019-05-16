@@ -65,7 +65,7 @@ export default class WindyMap extends React.Component {
                 closeButton: false,
                 maxWidth: 200,
               }
-            );
+            ).bindTooltip(`${value.station_name}`, {permanent: true, direction: 'top'});
           });
         }
       }

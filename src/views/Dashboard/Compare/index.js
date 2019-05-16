@@ -1,16 +1,16 @@
 import React from 'react';
 import moment from 'moment';
-import { Box, Flex, Text } from 'rebass';
+import { Box, Flex, Text, Heading } from 'rebass';
+import CompareChart from './CompareChart';
 import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumb';
 import Dropdown from '../../../components/Select';
 import DatePicker from '../../../components/DatePicker';
 import Button from '../../../components/Button';
 import Card from '../../../components/Card';
-import { Icon } from '../../../components/Icon';
 import CheckboxSelect from '../../../components/CheckboxSelect';
+import { Icon } from '../../../components/Icon';
 import { WEATHER_OPTIONS } from '../../../helpers/constants';
-import CompareChart from './CompareChart';
-import { createCSV, generateCSVFile } from '../../../helpers/functions';
+import { createCSV } from '../../../helpers/functions';
 import { Spinner } from '../../../components/Spinner';
 
 class Compare extends React.Component {
@@ -21,18 +21,8 @@ class Compare extends React.Component {
     observationTimes: [],
     endDate: moment(new Date()),
     startDate: moment(new Date()),
-    selectedStations: ['SEFWI01'],
+    selectedStations: [],
   };
-
-  componentDidMount() {
-    const { actions } = this.props;
-    this.setState({ loading: true });
-    this.utilityCallback({
-      actionType: actions.GET_COMPARE_STATION_DATA,
-      startDate: moment(new Date()),
-      endDate: new Date(),
-    });
-  }
 
   getWeatherTypeData = (type, dates) => {
     const { dispatch, actions } = this.props;
@@ -132,7 +122,7 @@ class Compare extends React.Component {
       selectedStations,
     } = this.state;
     let checkboxSelectOptions = weatherStations.map(station => ({
-      label: station.location,
+      label: station.station_name,
       value: station.station_name,
     }));
     return (
@@ -200,7 +190,11 @@ class Compare extends React.Component {
           </Box>
         </Box>
         <Box mt="30px">
-          {loading ? (
+          {selectedStations.length === 0 ? (
+            <Flex alignItems="center" justifyContent="center" py="30vh">
+              <Heading>Select weather stations to compare</Heading>
+            </Flex>
+          ) : loading ? (
             <Flex alignItems="center" justifyContent="center" py="30vh">
               <Spinner />
             </Flex>
