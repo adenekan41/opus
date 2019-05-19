@@ -29,7 +29,7 @@ const StyledTable = styled.div`
     position: relative;
   }
 
-  .rt-td {
+  .rt-td, .rt-th {
     text-align: center !important;
     justify-content: center !important;
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Flex, Box } from 'rebass';
+import { Flex, Box, Heading } from 'rebass';
 import moment from 'moment';
 import DatePicker from '../../../components/DatePicker';
 import Button from '../../../components/Button';
@@ -117,7 +117,9 @@ const ForecastTableColumns = [
     style: {
       backgroundColor: '#f4f4f4',
     },
-    Cell: ({ original: { wind_day_high_mph } }) => <span>{getValue(wind_day_high_mph, 'm/s')}</span>,
+    Cell: ({ original: { wind_day_high_mph } }) => (
+      <span>{getValue(wind_day_high_mph, 'm/s')}</span>
+    ),
     width: 180,
   },
   {
@@ -177,6 +179,14 @@ const ForecastTableColumns = [
     ),
     width: 120,
   },
+  {
+    Header: 'ET',
+    id: 'ET',
+    Cell: ({ original: { et_day } }) => (
+      <span>{getValue(et_day)}</span>
+    ),
+    width: 120,
+  },
 ];
 
 export default class ForecastTable extends Component {
@@ -208,7 +218,12 @@ export default class ForecastTable extends Component {
       rain_day_in,
       wind_kt,
       wind_direction,
-      davis_current_observation: { temp_day_low_f, temp_day_high_f, wind_day_high_mph } = {},
+      et_day,
+      davis_current_observation: {
+        temp_day_low_f,
+        temp_day_high_f,
+        wind_day_high_mph,
+      } = {},
     } = weatherStation;
 
     return {
@@ -220,6 +235,7 @@ export default class ForecastTable extends Component {
       heat_index,
       rain_day_in,
       wind_kt,
+      et_day,
       wind_day_high_mph,
       barometer: pressure_in,
       time: observation_time,
@@ -308,13 +324,19 @@ export default class ForecastTable extends Component {
           </Box>
         </Flex>
         <Box mt="40px">
-          <Table
-            data={data}
-            showPagination={data.length > 20}
-            noDataText="No Weather Data"
-            columns={ForecastTableColumns}
-            style={{ height: 500 }}
-          />
+          {data.length > 0 ? (
+            <Table
+              data={data}
+              showPagination={data.length > 20}
+              noDataText="No Weather Data"
+              columns={ForecastTableColumns}
+              style={{ height: 500 }}
+            />
+          ) : (
+            <Flex alignItems="center" justifyContent="center" py="30vh">
+              <Heading>No Weather Data</Heading>
+            </Flex>
+          )}
         </Box>
       </Box>
     );
