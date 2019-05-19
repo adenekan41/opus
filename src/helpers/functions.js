@@ -1,12 +1,13 @@
 import moment from 'moment';
 import { COMPARE_STATION_CHART_COLORS } from './constants';
 
-export const convertStringToNumber = string => string ? Number(string) : 0;
-;
-
+export const convertStringToNumber = string => (string ? Number(string) : 0);
 export const fahrenheitToCelcius = value => {
-  value = parseFloat(value);
-  return ((value - 32) / 1.8).toFixed(1);
+  if (!!value) {
+    value = parseFloat(value);
+    return ((value - 32) / 1.8).toFixed(1);
+  }
+  return null;
 };
 
 export const createCSV = text => {
@@ -19,15 +20,15 @@ export const createCSV = text => {
 
 export const generateCSVFile = data => {
   let csvContent = 'data:text/csv;charset=utf-8,';
-  let row = "";
+  let row = '';
   data.forEach(rowArray => {
     rowArray.forEach(item => {
-      row = row + JSON.stringify(item)
+      row = row + JSON.stringify(item);
     });
     csvContent += row + '\r\n';
   });
   csvContent.replace('/[!@#$%^&*]/g', '');
-  createCSV(csvContent)
+  createCSV(csvContent);
 };
 
 function getRandomColor() {
@@ -217,4 +218,17 @@ export const getDatesForFilter = ({ startDate, endDate }) => {
   let startDateInSeconds = convertStringToNumber(formatDate(startDate, 'X'));
   let endDateInSeconds = convertStringToNumber(formatDate(endDate, 'X'));
   return { todayInSeconds, startDateInSeconds, endDateInSeconds };
+};
+
+export const getValue = (value, unit = '') => {
+  if (value) {
+    return `${value} ${unit}`;
+  }
+  return '--';
+};
+
+export const valueInDecimal = value => {
+  if (!!value) {
+    return parseFloat(value).toFixed(1);
+  }
 };
