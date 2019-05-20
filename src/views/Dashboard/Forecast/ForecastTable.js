@@ -334,7 +334,7 @@ export default class ForecastTable extends Component {
             />
           ) : (
             <Flex alignItems="center" justifyContent="center" py="30vh">
-              <Heading>No Weather Data</Heading>
+              <Heading>No Weather Data For Selected Date Range</Heading>
             </Flex>
           )}
         </Box>
