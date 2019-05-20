@@ -61,6 +61,10 @@ const DatePickerContainer = styled.div`
     margin: 0 0 0 10px;
   }
 
+  .DateRangePicker_picker {
+    z-index: 4 !important;
+  }
+
   .label {
     display: inline-block;
     position: absolute;
@@ -111,12 +115,10 @@ class DatePicker extends React.Component {
             endDateId="your_unique_end_date_id"
             onDatesChange={({ startDate, endDate }) => {
               this.setState({ startDate, endDate }, () => {
-                if (startDate && endDate) {
-                  onChange({
-                    startDate,
-                    endDate,
-                  });
-                }
+                onChange({
+                  startDate,
+                  endDate,
+                });
               });
             }}
             focusedInput={this.state.focusedInput}

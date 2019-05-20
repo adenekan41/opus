@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
-import { Flex, Box } from 'rebass';
+import { Flex, Box, Heading } from 'rebass';
 import moment from 'moment';
 import DatePicker from '../../../components/DatePicker';
 import Button from '../../../components/Button';
 import { Icon } from '../../../components/Icon';
 import Table from '../../../components/Table';
-import { fahrenheitToCelcius, createCSV } from '../../../helpers/functions';
+import {
+  fahrenheitToCelcius,
+  createCSV,
+  getValue,
+  valueInDecimal,
+} from '../../../helpers/functions';
 
 const ForecastTableColumns = [
   {
@@ -15,23 +20,30 @@ const ForecastTableColumns = [
     Cell: ({ original: { time } }) => (
       <span>{moment(time).format('DD/MM/YY - hh:mm')}</span>
     ),
+    fixed: 'left',
     style: {
-      color: '#8c8c8c',
+      color: '#ffffff',
+      backgroundColor: '#3c464c',
     },
+    width: 120,
   },
   {
     Header: 'Barometer',
     id: 'barometer',
-    Cell: ({ original: { barometer } }) => (
-      <span>{parseFloat(barometer).toFixed(1)} hPa</span>
-    ),
+    Cell: ({ original: { barometer } }) => {
+      return <span>{getValue(valueInDecimal(barometer), 'hPa')}</span>;
+    },
+    width: 120,
   },
   {
     Header: 'Temperature',
     style: {
       backgroundColor: '#f4f4f4',
     },
-    Cell: ({ original: { temperature } }) => <span>{temperature}&deg;C</span>,
+    Cell: ({ original: { temperature } }) => (
+      <span>{getValue(temperature, '°C')}</span>
+    ),
+    width: 120,
   },
   {
     Header: 'High Temp.',
@@ -40,8 +52,9 @@ const ForecastTableColumns = [
       backgroundColor: '#f4f4f4',
     },
     Cell: ({ original: { low_temperature } }) => (
-      <span>{low_temperature}&deg;C</span>
+      <span>{getValue(low_temperature, `°C`)}</span>
     ),
+    width: 120,
   },
   {
     Header: 'Low Temp.',
@@ -50,13 +63,25 @@ const ForecastTableColumns = [
       backgroundColor: '#f4f4f4',
     },
     Cell: ({ original: { high_temperature } }) => (
-      <span>{high_temperature}&deg;C</span>
+      <span>{getValue(high_temperature, '°C')}</span>
     ),
+    width: 120,
   },
   {
     Header: 'Humidity',
     id: 'Humidity',
-    Cell: ({ original: { humidity } }) => <span>{humidity}%</span>,
+    Cell: ({ original: { humidity } }) => (
+      <span>{getValue(humidity, '%')}</span>
+    ),
+    width: 120,
+  },
+  {
+    Header: 'Dew Point',
+    id: 'Dew Point',
+    Cell: ({ original: { dewpoint } }) => (
+      <span>{getValue(dewpoint, '°C')}</span>
+    ),
+    width: 120,
   },
   {
     Header: 'Wind Speed',
@@ -64,29 +89,103 @@ const ForecastTableColumns = [
     style: {
       backgroundColor: '#f4f4f4',
     },
-    Cell: ({ original: { wind_speed } }) => <span>{wind_speed} m/s</span>,
+    Cell: ({ original: { wind_speed } }) => (
+      <span>{getValue(wind_speed, 'm/s')}</span>
+    ),
+    width: 120,
   },
   {
     Header: 'Wind Direction',
     style: {
       backgroundColor: '#f4f4f4',
     },
-    Cell: ({ original: { wind_direction } }) => <span>{wind_direction}</span>,
+    Cell: ({ original: { wind_direction } }) => (
+      <span>{getValue(wind_direction)}</span>
+    ),
+    width: 140,
+  },
+  {
+    Header: 'Wind Run',
+    style: {
+      backgroundColor: '#f4f4f4',
+    },
+    Cell: ({ original: { wind_kt } }) => <span>{getValue(wind_kt, 'm')}</span>,
+    width: 120,
+  },
+  {
+    Header: 'High Wind Speed',
+    style: {
+      backgroundColor: '#f4f4f4',
+    },
+    Cell: ({ original: { wind_day_high_mph } }) => (
+      <span>{getValue(wind_day_high_mph, 'm/s')}</span>
+    ),
+    width: 180,
+  },
+  {
+    Header: 'High Wind Direction',
+    style: {
+      backgroundColor: '#f4f4f4',
+    },
+    Cell: ({ original: { wind_kt } }) => <span>{getValue(wind_kt, 'm')}</span>,
+    width: 180,
   },
   {
     Header: 'Wind Chill',
     id: 'windchill',
-    accessor: 'windchill',
+    Cell: ({ original: { windchill } }) => (
+      <span>{getValue(windchill, '°C')}</span>
+    ),
     style: {
       backgroundColor: '#f4f4f4',
     },
+    width: 120,
+  },
+  {
+    Header: 'Heat Index',
+    id: 'heat_index',
+    Cell: ({ original: { heat_index } }) => (
+      <span>{getValue(heat_index, '°C')}</span>
+    ),
+    style: {
+      backgroundColor: '#f4f4f4',
+    },
+    width: 120,
+  },
+  {
+    Header: 'THW Index',
+    id: 'thw_index',
+    Cell: ({ original: { heat_index } }) => (
+      <span>{getValue(heat_index, '°C')}</span>
+    ),
+    style: {
+      backgroundColor: '#f4f4f4',
+    },
+    width: 120,
+  },
+  {
+    Header: 'Rain',
+    id: 'Rain',
+    Cell: ({ original: { rain_day_in } }) => (
+      <span>{getValue(valueInDecimal(rain_day_in))}</span>
+    ),
+    width: 120,
   },
   {
     Header: 'Rain Rate',
     id: 'Rain Rate',
     Cell: ({ original: { rain_rate } }) => (
-      <span>{parseFloat(rain_rate).toFixed(1)}</span>
+      <span>{getValue(valueInDecimal(rain_rate))}</span>
     ),
+    width: 120,
+  },
+  {
+    Header: 'ET',
+    id: 'ET',
+    Cell: ({ original: { et_day } }) => (
+      <span>{getValue(et_day)}</span>
+    ),
+    width: 120,
   },
 ];
 
@@ -114,8 +213,17 @@ export default class ForecastTable extends Component {
       pressure_in,
       observation_time,
       temp_f,
+      dewpoint,
+      heat_index,
+      rain_day_in,
+      wind_kt,
       wind_direction,
-      davis_current_observation: { temp_day_low_f, temp_day_high_f } = {},
+      et_day,
+      davis_current_observation: {
+        temp_day_low_f,
+        temp_day_high_f,
+        wind_day_high_mph,
+      } = {},
     } = weatherStation;
 
     return {
@@ -123,6 +231,12 @@ export default class ForecastTable extends Component {
       wind_speed,
       rain_rate,
       wind_direction,
+      dewpoint,
+      heat_index,
+      rain_day_in,
+      wind_kt,
+      et_day,
+      wind_day_high_mph,
       barometer: pressure_in,
       time: observation_time,
       humidity: current_humidity,
@@ -210,12 +324,19 @@ export default class ForecastTable extends Component {
           </Box>
         </Flex>
         <Box mt="40px">
-          <Table
-            data={data}
-            showPagination={data.length > 20}
-            noDataText="No Weather Data"
-            columns={ForecastTableColumns}
-          />
+          {data.length > 0 ? (
+            <Table
+              data={data}
+              showPagination={data.length > 20}
+              noDataText="No Weather Data"
+              columns={ForecastTableColumns}
+              style={{ height: 500 }}
+            />
+          ) : (
+            <Flex alignItems="center" justifyContent="center" py="30vh">
+              <Heading>No Weather Data For Selected Date Range</Heading>
+            </Flex>
+          )}
         </Box>
       </Box>
     );

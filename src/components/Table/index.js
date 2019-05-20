@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import ReactTable from 'react-table';
+import withFixedColumns from 'react-table-hoc-fixed-columns';
 import 'react-table/react-table.css';
+import 'react-table-hoc-fixed-columns/lib/styles.css';
 import { Icon } from '../Icon';
 import Button from '../Button';
 import { Spinner } from '../Spinner';
@@ -18,13 +20,18 @@ const StyledTable = styled.div`
   }
 
   .rt-noData {
-    top: 75%!important;
+    top: 75% !important;
     background: transparent !important;
   }
 
   .Table__Wrapper {
     overflow: auto;
     position: relative;
+  }
+
+  .rt-td, .rt-th {
+    text-align: center !important;
+    justify-content: center !important;
   }
 
   .Table__Row {
@@ -62,10 +69,11 @@ const Table = ({
   tableWrapperCSS,
   ...rest
 }) => {
+  const ReactTableFixedColumns = withFixedColumns(ReactTable);
   return (
     <StyledTable {...{ tableRowCSS, tableHeadCSS, tableWrapperCSS, ...rest }}>
       <div className="Table__Wrapper">
-        <ReactTable
+        <ReactTableFixedColumns
           style={{
             backgroundColor: 'white',
             border: 'none',
