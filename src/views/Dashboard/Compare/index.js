@@ -1,17 +1,18 @@
-import React from 'react';
-import moment from 'moment';
-import { Box, Flex, Text, Heading } from 'rebass';
-import CompareChart from './CompareChart';
-import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumb';
-import Dropdown from '../../../components/Select';
-import DatePicker from '../../../components/DatePicker';
-import Button from '../../../components/Button';
-import Card from '../../../components/Card';
-import CheckboxSelect from '../../../components/CheckboxSelect';
-import { Icon } from '../../../components/Icon';
-import { WEATHER_OPTIONS } from '../../../helpers/constants';
-import { createCSV } from '../../../helpers/functions';
-import { Spinner } from '../../../components/Spinner';
+import React from "react";
+import moment from "moment";
+import { Box, Flex, Text, Heading } from "rebass";
+import CompareChart from "./CompareChart";
+import Breadcrumbs, { BreadcrumbItem } from "../../../components/Breadcrumb";
+import Dropdown from "../../../components/Select";
+import DatePicker from "../../../components/DatePicker";
+import Button from "../../../components/Button";
+import Card from "../../../components/Card";
+import CheckboxSelect from "../../../components/CheckboxSelect";
+import { Icon } from "../../../components/Icon";
+import { WEATHER_OPTIONS } from "../../../helpers/constants";
+import { createCSV } from "../../../helpers/functions";
+import { Spinner } from "../../../components/Spinner";
+import { Toast } from "../../../components/Toast";
 
 class Compare extends React.Component {
   state = {
@@ -22,6 +23,8 @@ class Compare extends React.Component {
     endDate: moment(new Date()),
     startDate: moment(new Date()),
     selectedStations: [],
+    error: false,
+    errorMessage: "",
   };
 
   getWeatherTypeData = (type, dates) => {
@@ -41,7 +44,7 @@ class Compare extends React.Component {
     const { dispatch, actions, compareType } = this.props;
     const { selectedStations, startDate, endDate } = this.state;
 
-    this.setState({ buttonLoading: true });
+    this.setState({ buttonLoading: true, error: false, errorMessage: "" });
 
     dispatch({
       type: actions.EXPORT_COMPARE_DATA_CSV,
@@ -57,7 +60,11 @@ class Compare extends React.Component {
         createCSV(data);
       })
       .catch(() => {
-        this.setState({ loading: false });
+        this.setState({
+          error: true,
+          buttonLoading: false,
+          errorMessage: "Unable to export data. Please try again.",
+        });
       });
   };
 
@@ -114,9 +121,11 @@ class Compare extends React.Component {
     const { compareType, weatherStations } = this.props;
     let {
       data,
+      error,
       endDate,
       loading,
       startDate,
+      errorMessage,
       buttonLoading,
       observationTimes,
       selectedStations,
@@ -206,12 +215,12 @@ class Compare extends React.Component {
                 mb="16px"
               >
                 <Text fontSize="12px">
-                  <span style={{ fontWeight: 'bold' }}>
+                  <span style={{ fontWeight: "bold" }}>
                     Weather Station Comparism -
                   </span>
-                  <span style={{ fontStyle: 'italic' }}>
-                    {moment(startDate).format('DD MMM, YYYY hh:mm')} to{' '}
-                    {moment(endDate).format('DD MMM, YYYY hh:mm')}
+                  <span style={{ fontStyle: "italic" }}>
+                    {moment(startDate).format("DD MMM, YYYY hh:mm")} to{" "}
+                    {moment(endDate).format("DD MMM, YYYY hh:mm")}
                   </span>
                 </Text>
               </Flex>
@@ -225,6 +234,19 @@ class Compare extends React.Component {
             </Card>
           )}
         </Box>
+
+        {error && (
+          <Toast
+            showToast={error}
+            title="Error"
+            status="error"
+            showCloseButton
+            autoClose={false}
+            onClose={() => this.setState({ error: false })}
+          >
+            {errorMessage}
+          </Toast>
+        )}
       </Box>
     );
   }
