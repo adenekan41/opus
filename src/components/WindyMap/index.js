@@ -38,25 +38,23 @@ export default class WindyMap extends React.Component {
                   <h3>${value.location} (${value.station_name})</h3>
                   <div class="station-data">
                     <p>Temperature:</p>
-                    <p>${value.outside_temp}&deg;C</p>
+                    <p>${value.temp_c ? `${value.temp_c} &deg;C` : 'N/A'}</p>
                   </div>
                   <div class="station-data">
                     <p>Humidity:</p>
-                    <p>${value.current_humidity}%</p>
+                    <p>${value["hum_%"] ? `${value["hum_%"]} %` : 'N/A'}</p>
                   </div>
                   <div class="station-data">
                     <p>Wind:</p>
-                    <p>${value.wind_speed}mph</p>
+                    <p>${value.wind_speed_m_s ? `${value.wind_speed_m_s} mph` : 'N/A'}</p>
                   </div>
                   <div class="station-data">
                     <p>Barometer:</p>
-                    <p>${value.pressure_in} in. Hg ${
-                value.pressure_tendency_string
-              }</p>
+                    <p>${value.barometer_hpa ? `${value.barometer_hpa} in. Hg` : 'N/A'} </p>
                   </div>
                   <div class="station-data">
                     <p>Daily Rain:</p>
-                    <p>${value.rain_day_in} in</p>
+                    <p>${value.rain_mm ? `${value.rain_mm} in` : 'N/A'}</p>
                   </div>
                   <button id="view-bulletin" class="station-data__button" onclick="window.onStationClick('${value.station_name}')">view bulletin</button>
                   `,

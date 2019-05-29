@@ -109,39 +109,30 @@ export default class ForecastCharts extends Component {
     let chartFilter = Object.values(charts).map(item => item.label);
     const { weatherStation } = this.props;
     const {
-      heat_index,
-      windchill,
-      outside_temp,
-      dewpoint,
-      rain_day_in,
-      rain_storm,
-      rain_month,
-      rain_year,
-      current_humidity,
-      wind_speed,
+
+      observation_time,
+      barometer_hpa,
+      temp_c,
+      high_temp_c,
+      low_temp_c,
+      dew_point_c,
+      wet_bulb_c,
+      wind_speed_m_s,
+      wind_direction,
+      wind_run_m,
+      wind_chill_c,
+      heat_index_c,
+      rain_mm,
+      rain_rate_mm_h,
       wind_degrees,
-      davis_current_observation: {
-        pressure_day_high_in,
-        pressure_day_low_in,
-        pressure_month_high_in,
-        pressure_month_low_in,
-        pressure_year_high_in,
-        pressure_year_low_in,
-      } = {},
+        ...rest
     } = weatherStation;
-    let temperatureChartData = [outside_temp || "0", windchill || "0", heat_index || "0", dewpoint || "0"];
-    let currentRainData = [rain_day_in || "0", rain_storm || "0"];
-    let totalRainData = [rain_month || "0", rain_year || "0"];
-    let windSpeedData = [wind_speed || "0"];
-    let humidityData = [current_humidity || "0"];
-    let barometerData = [
-      convertStringToNumber(pressure_day_high_in),
-      convertStringToNumber(pressure_day_low_in),
-      convertStringToNumber(pressure_month_high_in),
-      convertStringToNumber(pressure_month_low_in),
-      convertStringToNumber(pressure_year_high_in),
-      convertStringToNumber(pressure_year_low_in),
-    ];
+    let temperatureChartData = [temp_c || "0", wind_chill_c || "0", heat_index_c || "0", dew_point_c || "0"];
+    let currentRainData = [rain_rate_mm_h || "0", rain_rate_mm_h || "0"];
+    let totalRainData = [rain_mm || "0", rain_mm || "0"];
+    let windSpeedData = [wind_speed_m_s || "0"];
+    let humidityData = [rest["hum_%"] || "0"];
+    let barometerData = [barometer_hpa];
     let windDirectionData = [convertStringToNumber(wind_degrees)];
     return (
       <Box>

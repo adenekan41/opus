@@ -1,103 +1,110 @@
-import React, { Component } from 'react';
-import { Flex, Box, Heading } from 'rebass';
-import moment from 'moment';
-import DatePicker from '../../../components/DatePicker';
-import Button from '../../../components/Button';
-import { Icon } from '../../../components/Icon';
-import Table from '../../../components/Table';
+import React, { Component } from "react";
+import { Flex, Box, Heading } from "rebass";
+import moment from "moment";
+import DatePicker from "../../../components/DatePicker";
+import Button from "../../../components/Button";
+import { Icon } from "../../../components/Icon";
+import Table from "../../../components/Table";
 import {
-  fahrenheitToCelcius,
   createCSV,
   getValue,
   valueInDecimal,
-} from '../../../helpers/functions';
+} from "../../../helpers/functions";
 
 const ForecastTableColumns = [
   {
-    Header: 'Time',
-    id: 'time',
-    accessor: 'time',
+    Header: "Time",
+    id: "time",
+    accessor: "time",
     Cell: ({ original: { time } }) => (
-      <span>{moment(time).format('DD/MM/YY - hh:mm')}</span>
+      <span>{moment(time).format("DD/MM/YY - hh:mm")}</span>
     ),
-    fixed: 'left',
+    fixed: "left",
     style: {
-      color: '#ffffff',
-      backgroundColor: '#3c464c',
+      color: "#ffffff",
+      backgroundColor: "#3c464c",
     },
     width: 120,
   },
   {
-    Header: 'Barometer',
-    id: 'barometer',
+    Header: "Barometer",
+    id: "barometer",
     Cell: ({ original: { barometer } }) => {
-      return <span>{getValue(valueInDecimal(barometer), 'hPa')}</span>;
+      return <span>{getValue(valueInDecimal(barometer), "hPa")}</span>;
     },
     width: 120,
   },
   {
-    Header: 'Temperature',
+    Header: "Temperature",
     style: {
-      backgroundColor: '#f4f4f4',
+      backgroundColor: "#f4f4f4",
     },
     Cell: ({ original: { temperature } }) => (
-      <span>{getValue(temperature, '°C')}</span>
+      <span>{getValue(temperature, "°C")}</span>
     ),
     width: 120,
   },
   {
-    Header: 'High Temp.',
-    id: 'High Temperature',
+    Header: "High Temp.",
+    id: "High Temperature",
     style: {
-      backgroundColor: '#f4f4f4',
-    },
-    Cell: ({ original: { low_temperature } }) => (
-      <span>{getValue(low_temperature, `°C`)}</span>
-    ),
-    width: 120,
-  },
-  {
-    Header: 'Low Temp.',
-    id: 'Low Temp',
-    style: {
-      backgroundColor: '#f4f4f4',
+      backgroundColor: "#f4f4f4",
     },
     Cell: ({ original: { high_temperature } }) => (
-      <span>{getValue(high_temperature, '°C')}</span>
+      <span>{getValue(high_temperature, `°C`)}</span>
     ),
     width: 120,
   },
   {
-    Header: 'Humidity',
-    id: 'Humidity',
-    Cell: ({ original: { humidity } }) => (
-      <span>{getValue(humidity, '%')}</span>
-    ),
-    width: 120,
-  },
-  {
-    Header: 'Dew Point',
-    id: 'Dew Point',
-    Cell: ({ original: { dewpoint } }) => (
-      <span>{getValue(dewpoint, '°C')}</span>
-    ),
-    width: 120,
-  },
-  {
-    Header: 'Wind Speed',
-    id: 'Wind Speed',
+    Header: "Low Temp.",
+    id: "Low Temp",
     style: {
-      backgroundColor: '#f4f4f4',
+      backgroundColor: "#f4f4f4",
+    },
+    Cell: ({ original: { low_temperature } }) => (
+      <span>{getValue(low_temperature, "°C")}</span>
+    ),
+    width: 120,
+  },
+  {
+    Header: "Humidity",
+    id: "Humidity",
+    Cell: ({ original: { humidity } }) => (
+      <span>{getValue(humidity, "%")}</span>
+    ),
+    width: 120,
+  },
+  {
+    Header: "Dew Point",
+    id: "Dew Point",
+    Cell: ({ original: { dewpoint } }) => (
+      <span>{getValue(dewpoint, "°C")}</span>
+    ),
+    width: 120,
+  },
+  {
+    Header: "Wet Bulb",
+    id: "Wet Bulb",
+    Cell: ({ original: { wetbulb } }) => (
+      <span>{getValue(wetbulb, "°C")}</span>
+    ),
+    width: 120,
+  },
+  {
+    Header: "Wind Speed",
+    id: "Wind Speed",
+    style: {
+      backgroundColor: "#f4f4f4",
     },
     Cell: ({ original: { wind_speed } }) => (
-      <span>{getValue(wind_speed, 'm/s')}</span>
+      <span>{getValue(wind_speed, "m/s")}</span>
     ),
     width: 120,
   },
   {
-    Header: 'Wind Direction',
+    Header: "Wind Direction",
     style: {
-      backgroundColor: '#f4f4f4',
+      backgroundColor: "#f4f4f4",
     },
     Cell: ({ original: { wind_direction } }) => (
       <span>{getValue(wind_direction)}</span>
@@ -105,86 +112,96 @@ const ForecastTableColumns = [
     width: 140,
   },
   {
-    Header: 'Wind Run',
+    Header: "Wind Run",
     style: {
-      backgroundColor: '#f4f4f4',
+      backgroundColor: "#f4f4f4",
     },
-    Cell: ({ original: { wind_kt } }) => <span>{getValue(wind_kt, 'm')}</span>,
+    Cell: ({ original: { wind_run } }) => <span>{getValue(wind_run, "m")}</span>,
     width: 120,
   },
   {
-    Header: 'High Wind Speed',
+    Header: "High Wind Speed",
     style: {
-      backgroundColor: '#f4f4f4',
+      backgroundColor: "#f4f4f4",
     },
-    Cell: ({ original: { wind_day_high_mph } }) => (
-      <span>{getValue(wind_day_high_mph, 'm/s')}</span>
+    Cell: ({ original: { high_wind_speed } }) => (
+      <span>{getValue(high_wind_speed, "m/s")}</span>
     ),
     width: 180,
   },
   {
-    Header: 'High Wind Direction',
+    Header: "High Wind Direction",
     style: {
-      backgroundColor: '#f4f4f4',
+      backgroundColor: "#f4f4f4",
     },
-    Cell: ({ original: { wind_kt } }) => <span>{getValue(wind_kt, 'm')}</span>,
+    Cell: ({ original: { high_wind_direction } }) => <span>{getValue(high_wind_direction)}</span>,
     width: 180,
   },
   {
-    Header: 'Wind Chill',
-    id: 'windchill',
+    Header: "Wind Chill",
+    id: "windchill",
     Cell: ({ original: { windchill } }) => (
-      <span>{getValue(windchill, '°C')}</span>
+      <span>{getValue(windchill, "°C")}</span>
     ),
     style: {
-      backgroundColor: '#f4f4f4',
+      backgroundColor: "#f4f4f4",
     },
     width: 120,
   },
   {
-    Header: 'Heat Index',
-    id: 'heat_index',
+    Header: "Heat Index",
+    id: "heat_index",
     Cell: ({ original: { heat_index } }) => (
-      <span>{getValue(heat_index, '°C')}</span>
+      <span>{getValue(heat_index, "°C")}</span>
     ),
     style: {
-      backgroundColor: '#f4f4f4',
+      backgroundColor: "#f4f4f4",
     },
     width: 120,
   },
   {
-    Header: 'THW Index',
-    id: 'thw_index',
-    Cell: ({ original: { heat_index } }) => (
-      <span>{getValue(heat_index, '°C')}</span>
+    Header: "THW Index",
+    id: "thw_index",
+    Cell: ({ original: { thw_index } }) => (
+      <span>{getValue(thw_index, "°C")}</span>
     ),
     style: {
-      backgroundColor: '#f4f4f4',
+      backgroundColor: "#f4f4f4",
     },
     width: 120,
   },
   {
-    Header: 'Rain',
-    id: 'Rain',
-    Cell: ({ original: { rain_day_in } }) => (
-      <span>{getValue(valueInDecimal(rain_day_in))}</span>
+    Header: "Rain",
+    id: "Rain",
+    Cell: ({ original: { rain } }) => (
+      <span>{getValue(valueInDecimal(rain, "mm"))}</span>
     ),
     width: 120,
   },
   {
-    Header: 'Rain Rate',
-    id: 'Rain Rate',
+    Header: "Rain Rate",
+    id: "Rain Rate",
     Cell: ({ original: { rain_rate } }) => (
-      <span>{getValue(valueInDecimal(rain_rate))}</span>
+      <span>{getValue(valueInDecimal(rain_rate, "mm/h"))}</span>
     ),
     width: 120,
   },
   {
-    Header: 'ET',
-    id: 'ET',
-    Cell: ({ original: { et_day } }) => (
-      <span>{getValue(et_day)}</span>
-    ),
+    Header: "ET",
+    id: "ET",
+    Cell: ({ original: { et } }) => <span>{getValue(et, "mm")}</span>,
+    width: 120,
+  },
+  {
+    Header: "Heating Degree Days",
+    id: "Heating Degree Days",
+    Cell: ({ original: { heating_degree_days } }) => <span>{getValue(heating_degree_days)}</span>,
+    width: 120,
+  },
+  {
+    Header: "Cooling Degree Days",
+    id: "Cooling Degree Days",
+    Cell: ({ original: { cooling_degree_days } }) => <span>{getValue(cooling_degree_days)}</span>,
     width: 120,
   },
 ];
@@ -200,49 +217,71 @@ export default class ForecastTable extends Component {
   componentDidMount() {
     const { weatherStation, history } = this.props;
     if (Object.values(weatherStation).length === 0) {
-      history.push('/dashboard/weather-data/map');
+      history.push("/dashboard/weather-data/map");
     }
   }
 
   getSingleDataPoint = weatherStation => {
     const {
-      windchill,
-      rain_rate,
-      current_humidity,
-      wind_speed,
-      pressure_in,
       observation_time,
-      temp_f,
-      dewpoint,
-      heat_index,
-      rain_day_in,
-      wind_kt,
+      barometer_hpa,
+      temp_c,
+      high_temp_c,
+      low_temp_c,
+      dew_point_c,
+      wet_bulb_c,
+      wind_speed_m_s,
       wind_direction,
-      et_day,
-      davis_current_observation: {
-        temp_day_low_f,
-        temp_day_high_f,
-        wind_day_high_mph,
-      } = {},
+      wind_run_m,
+      high_wind_speed_m_s,
+      high_wind_direction,
+      wind_chill_c,
+      heat_index_c,
+      thw_index_c,
+      rain_mm,
+      rain_rate_mm_h,
+      et_mm,
+      heating_degree_days,
+      cooling_degree_days,
+      wind_chill_low_c,
+      wind_chill_high_c,
+      heat_index_low_c,
+      heat_index_high_c,
+      dew_point_low_c,
+      dew_point_high_c,
+        ...rest
     } = weatherStation;
 
     return {
-      windchill,
-      wind_speed,
-      rain_rate,
+      temperature: temp_c,
+      high_temperature: high_temp_c,
+      low_temperature: low_temp_c,
+      dewpoint: dew_point_c,
+      wetbulb: wet_bulb_c,
+      wind_speed: wind_speed_m_s,
       wind_direction,
-      dewpoint,
-      heat_index,
-      rain_day_in,
-      wind_kt,
-      et_day,
-      wind_day_high_mph,
-      barometer: pressure_in,
+      wind_run: wind_run_m,
+      high_wind_speed: high_wind_speed_m_s,
+      high_wind_direction,
+      wind_chill: wind_chill_c,
+      heat_index: heat_index_c,
+      thw_index: thw_index_c,
+      rain: rain_mm,
+      rain_rate: rain_rate_mm_h,
+      et: et_mm,
+      heating_degree_days,
+      cooling_degree_days,
+      low_wind_chill: wind_chill_low_c,
+      high_wind_chill: wind_chill_high_c,
+      low_heat_index: heat_index_low_c,
+      high_heat_index: heat_index_high_c,
+      low_dew_point: dew_point_low_c,
+      high_dew_point: dew_point_high_c,
+      barometer: barometer_hpa,
       time: observation_time,
-      humidity: current_humidity,
-      temperature: fahrenheitToCelcius(temp_f),
-      low_temperature: fahrenheitToCelcius(temp_day_low_f),
-      high_temperature: fahrenheitToCelcius(temp_day_high_f),
+      humidity: rest["hum_%"],
+      low_humidity: rest["hum_low_%"],
+      high_humidity: rest["hum_high_%"],
     };
   };
 

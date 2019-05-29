@@ -1,16 +1,16 @@
-import React from 'react';
-import moment from 'moment';
-import adapter from './adapter';
-import { ACTIONS } from './actions';
-import { DataContext } from './context';
-import { clearState, saveState, loadState } from '../localStorage';
+import React from "react";
+import moment from "moment";
+import adapter from "./adapter";
+import { ACTIONS } from "./actions";
+import { DataContext } from "./context";
+import { clearState, saveState, loadState } from "../localStorage";
 import {
   convertStringToNumber,
   weatherTypeData,
   formatDate,
   getDatesForFilter,
   compareTypeData,
-} from '../helpers/functions';
+} from "../helpers/functions";
 
 export class DataProvider extends React.Component {
   static defaultProps = {
@@ -29,15 +29,16 @@ export class DataProvider extends React.Component {
       fetching: false,
       weatherStation: {},
       weatherStations: [],
-      type: 'Temperature',
+      type: "Temperature",
       weatherStationLogs: [],
       compareStationLogs: [],
+      observationTimes: [],
       compareStationCsvData: [],
-      compareType: 'Temperature',
+      compareType: "Temperature",
       profile: {
-        username: 'admin',
-        first_name: 'Micha',
-        last_name: 'Van Winkelhof',
+        username: "admin",
+        first_name: "Micha",
+        last_name: "Van Winkelhof",
       },
       ...this.loadTokenFromStorage(),
     };
@@ -65,8 +66,8 @@ export class DataProvider extends React.Component {
 
   loadTokenFromStorage = () => {
     let auth =
-      (loadState() || { auth: { token: '' } } || { auth: { token: '' } })
-        .auth || '';
+      (loadState() || { auth: { token: "" } } || { auth: { token: "" } })
+        .auth || "";
     if (!this.props.token) {
       return { token: auth.token, opus1_token: auth.opus1_token };
     } else {
@@ -408,9 +409,8 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .getWeatherData(token)
       .then(data => {
-        let formatData = data.map(value => value.response_data);
-        this.updateState({ weatherStations: formatData });
-        return formatData;
+        this.updateState({ weatherStations: data });
+        return data;
       });
   };
 
@@ -433,30 +433,24 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .getWeatherStationData(token, station_name)
       .then(data => {
-        let formatData = data.map(value => value.response_data);
-        this.updateState({ weatherStationLogs: formatData });
-        return formatData;
+        this.updateState({ weatherStationLogs: data });
+        return data;
       });
   };
 
   getCompareStationData = station_name => {
-    let { token, compareStationLogs, observationTimes } = this.state;
+    let { token, compareStationLogs } = this.state;
 
     return this.getAdapter()
       .getWeatherStationData(token, station_name)
       .then(data => {
-        let formattedData = data.map(value => value.response_data);
-
         this.updateState({
           compareStationLogs: [
-            { station: station_name, data: formattedData },
+            { station: station_name, data },
             ...compareStationLogs,
           ],
         });
-        return [
-          { station: station_name, data: formattedData },
-          ...compareStationLogs,
-        ];
+        return [{ station: station_name, data }, ...compareStationLogs];
       });
   };
 
@@ -488,7 +482,7 @@ export class DataProvider extends React.Component {
     } else {
       data = weatherStationLogs.filter(station => {
         let { observation_time } = station;
-        let time = convertStringToNumber(formatDate(observation_time, 'X'));
+        let time = convertStringToNumber(formatDate(observation_time, "X"));
         if (time >= startDateInSeconds && time <= endDateInSeconds) {
           return station;
         }
@@ -504,7 +498,7 @@ export class DataProvider extends React.Component {
       let result = [];
       let weatherStationLogs = this.filterWeatherLogByDate(dates);
       let observationTimes = weatherStationLogs.map(value =>
-        formatDate(value.observation_time, 'DD/MM')
+        formatDate(value.observation_time, "DD/MM")
       );
       weatherTypeData[type].forEach(item => {
         result.push(weatherStationLogs.map(value => value[item]));
@@ -533,7 +527,7 @@ export class DataProvider extends React.Component {
       compareStationLogs.forEach(({ station, data }) => {
         let filteredStationLog = data.filter(stationItem => {
           let { observation_time } = stationItem;
-          let time = convertStringToNumber(formatDate(observation_time, 'X'));
+          let time = convertStringToNumber(formatDate(observation_time, "X"));
           if (time >= startDateInSeconds && time <= endDateInSeconds) {
             return stationItem;
           }
@@ -560,7 +554,7 @@ export class DataProvider extends React.Component {
         weatherStationLogs &&
         weatherStationLogs[0] &&
         weatherStationLogs[0].data.map(value =>
-          moment(value.observation_time).format('DD/MM')
+          moment(value.observation_time).format("DD/MM")
         );
       compareTypeData[type].forEach(item => {
         result = weatherStationLogs.map(({ station, data }) => ({
@@ -568,7 +562,11 @@ export class DataProvider extends React.Component {
           data: data.map(value => value[item]),
         }));
       });
-      return { result, observationTimes: observationTimes || [] };
+      if (observationTimes.length > 0) {
+        this.updateState({ observationTimes });
+        return { result, observationTimes: observationTimes || [] };
+      }
+      return { result, observationTimes: this.state.observationTimes || [] };
     }
   };
 
