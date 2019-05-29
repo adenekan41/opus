@@ -1,20 +1,23 @@
-import React, { Component } from 'react';
-import moment from 'moment';
-import { Box, Flex, Text } from 'rebass';
-import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumb';
-import DatePicker from '../../../components/DatePicker';
-import Dropdown from '../../../components/Select';
-import Button from '../../../components/Button';
-import Card from '../../../components/Card';
-import { Icon } from '../../../components/Icon';
-import ReportChart from './charts/ReportChart';
-import { createCSV } from '../../../helpers/functions';
-import { WEATHER_OPTIONS } from '../../../helpers/constants';
+import React, { Component } from "react";
+import moment from "moment";
+import { Box, Flex, Text } from "rebass";
+import Breadcrumbs, { BreadcrumbItem } from "../../../components/Breadcrumb";
+import DatePicker from "../../../components/DatePicker";
+import Dropdown from "../../../components/Select";
+import Button from "../../../components/Button";
+import Card from "../../../components/Card";
+import { Icon } from "../../../components/Icon";
+import ReportChart from "./charts/ReportChart";
+import { createCSV } from "../../../helpers/functions";
+import { WEATHER_OPTIONS } from "../../../helpers/constants";
+import { Toast } from "../../../components/Toast";
 
 export default class ForecastReport extends Component {
   state = {
     data: [],
+    error: false,
     loading: false,
+    errorMessage: "",
     observationTimes: [],
     startDate: moment(new Date()),
     endDate: moment(new Date()),
@@ -23,7 +26,7 @@ export default class ForecastReport extends Component {
   componentDidMount() {
     const { weatherStation, history, type } = this.props;
     if (Object.values(weatherStation).length === 0) {
-      history.push('/dashboard/weather-data/map');
+      history.push("/dashboard/weather-data/map");
     }
     this.getWeatherTypeData(type, {
       startDate: new Date(),
@@ -48,7 +51,7 @@ export default class ForecastReport extends Component {
     const { dispatch, actions, weatherStation } = this.props;
     const { startDate, endDate } = this.state;
 
-    this.setState({ loading: true });
+    this.setState({ loading: true, error: false, errorMessage: "" });
 
     dispatch({
       type: actions.EXPORT_WEATHER_DATA,
@@ -63,13 +66,24 @@ export default class ForecastReport extends Component {
         createCSV(data);
       })
       .catch(() => {
-        this.setState({ loading: false });
+        this.setState({
+          loading: false,
+          error: true,
+          errorMessage: "Unable to export data. Please try again.",
+        });
       });
   };
 
   render() {
     const { weatherStation, type } = this.props;
-    let { data, startDate, endDate, observationTimes } = this.state;
+    let {
+      data,
+      error,
+      startDate,
+      endDate,
+      errorMessage,
+      observationTimes,
+    } = this.state;
     return (
       <Box py="40px" px="40px">
         <Box mb="40px">
@@ -139,12 +153,12 @@ export default class ForecastReport extends Component {
           <Card padding="16px">
             <Flex alignItems="center" justifyContent="space-between" mb="16px">
               <Text fontSize="12px">
-                <span style={{ fontWeight: 'bold' }}>
-                  {weatherStation.station_name} -{' '}
+                <span style={{ fontWeight: "bold" }}>
+                  {weatherStation.station_name} -{" "}
                 </span>
-                <span style={{ fontStyle: 'italic' }}>
-                  {moment(startDate).format('DD MMM, YYYY hh:mm')} to{' '}
-                  {moment(endDate).format('DD MMM, YYYY hh:mm')}
+                <span style={{ fontStyle: "italic" }}>
+                  {moment(startDate).format("DD MMM, YYYY hh:mm")} to{" "}
+                  {moment(endDate).format("DD MMM, YYYY hh:mm")}
                 </span>
               </Text>
             </Flex>
@@ -157,6 +171,18 @@ export default class ForecastReport extends Component {
             />
           </Card>
         </Box>
+        {error && (
+          <Toast
+            showToast={error}
+            title="Error"
+            status="error"
+            showCloseButton
+            autoClose={false}
+            onClose={() => this.setState({ error: false })}
+          >
+            {errorMessage}
+          </Toast>
+        )}
       </Box>
     );
   }

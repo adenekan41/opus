@@ -10,6 +10,7 @@ import {
   getValue,
   valueInDecimal,
 } from "../../../helpers/functions";
+import { Toast } from "../../../components/Toast";
 
 const ForecastTableColumns = [
   {
@@ -85,9 +86,7 @@ const ForecastTableColumns = [
   {
     Header: "Wet Bulb",
     id: "Wet Bulb",
-    Cell: ({ original: { wetbulb } }) => (
-      <span>{getValue(wetbulb, "°C")}</span>
-    ),
+    Cell: ({ original: { wetbulb } }) => <span>{getValue(wetbulb, "°C")}</span>,
     width: 120,
   },
   {
@@ -116,7 +115,9 @@ const ForecastTableColumns = [
     style: {
       backgroundColor: "#f4f4f4",
     },
-    Cell: ({ original: { wind_run } }) => <span>{getValue(wind_run, "m")}</span>,
+    Cell: ({ original: { wind_run } }) => (
+      <span>{getValue(wind_run, "m")}</span>
+    ),
     width: 120,
   },
   {
@@ -134,7 +135,9 @@ const ForecastTableColumns = [
     style: {
       backgroundColor: "#f4f4f4",
     },
-    Cell: ({ original: { high_wind_direction } }) => <span>{getValue(high_wind_direction)}</span>,
+    Cell: ({ original: { high_wind_direction } }) => (
+      <span>{getValue(high_wind_direction)}</span>
+    ),
     width: 180,
   },
   {
@@ -195,20 +198,26 @@ const ForecastTableColumns = [
   {
     Header: "Heating Degree Days",
     id: "Heating Degree Days",
-    Cell: ({ original: { heating_degree_days } }) => <span>{getValue(heating_degree_days)}</span>,
+    Cell: ({ original: { heating_degree_days } }) => (
+      <span>{getValue(heating_degree_days)}</span>
+    ),
     width: 120,
   },
   {
     Header: "Cooling Degree Days",
     id: "Cooling Degree Days",
-    Cell: ({ original: { cooling_degree_days } }) => <span>{getValue(cooling_degree_days)}</span>,
+    Cell: ({ original: { cooling_degree_days } }) => (
+      <span>{getValue(cooling_degree_days)}</span>
+    ),
     width: 120,
   },
 ];
 
 export default class ForecastTable extends Component {
   state = {
+    error: false,
     loading: false,
+    errorMessage: "",
     endDate: moment(new Date()),
     startDate: moment(new Date()),
     weatherStationLogs: this.props.weatherStationLogs || [],
@@ -249,7 +258,7 @@ export default class ForecastTable extends Component {
       heat_index_high_c,
       dew_point_low_c,
       dew_point_high_c,
-        ...rest
+      ...rest
     } = weatherStation;
 
     return {
@@ -294,7 +303,7 @@ export default class ForecastTable extends Component {
     const { dispatch, actions, weatherStation } = this.props;
     const { startDate, endDate } = this.state;
 
-    this.setState({ loading: true });
+    this.setState({ loading: true, error: false, errorMessage: "" });
 
     dispatch({
       type: actions.EXPORT_WEATHER_DATA,
@@ -309,7 +318,11 @@ export default class ForecastTable extends Component {
         createCSV(data);
       })
       .catch(() => {
-        this.setState({ loading: false });
+        this.setState({
+          loading: false,
+          error: true,
+          errorMessage: "Unable to export data. Please try again.",
+        });
       });
   };
 
@@ -326,6 +339,7 @@ export default class ForecastTable extends Component {
 
   render() {
     let data = this.getTableData();
+    let { error, errorMessage } = this.state;
     return (
       <Box mt="32px">
         <Flex flexWrap="wrap">
@@ -377,6 +391,19 @@ export default class ForecastTable extends Component {
             </Flex>
           )}
         </Box>
+
+        {error && (
+          <Toast
+            showToast={error}
+            title="Error"
+            status="error"
+            showCloseButton
+            autoClose={false}
+            onClose={() => this.setState({ error: false })}
+          >
+            {errorMessage}
+          </Toast>
+        )}
       </Box>
     );
   }
