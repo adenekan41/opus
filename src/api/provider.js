@@ -427,15 +427,17 @@ export class DataProvider extends React.Component {
     return promise;
   };
 
-  getWeatherStationData = station_name => {
+  getWeatherStationData = ({ station_name, start_date, end_date }) => {
     let { token } = this.state;
-
-    return this.getAdapter()
-      .getWeatherStationData(token, station_name)
-      .then(data => {
-        this.updateState({ weatherStationLogs: data });
-        return data;
-      });
+    
+    if(start_date && end_date) {
+      return this.getAdapter()
+        .getWeatherStationData(token, station_name, start_date, end_date)
+        .then(data => {
+          this.updateState({ weatherStationLogs: data });
+          return data;
+        });
+    }
   };
 
   getCompareStationData = station_name => {
@@ -464,31 +466,17 @@ export class DataProvider extends React.Component {
     return new Promise(resolve => resolve({ compareStationLogs: newData }));
   };
 
-  filterWeatherLogByDate = dates => {
-    let { weatherStationLogs } = this.state;
-    let { startDate, endDate } = dates;
-    let {
-      todayInSeconds,
-      endDateInSeconds,
-      startDateInSeconds,
-    } = getDatesForFilter({ startDate, endDate });
-    let data = weatherStationLogs;
-
-    if (
-      todayInSeconds === startDateInSeconds &&
-      todayInSeconds === endDateInSeconds
-    ) {
-      data = weatherStationLogs;
-    } else {
-      data = weatherStationLogs.filter(station => {
-        let { observation_time } = station;
-        let time = convertStringToNumber(formatDate(observation_time, "X"));
-        if (time >= startDateInSeconds && time <= endDateInSeconds) {
-          return station;
-        }
-      });
-    }
-    return data;
+  filterWeatherLogByDate = values => {
+    let { startDate, endDate, station_name } = values;
+    let start_date = moment(startDate).format("M/D/YYYY");
+    let end_date = moment(endDate).format("M/D/YYYY");
+    return this.getWeatherStationData({
+      station_name,
+      start_date,
+      end_date,
+    }).then(data => {
+      return data;
+    });
   };
 
   filterWeatherLogByType = value => {

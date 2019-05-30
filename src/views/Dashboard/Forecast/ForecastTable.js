@@ -11,6 +11,7 @@ import {
   valueInDecimal,
 } from "../../../helpers/functions";
 import { Toast } from "../../../components/Toast";
+import { Spinner } from "../../../components/Spinner";
 
 const ForecastTableColumns = [
   {
@@ -217,6 +218,7 @@ export default class ForecastTable extends Component {
   state = {
     error: false,
     loading: false,
+    buttonLoading: false,
     errorMessage: "",
     endDate: moment(new Date()),
     startDate: moment(new Date()),
@@ -295,7 +297,7 @@ export default class ForecastTable extends Component {
   };
 
   getTableData = () => {
-    const { weatherStationLogs } = this.state;
+    const { weatherStationLogs=[] } = this.state;
     return weatherStationLogs.map(this.getSingleDataPoint);
   };
 
@@ -303,7 +305,7 @@ export default class ForecastTable extends Component {
     const { dispatch, actions, weatherStation } = this.props;
     const { startDate, endDate } = this.state;
 
-    this.setState({ loading: true, error: false, errorMessage: "" });
+    this.setState({ buttonLoading: true, error: false, errorMessage: "" });
 
     dispatch({
       type: actions.EXPORT_WEATHER_DATA,
@@ -314,12 +316,12 @@ export default class ForecastTable extends Component {
       },
     })
       .then(data => {
-        this.setState({ loading: false });
+        this.setState({ buttonLoading: false });
         createCSV(data);
       })
       .catch(() => {
         this.setState({
-          loading: false,
+          buttonLoading: false,
           error: true,
           errorMessage: "Unable to export data. Please try again.",
         });
@@ -327,13 +329,24 @@ export default class ForecastTable extends Component {
   };
 
   filterDataByDate = dates => {
-    const { dispatch, actions } = this.props;
-    let data = dispatch({
-      type: actions.FILTER_WEATHER_DATA_BY_DATE,
-      value: dates,
-    });
+    const { dispatch, actions, weatherStation } = this.props;
     this.setState({
-      weatherStationLogs: data,
+      loading: true,
+    });
+    dispatch({
+      type: actions.FILTER_WEATHER_DATA_BY_DATE,
+      value: { ...dates, station_name: weatherStation.station_name },
+    }).then(data => {
+      this.setState({
+        loading: false,
+        weatherStationLogs: data,
+      });
+    }).catch(() => {
+      this.setState({
+        loading: false,
+        error: true,
+        errorMessage: "An error occured. Please refresh."
+      })
     });
   };
 
@@ -368,7 +381,7 @@ export default class ForecastTable extends Component {
                 display: flex;
                 align-items: center;
               `}
-              isLoading={this.state.loading}
+              isLoading={this.state.buttonLoading}
               onClick={this.exportWeatherData}
             >
               <Icon name="asset" color="#fff" size={24} />
@@ -377,7 +390,11 @@ export default class ForecastTable extends Component {
           </Box>
         </Flex>
         <Box mt="40px">
-          {data.length > 0 ? (
+          {this.state.loading ? (
+          <Flex alignItems="center" justifyContent="center" py="30vh">
+            <Spinner />
+          </Flex>
+          ) : data.length > 0 ? (
             <Table
               data={data}
               showPagination={data.length > 20}
