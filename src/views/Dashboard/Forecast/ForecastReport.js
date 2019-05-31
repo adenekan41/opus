@@ -11,39 +11,58 @@ import ReportChart from "./charts/ReportChart";
 import { createCSV } from "../../../helpers/functions";
 import { WEATHER_OPTIONS } from "../../../helpers/constants";
 import { Toast } from "../../../components/Toast";
+import { Spinner } from "../../../components/Spinner";
 
 export default class ForecastReport extends Component {
   state = {
     data: [],
     error: false,
     loading: false,
+    buttonLoading: false,
     errorMessage: "",
     observationTimes: [],
-    startDate: moment(new Date()),
+    startDate: moment(new Date()).subtract(1, "days"),
     endDate: moment(new Date()),
   };
 
   componentDidMount() {
     const { weatherStation, history, type } = this.props;
+    console.log(weatherStation)
     if (Object.values(weatherStation).length === 0) {
       history.push("/dashboard/weather-data/map");
     }
     this.getWeatherTypeData(type, {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: moment(new Date()).subtract(1, "days"),
+      endDate: moment(new Date()),
     });
   }
 
   getWeatherTypeData = (type, dates) => {
-    const { dispatch, actions } = this.props;
-    let data = dispatch({
-      type: actions.FILTER_WEATHER_DATA_BY_TYPE,
-      value: { type, dates },
-    });
-    let { result, observationTimes } = data;
+    const { dispatch, actions, weatherStation } = this.props;
+
     this.setState({
-      data: result,
-      observationTimes,
+      loading: true,
+    });
+
+    dispatch({
+      type: actions.FILTER_WEATHER_DATA_BY_TYPE,
+      value: {
+        type,
+        ...{ ...dates, station_name: weatherStation.station_name },
+      },
+    }).then(data => {
+      let { result, observationTimes } = data;
+      this.setState({
+        data: result,
+        observationTimes,
+        loading: false,
+      });
+    }).catch(() => {
+      this.setState({
+        loading: false,
+        error: true,
+        errorMessage: "An error occured. Please try again"
+      })
     });
   };
 
@@ -51,7 +70,7 @@ export default class ForecastReport extends Component {
     const { dispatch, actions, weatherStation } = this.props;
     const { startDate, endDate } = this.state;
 
-    this.setState({ loading: true, error: false, errorMessage: "" });
+    this.setState({ buttonLoading: true, error: false, errorMessage: "" });
 
     dispatch({
       type: actions.EXPORT_WEATHER_DATA,
@@ -62,12 +81,12 @@ export default class ForecastReport extends Component {
       },
     })
       .then(data => {
-        this.setState({ loading: false });
+        this.setState({ buttonLoading: false });
         createCSV(data);
       })
       .catch(() => {
         this.setState({
-          loading: false,
+          buttonLoading: false,
           error: true,
           errorMessage: "Unable to export data. Please try again.",
         });
@@ -108,8 +127,8 @@ export default class ForecastReport extends Component {
               options={WEATHER_OPTIONS}
               onChange={weatherType =>
                 this.getWeatherTypeData(weatherType.value, {
-                  startDate: new Date(),
-                  endDate: new Date(),
+                  startDate: this.state.startDate,
+                  endDate: this.state.endDate,
                 })
               }
               label="Select graph"
@@ -141,7 +160,7 @@ export default class ForecastReport extends Component {
                 display: flex;
                 align-items: center;
               `}
-              isLoading={this.state.loading}
+              isLoading={this.state.buttonLoading}
               onClick={this.exportWeatherData}
             >
               <Icon name="asset" color="#fff" size={24} />
@@ -150,26 +169,36 @@ export default class ForecastReport extends Component {
           </Box>
         </Box>
         <Box mt="30px">
-          <Card padding="16px">
-            <Flex alignItems="center" justifyContent="space-between" mb="16px">
-              <Text fontSize="12px">
-                <span style={{ fontWeight: "bold" }}>
-                  {weatherStation.station_name} -{" "}
-                </span>
-                <span style={{ fontStyle: "italic" }}>
-                  {moment(startDate).format("DD MMM, YYYY hh:mm")} to{" "}
-                  {moment(endDate).format("DD MMM, YYYY hh:mm")}
-                </span>
-              </Text>
+          {this.state.loading ? (
+            <Flex alignItems="center" justifyContent="center" py="30vh">
+              <Spinner />
             </Flex>
-            <ReportChart
-              {...{
-                type,
-                data,
-                observationTimes,
-              }}
-            />
-          </Card>
+          ) : (
+            <Card padding="16px">
+              <Flex
+                alignItems="center"
+                justifyContent="space-between"
+                mb="16px"
+              >
+                <Text fontSize="12px">
+                  <span style={{ fontWeight: "bold" }}>
+                    {weatherStation.station_name} -{" "}
+                  </span>
+                  <span style={{ fontStyle: "italic" }}>
+                    {moment(startDate).format("DD MMM, YYYY hh:mm")} to{" "}
+                    {moment(endDate).format("DD MMM, YYYY hh:mm")}
+                  </span>
+                </Text>
+              </Flex>
+              <ReportChart
+                {...{
+                  type,
+                  data,
+                  observationTimes,
+                }}
+              />
+            </Card>
+          )}
         </Box>
         {error && (
           <Toast

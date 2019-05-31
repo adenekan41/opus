@@ -4,7 +4,7 @@ export const WEATHER_OPTIONS = [
   { value: 'Total rain', label: 'Total rain' },
   { value: 'Humidity', label: 'Humidity' },
   { value: 'Wind speed', label: 'Wind speed' },
-  // { value: 'Wind direction', label: 'Wind direction' },
+  { value: 'Wind direction', label: 'Wind direction' },
   { value: 'Barometer', label: 'Barometer' },
 ];
 
@@ -14,7 +14,7 @@ export const labelStringRegister = {
   'Total rain': 'Total rain',
   'Wind speed': 'Wind Speed',
   Humidity: 'Humidity',
-  // 'Wind direction': 'Wind direction',
+  'Wind direction': 'Wind direction',
   Barometer: 'Barometer',
 };
 

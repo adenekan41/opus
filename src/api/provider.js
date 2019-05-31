@@ -427,22 +427,24 @@ export class DataProvider extends React.Component {
     return promise;
   };
 
-  getWeatherStationData = station_name => {
+  getWeatherStationData = ({ station_name, start_date, end_date }) => {
     let { token } = this.state;
 
-    return this.getAdapter()
-      .getWeatherStationData(token, station_name)
-      .then(data => {
-        this.updateState({ weatherStationLogs: data });
-        return data;
-      });
+    if (start_date && end_date) {
+      return this.getAdapter()
+        .getWeatherStationData(token, station_name, start_date, end_date)
+        .then(data => {
+          this.updateState({ weatherStationLogs: data });
+          return data;
+        });
+    }
   };
 
   getCompareStationData = station_name => {
     let { token, compareStationLogs } = this.state;
 
     return this.getAdapter()
-      .getWeatherStationData(token, station_name)
+      .getAllWeatherStationData(token, station_name)
       .then(data => {
         this.updateState({
           compareStationLogs: [
@@ -454,56 +456,51 @@ export class DataProvider extends React.Component {
       });
   };
 
-  removeCompareStationData = station_name => {
+  removeCompareStationData = station => {
     let { compareStationLogs } = this.state;
-    let newData = compareStationLogs.filter(
-      item => item.station !== station_name
-    );
-    this.updateState({ compareStationLogs: newData });
+    let newData = compareStationLogs.filter(item => item.station !== station);
+    this.updateState({
+      compareStationLogs: newData,
+      compareStationCsvData: newData,
+    });
 
     return new Promise(resolve => resolve({ compareStationLogs: newData }));
   };
 
-  filterWeatherLogByDate = dates => {
-    let { weatherStationLogs } = this.state;
-    let { startDate, endDate } = dates;
-    let {
-      todayInSeconds,
-      endDateInSeconds,
-      startDateInSeconds,
-    } = getDatesForFilter({ startDate, endDate });
-    let data = weatherStationLogs;
+  filterWeatherLogByDate = values => {
+    let { startDate, endDate, station_name } = values;
+    let start_date = moment(startDate).format("M/D/YYYY");
+    let end_date = moment(endDate).format("M/D/YYYY");
 
-    if (
-      todayInSeconds === startDateInSeconds &&
-      todayInSeconds === endDateInSeconds
-    ) {
-      data = weatherStationLogs;
-    } else {
-      data = weatherStationLogs.filter(station => {
-        let { observation_time } = station;
-        let time = convertStringToNumber(formatDate(observation_time, "X"));
-        if (time >= startDateInSeconds && time <= endDateInSeconds) {
-          return station;
-        }
-      });
-    }
-    return data;
+    return this.getWeatherStationData({
+      station_name,
+      start_date,
+      end_date,
+    }).then(data => {
+      return data;
+    });
   };
 
   filterWeatherLogByType = value => {
-    let { type, dates } = value;
+    let { type, startDate, endDate, station_name } = value;
     if (type) {
       this.updateWeatherType(type);
       let result = [];
-      let weatherStationLogs = this.filterWeatherLogByDate(dates);
-      let observationTimes = weatherStationLogs.map(value =>
-        formatDate(value.observation_time, "DD/MM")
-      );
-      weatherTypeData[type].forEach(item => {
-        result.push(weatherStationLogs.map(value => value[item]));
+      let weatherStationLogs = [];
+      return this.filterWeatherLogByDate({
+        startDate,
+        endDate,
+        station_name,
+      }).then(data => {
+        weatherStationLogs = data;
+        let observationTimes = weatherStationLogs.map(value =>
+          formatDate(value.observation_time, "DD/MM")
+        );
+        weatherTypeData[type].forEach(item => {
+          result.push(weatherStationLogs.map(value => value[item]));
+        });
+        return { result, observationTimes };
       });
-      return { result, observationTimes };
     }
   };
 
@@ -553,6 +550,7 @@ export class DataProvider extends React.Component {
       let observationTimes =
         weatherStationLogs &&
         weatherStationLogs[0] &&
+        weatherStationLogs[0].data && 
         weatherStationLogs[0].data.map(value =>
           moment(value.observation_time).format("DD/MM")
         );
@@ -562,7 +560,7 @@ export class DataProvider extends React.Component {
           data: data.map(value => value[item]),
         }));
       });
-      if (observationTimes.length > 0) {
+      if (observationTimes && observationTimes.length > 0) {
         this.updateState({ observationTimes });
         return { result, observationTimes: observationTimes || [] };
       }

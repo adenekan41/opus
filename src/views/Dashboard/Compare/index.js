@@ -19,14 +19,15 @@ class Compare extends React.Component {
     data: [],
     loading: false,
     buttonLoading: false,
+    compareType: this.props.compareType,
     observationTimes: [],
     endDate: moment(new Date()),
-    startDate: moment(new Date()),
+    startDate: moment(new Date()).subtract(1, "days"),
     selectedStations: [],
     error: false,
     errorMessage: "",
   };
-
+  
   getWeatherTypeData = (type, dates) => {
     const { dispatch, actions } = this.props;
     let data = dispatch({
@@ -40,9 +41,10 @@ class Compare extends React.Component {
     });
   };
 
+
   exportDataToCsv = () => {
-    const { dispatch, actions, compareType } = this.props;
-    const { selectedStations, startDate, endDate } = this.state;
+    const { dispatch, actions } = this.props;
+    const { selectedStations, startDate, endDate, compareType } = this.state;
 
     this.setState({ buttonLoading: true, error: false, errorMessage: "" });
 
@@ -69,27 +71,31 @@ class Compare extends React.Component {
   };
 
   utilityCallback = ({ actionType, station, startDate, endDate }) => {
-    let { dispatch, compareType } = this.props;
+    let { dispatch } = this.props;
     dispatch({
       type: actionType,
       value: station,
     }).then(() => {
       this.setState({ loading: false });
-      this.getWeatherTypeData(compareType, {
+      this.getWeatherTypeData(this.state.compareType, {
         startDate,
         endDate,
       });
     });
   };
 
+
   checkboxSelectOptionClicked = station => {
     let { selectedStations, startDate, endDate } = this.state;
     let { actions } = this.props;
+
     this.setState({ loading: true });
+
     if (selectedStations.includes(station)) {
       this.setState(
-        ({ selectedStations }) => ({
+        ({ selectedStations, data }) => ({
           selectedStations: selectedStations.filter(item => item !== station),
+          data: data.filter(item => item.station !== station),
         }),
         () => {
           this.utilityCallback({
@@ -118,7 +124,7 @@ class Compare extends React.Component {
   };
 
   render() {
-    const { compareType, weatherStations } = this.props;
+    const { weatherStations } = this.props;
     let {
       data,
       error,
@@ -134,6 +140,7 @@ class Compare extends React.Component {
       label: station.station_name,
       value: station.station_name,
     }));
+
     return (
       <Box py="40px" px="40px">
         <Box mb="40px">
@@ -158,13 +165,21 @@ class Compare extends React.Component {
             <Dropdown
               options={WEATHER_OPTIONS}
               onChange={weatherType =>
-                this.getWeatherTypeData(weatherType.value, {
-                  startDate,
-                  endDate,
-                })
+                this.setState(
+                  {
+                    compareType: weatherType.value,
+                  },
+                  () => {
+                    this.getWeatherTypeData(weatherType.value, {
+                      startDate,
+                      endDate,
+                      station: selectedStations[0]
+                    });
+                  }
+                )
               }
               label="Select graph"
-              value={compareType}
+              value={this.state.compareType}
             />
           </Box>
           <Box className="col-md-4">
@@ -177,7 +192,11 @@ class Compare extends React.Component {
                   startDate,
                   endDate,
                 });
-                this.getWeatherTypeData(compareType, { startDate, endDate });
+                this.getWeatherTypeData(this.state.compareType, {
+                  startDate,
+                  endDate,
+                  station: selectedStations[0]
+                });
               }}
             />
           </Box>
@@ -207,7 +226,7 @@ class Compare extends React.Component {
             <Flex alignItems="center" justifyContent="center" py="30vh">
               <Spinner />
             </Flex>
-          ) : (
+          ) : data.length > 0 ? (
             <Card padding="16px">
               <Flex
                 alignItems="center"
@@ -226,12 +245,16 @@ class Compare extends React.Component {
               </Flex>
               <CompareChart
                 {...{
-                  type: compareType,
+                  type: this.state.compareType,
                   data,
                   observationTimes,
                 }}
               />
             </Card>
+          ) : (
+            <Flex alignItems="center" justifyContent="center" py="30vh">
+              <Heading>No data for weather station</Heading>
+            </Flex>
           )}
         </Box>
 

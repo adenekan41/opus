@@ -58,7 +58,7 @@ function generateChartOptions(list) {
       label: station,
       backgroundColor: "transparent",
       borderColor: getStationLabelColor(list)[station],
-      data,
+      data: data.map(item => item ? item : 0),
       borderWidth: 1,
     };
   });
@@ -190,20 +190,20 @@ export const getWeatherReportType = (type, data) => {
 export const weatherTypeData = {
   Temperature: ["temp_c", "wind_chill_c", "dew_point_c", "heat_index_c"],
   "Current rain": ["rain_rate_mm_h", "rain_rate_mm_h"],
-  "Total rain": ["rain_mm", "rain_mm"],
+  "Total rain": ["rain_month", "rain_year"],
   "Wind speed": ["wind_speed_m_s"],
   Humidity: ["hum_%"],
-  // "Wind direction": ["wind_degrees"],
+  "Wind direction": ["wind_degrees"],
   Barometer: ["barometer_hpa"],
 };
 
 export const compareTypeData = {
   Temperature: ["temp_c"],
   "Current rain": ["rain_rate_mm_h"],
-  "Total rain": ["rain_mm", "rain_mm"],
+  "Total rain": ["rain_month", "rain_year"],
   "Wind speed": ["wind_speed_m_s"],
   Humidity: ["hum_%"],
-  // "Wind direction": ["wind_degrees"],
+  "Wind direction": ["wind_degrees"],
   Barometer: ["barometer_hpa"],
 };
 

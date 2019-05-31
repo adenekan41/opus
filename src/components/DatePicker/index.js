@@ -109,7 +109,7 @@ class DatePicker extends React.Component {
             {...rest}
             showDefaultInputIcon
             customArrowIcon={<CustomArrowIcon />}
-            startoDate={this.state.startDate}
+            startDate={this.state.startDate}
             startDateId="your_unique_start_date_id"
             endDate={this.state.endDate}
             endDateId="your_unique_end_date_id"
