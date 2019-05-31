@@ -27,7 +27,6 @@ export default class ForecastReport extends Component {
 
   componentDidMount() {
     const { weatherStation, history, type } = this.props;
-    console.log(weatherStation)
     if (Object.values(weatherStation).length === 0) {
       history.push("/dashboard/weather-data/map");
     }

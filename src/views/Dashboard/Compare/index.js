@@ -27,6 +27,13 @@ class Compare extends React.Component {
     error: false,
     errorMessage: "",
   };
+
+  componentDidMount() {
+    const { dispatch, actions } = this.props;
+    dispatch({
+      type: actions.CLEAR_COMPARE_LOGS
+    })
+  }
   
   getWeatherTypeData = (type, dates) => {
     const { dispatch, actions } = this.props;
