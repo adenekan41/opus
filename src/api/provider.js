@@ -440,14 +440,11 @@ export class DataProvider extends React.Component {
     }
   };
 
-  getCompareStationData = ({ station, startDate, endDate }) => {
+  getCompareStationData = station_name => {
     let { token, compareStationLogs } = this.state;
-    let station_name = station;
-    let start_date = moment(startDate).format("M/D/YYYY");
-    let end_date = moment(endDate).format("M/D/YYYY");
 
     return this.getAdapter()
-      .getWeatherStationData(token, station_name, start_date, end_date)
+      .getAllWeatherStationData(token, station_name)
       .then(data => {
         this.updateState({
           compareStationLogs: [
@@ -459,7 +456,7 @@ export class DataProvider extends React.Component {
       });
   };
 
-  removeCompareStationData = ({ station }) => {
+  removeCompareStationData = station => {
     let { compareStationLogs } = this.state;
     let newData = compareStationLogs.filter(item => item.station !== station);
     this.updateState({
@@ -507,55 +504,53 @@ export class DataProvider extends React.Component {
     }
   };
 
-  // filterCompareLogByDate = dates => {
-  //   let { compareStationLogs } = this.state;
-  //   let { startDate, endDate } = dates;
-  //   let {
-  //     todayInSeconds,
-  //     startDateInSeconds,
-  //     endDateInSeconds,
-  //   } = getDatesForFilter({ startDate, endDate });
-  //   let data = compareStationLogs;
+  filterCompareLogByDate = dates => {
+    let { compareStationLogs } = this.state;
+    let { startDate, endDate } = dates;
+    let {
+      todayInSeconds,
+      startDateInSeconds,
+      endDateInSeconds,
+    } = getDatesForFilter({ startDate, endDate });
+    let data = compareStationLogs;
 
-  //   if (
-  //     todayInSeconds === startDateInSeconds &&
-  //     todayInSeconds === endDateInSeconds
-  //   ) {
-  //     data = compareStationLogs;
-  //   } else {
-  //     let result = [];
-  //     compareStationLogs.forEach(({ station, data }) => {
-  //       let filteredStationLog = data.filter(stationItem => {
-  //         let { observation_time } = stationItem;
-  //         let time = convertStringToNumber(formatDate(observation_time, "X"));
-  //         if (time >= startDateInSeconds && time <= endDateInSeconds) {
-  //           return stationItem;
-  //         }
-  //       });
-  //       result.push({ station, data: filteredStationLog });
-  //     });
-  //     data = result;
-  //   }
+    if (
+      todayInSeconds === startDateInSeconds &&
+      todayInSeconds === endDateInSeconds
+    ) {
+      data = compareStationLogs;
+    } else {
+      let result = [];
+      compareStationLogs.forEach(({ station, data }) => {
+        let filteredStationLog = data.filter(stationItem => {
+          let { observation_time } = stationItem;
+          let time = convertStringToNumber(formatDate(observation_time, "X"));
+          if (time >= startDateInSeconds && time <= endDateInSeconds) {
+            return stationItem;
+          }
+        });
+        result.push({ station, data: filteredStationLog });
+      });
+      data = result;
+    }
 
-  //   return data;
-  // };
+    return data;
+  };
 
   filterCompareLogByType = value => {
-    let { type } = value;
-    let { compareStationLogs } = this.state;
+    let { type, dates } = value;
 
     if (type) {
-      this.updateState({
-        compareType: type,
-      });
       let result = [];
-      let weatherStationLogs = compareStationLogs;
+      let weatherStationLogs = this.filterCompareLogByDate(dates);
       this.updateState({
         compareStationCsvData: weatherStationLogs,
+        compareType: type,
       });
       let observationTimes =
         weatherStationLogs &&
         weatherStationLogs[0] &&
+        weatherStationLogs[0].data && 
         weatherStationLogs[0].data.map(value =>
           moment(value.observation_time).format("DD/MM")
         );
@@ -565,7 +560,7 @@ export class DataProvider extends React.Component {
           data: data.map(value => value[item]),
         }));
       });
-      if (observationTimes.length > 0) {
+      if (observationTimes && observationTimes.length > 0) {
         this.updateState({ observationTimes });
         return { result, observationTimes: observationTimes || [] };
       }

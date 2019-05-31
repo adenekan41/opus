@@ -27,22 +27,20 @@ class Compare extends React.Component {
     error: false,
     errorMessage: "",
   };
-
-  getWeatherTypeData = type => {
-    let { dispatch, actions } = this.props;
+  
+  getWeatherTypeData = (type, dates) => {
+    const { dispatch, actions } = this.props;
     let data = dispatch({
       type: actions.FILTER_COMPARE_LOGS_BY_TYPE,
-      value: {
-        type,
-      },
+      value: { type, dates },
     });
     let { result, observationTimes } = data;
-
     this.setState({
       data: result,
       observationTimes,
     });
   };
+
 
   exportDataToCsv = () => {
     const { dispatch, actions } = this.props;
@@ -73,29 +71,26 @@ class Compare extends React.Component {
   };
 
   utilityCallback = ({ actionType, station, startDate, endDate }) => {
-    let { dispatch, actions } = this.props;
+    let { dispatch } = this.props;
     dispatch({
       type: actionType,
-      value: {
-        station,
-        endDate,
-        startDate,
-      },
+      value: station,
     }).then(() => {
       this.setState({ loading: false });
-      if (actionType !== actions.REMOVE_COMPARE_STATION_DATA) {
-        this.getWeatherTypeData(this.state.compareType, {
-          startDate,
-          endDate,
-        });
-      }
+      this.getWeatherTypeData(this.state.compareType, {
+        startDate,
+        endDate,
+      });
     });
   };
+
 
   checkboxSelectOptionClicked = station => {
     let { selectedStations, startDate, endDate } = this.state;
     let { actions } = this.props;
+
     this.setState({ loading: true });
+
     if (selectedStations.includes(station)) {
       this.setState(
         ({ selectedStations, data }) => ({
@@ -178,6 +173,7 @@ class Compare extends React.Component {
                     this.getWeatherTypeData(weatherType.value, {
                       startDate,
                       endDate,
+                      station: selectedStations[0]
                     });
                   }
                 )
@@ -196,7 +192,11 @@ class Compare extends React.Component {
                   startDate,
                   endDate,
                 });
-                this.getWeatherTypeData(this.state.compareType, { startDate, endDate });
+                this.getWeatherTypeData(this.state.compareType, {
+                  startDate,
+                  endDate,
+                  station: selectedStations[0]
+                });
               }}
             />
           </Box>
@@ -226,7 +226,7 @@ class Compare extends React.Component {
             <Flex alignItems="center" justifyContent="center" py="30vh">
               <Spinner />
             </Flex>
-          ) : (
+          ) : data.length > 0 ? (
             <Card padding="16px">
               <Flex
                 alignItems="center"
@@ -251,6 +251,10 @@ class Compare extends React.Component {
                 }}
               />
             </Card>
+          ) : (
+            <Flex alignItems="center" justifyContent="center" py="30vh">
+              <Heading>No data for weather station</Heading>
+            </Flex>
           )}
         </Box>
 

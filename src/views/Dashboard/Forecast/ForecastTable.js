@@ -221,7 +221,7 @@ export default class ForecastTable extends Component {
     buttonLoading: false,
     errorMessage: "",
     endDate: moment(new Date()),
-    startDate: moment(new Date()),
+    startDate: moment(new Date()).subtract(1, "days"),
     weatherStationLogs: this.props.weatherStationLogs || [],
   };
 

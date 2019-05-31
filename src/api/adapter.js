@@ -208,6 +208,15 @@ const getWeatherStationData = (token, station_name, start_date, end_date) => {
   });
 };
 
+const getAllWeatherStationData = (token, station_name = '') => {
+  return makeApiCall({
+    baseURL: BASE_URL_TWO,
+    url: `/weatherlink/${station_name}/`,
+    token,
+  });
+};
+
+
 const exportWeatherData = (token, station_name, start_date, end_date) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
@@ -269,5 +278,6 @@ export default {
   getWeatherStationData,
   exportWeatherData,
   exportCompareData,
+  getAllWeatherStationData,
   getWeatherStationCurrentData,
 };
