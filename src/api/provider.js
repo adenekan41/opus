@@ -131,6 +131,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.FILTER_COMPARE_LOGS_BY_TYPE]: this.filterCompareLogByType,
       [ACTIONS.EXPORT_COMPARE_DATA_CSV]: this.exportCompareData,
       [ACTIONS.SET_WINDY_MAP]: this.setWindyMap,
+      [ACTIONS.CLEAR_COMPARE_LOGS]: this.clearComparelogs
     };
     console.log({ type });
     return options[type](value);
@@ -615,6 +616,10 @@ export class DataProvider extends React.Component {
 
   setWindyMap = map => {
     this.updateState({ map });
+  };
+
+  clearComparelogs = () => {
+    this.updateState({ compareStationLogs: [], compareStationCsvData: [], compareType: "Temperature" });
   };
 
   render() {
