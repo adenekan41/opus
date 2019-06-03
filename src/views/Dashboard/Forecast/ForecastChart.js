@@ -1,54 +1,57 @@
-import React, { Component } from 'react';
-import { Box, Flex } from 'rebass';
-import { TagButton } from '../../../components/Tags';
-import EmptyState from '../../../components/EmptyState';
-import emptyStateImage from '../../../assets/img/empty-states/bulletin.png';
-import TemperatureChart from './charts/TemperatureChart';
-import CurrentRainChart from './charts/CurrentRainChart';
-import TotalRainChart from './charts/TotalRainChart';
-import HumidityChart from './charts/HumidityChart';
-import WindSpeedChart from './charts/WindSpeedChart';
-import WindDirection from './charts/WindDirectionChart';
-import BarometerChart from './charts/BarometerChart';
-import { convertStringToNumber } from '../../../helpers/functions';
-import { Spinner } from '../../../components/Spinner';
+import React, { Component } from "react";
+import { Box, Flex } from "rebass";
+import moment from "moment";
+import { TagButton } from "../../../components/Tags";
+import EmptyState from "../../../components/EmptyState";
+import emptyStateImage from "../../../assets/img/empty-states/bulletin.png";
+import TemperatureChart from "./charts/TemperatureChart";
+import CurrentRainChart from "./charts/CurrentRainChart";
+import TotalRainChart from "./charts/TotalRainChart";
+import HumidityChart from "./charts/HumidityChart";
+import WindSpeedChart from "./charts/WindSpeedChart";
+import WindDirection from "./charts/WindDirectionChart";
+import BarometerChart from "./charts/BarometerChart";
+import { convertStringToNumber } from "../../../helpers/functions";
+import { Spinner } from "../../../components/Spinner";
 
 const chartMapping = {
-  temperature: { label: 'Temperature', Component: TemperatureChart },
-  'current rain': { label: 'Current rain', Component: CurrentRainChart },
-  'total rain': { label: 'Total rain', Component: TotalRainChart },
-  humidity: { label: 'Humidity', Component: HumidityChart },
-  'wind speed': { label: 'Wind speed', Component: WindSpeedChart },
-  'wind direction': {
-    label: 'Wind direction',
+  temperature: { label: "Temperature", Component: TemperatureChart },
+  "current rain": { label: "Current rain", Component: CurrentRainChart },
+  "total rain": { label: "Total rain", Component: TotalRainChart },
+  humidity: { label: "Humidity", Component: HumidityChart },
+  "wind speed": { label: "Wind speed", Component: WindSpeedChart },
+  "wind direction": {
+    label: "Wind direction",
     Component: WindDirection,
   },
-  barometer: { label: 'Barometer', Component: BarometerChart },
+  barometer: { label: "Barometer", Component: BarometerChart },
 };
 const chartMappingArray = [
-  { label: 'Temperature', Component: TemperatureChart },
-  { label: 'Current rain', Component: CurrentRainChart },
-  { label: 'Total rain', Component: TotalRainChart },
-  { label: 'Humidity', Component: HumidityChart },
-  { label: 'Wind speed', Component: WindSpeedChart },
+  { label: "Temperature", Component: TemperatureChart },
+  { label: "Current rain", Component: CurrentRainChart },
+  { label: "Total rain", Component: TotalRainChart },
+  { label: "Humidity", Component: HumidityChart },
+  { label: "Wind speed", Component: WindSpeedChart },
   {
-    label: 'Wind direction',
+    label: "Wind direction",
     Component: WindDirection,
   },
-  { label: 'Barometer', Component: BarometerChart },
+  { label: "Barometer", Component: BarometerChart },
 ];
 
 export default class ForecastCharts extends Component {
   state = {
     charts: chartMapping,
     loading: false,
+    start_date: moment(new Date()).subtract(1, 'days').format("M/D/YYYY"),
+    end_date: moment(new Date()).format("M/D/YYYY"),
     selectedCharts: chartMappingArray,
   };
 
   componentDidMount() {
     const { weatherStation, history, weatherStationLogs } = this.props;
     if (Object.values(weatherStation).length === 0) {
-      history.push('/dashboard/weather-data/map');
+      history.push("/dashboard/weather-data/map");
     }
     if (weatherStationLogs.length === 0) {
       this.getWeatherStationData(weatherStation.station_name);
@@ -57,10 +60,11 @@ export default class ForecastCharts extends Component {
 
   getWeatherStationData = station_name => {
     const { dispatch, actions } = this.props;
+    const { start_date, end_date } = this.state;
     this.setState({ loading: true });
     dispatch({
       type: actions.GET_WEATHER_STATION_DATA,
-      value: station_name,
+      value: { station_name, start_date, end_date },
     }).then(() => {
       this.setState({ loading: false });
     });
@@ -109,39 +113,37 @@ export default class ForecastCharts extends Component {
     let chartFilter = Object.values(charts).map(item => item.label);
     const { weatherStation } = this.props;
     const {
-      heat_index,
-      windchill,
-      outside_temp,
-      dewpoint,
-      rain_day_in,
-      rain_storm,
-      rain_month,
+      observation_time,
+      barometer_hpa,
+      temp_c,
+      high_temp_c,
+      low_temp_c,
+      dew_point_c,
+      wet_bulb_c,
+      wind_speed_m_s,
+      wind_direction,
+      wind_run_m,
+      wind_chill_c,
+      heat_index_c,
+      rain_mm,
       rain_year,
-      current_humidity,
-      wind_speed,
+      rain_month,
+      rain_storm,
+      rain_rate_mm_h,
       wind_degrees,
-      davis_current_observation: {
-        pressure_day_high_in,
-        pressure_day_low_in,
-        pressure_month_high_in,
-        pressure_month_low_in,
-        pressure_year_high_in,
-        pressure_year_low_in,
-      } = {},
+      ...rest
     } = weatherStation;
-    let temperatureChartData = [outside_temp, windchill, heat_index, dewpoint];
-    let currentRainData = [rain_day_in, rain_storm];
-    let totalRainData = [rain_month, rain_year];
-    let windSpeedData = [wind_speed];
-    let humidityData = [current_humidity];
-    let barometerData = [
-      convertStringToNumber(pressure_day_high_in),
-      convertStringToNumber(pressure_day_low_in),
-      convertStringToNumber(pressure_month_high_in),
-      convertStringToNumber(pressure_month_low_in),
-      convertStringToNumber(pressure_year_high_in),
-      convertStringToNumber(pressure_year_low_in),
+    let temperatureChartData = [
+      temp_c || "0",
+      wind_chill_c || "0",
+      heat_index_c || "0",
+      dew_point_c || "0",
     ];
+    let currentRainData = [rain_rate_mm_h || "0", rain_storm || "0"];
+    let totalRainData = [rain_month || "0", rain_year || "0"];
+    let windSpeedData = [wind_speed_m_s || "0"];
+    let humidityData = [rest["hum_%"] || "0"];
+    let barometerData = [barometer_hpa];
     let windDirectionData = [convertStringToNumber(wind_degrees)];
     return (
       <Box>
@@ -155,7 +157,7 @@ export default class ForecastCharts extends Component {
               {chartFilter.map((filter, i) => (
                 <TagButton
                   key={i.toString()}
-                  style={{ marginRight: '12px' }}
+                  style={{ marginRight: "12px" }}
                   isActive={selectedChartsLabels.includes(filter.toLowerCase())}
                   onClick={() => this.onChartFilterClick(filter.toLowerCase())}
                 >

@@ -1,19 +1,20 @@
-import axios from 'axios';
+import axios from "axios";
+import { formatDate } from "../helpers/functions";
 
 const BASE_URL_ONE =
-  process.env.NODE_ENV === 'production'
+  process.env.NODE_ENV === "production"
     ? process.env.REACT_APP_BASE_URL_ONE_DEVELOPMENT
     : process.env.REACT_APP_BASE_URL_ONE_DEVELOPMENT;
 
 const BASE_URL_TWO =
-  process.env.NODE_ENV === 'production'
+  process.env.NODE_ENV === "production"
     ? process.env.REACT_APP_BASE_URL
     : process.env.REACT_APP_BASE_URL;
 
 export const makeApiCall = async ({
   baseURL = BASE_URL_ONE,
   url,
-  method = 'get',
+  method = "get",
   params,
   data,
   token,
@@ -41,7 +42,7 @@ const login = payload => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/token/`,
-    method: 'POST',
+    method: "POST",
     data: payload,
     headers: {
       Authorization: `Basic ${btoa(encryt)}`,
@@ -52,7 +53,7 @@ const login = payload => {
 const resetPassword = payload => {
   return makeApiCall({
     url: `/auth/password/request/reset/`,
-    method: 'POST',
+    method: "POST",
     data: payload,
   });
 };
@@ -60,7 +61,7 @@ const resetPassword = payload => {
 const newPassword = payload => {
   return makeApiCall({
     url: `/auth/password/reset/`,
-    method: 'POST',
+    method: "POST",
     data: payload,
   });
 };
@@ -74,13 +75,13 @@ const getUser = (token, id) => {
 };
 
 const createUser = (token, payload) => {
-  return makeApiCall({ url: `/users/`, method: 'POST', token, data: payload });
+  return makeApiCall({ url: `/users/`, method: "POST", token, data: payload });
 };
 
 const adminCreateUser = (token, payload) => {
   return makeApiCall({
     url: `/users/admins/create/`,
-    method: 'POST',
+    method: "POST",
     token,
     data: payload,
   });
@@ -89,7 +90,7 @@ const adminCreateUser = (token, payload) => {
 const patchUser = (token, payload) => {
   return makeApiCall({
     url: `/users/${payload.id}/`,
-    method: 'PATCH',
+    method: "PATCH",
     token,
     data: payload,
   });
@@ -98,14 +99,14 @@ const patchUser = (token, payload) => {
 const updateUser = (token, payload) => {
   return makeApiCall({
     url: `/users/${payload.id}/`,
-    method: 'PUT',
+    method: "PUT",
     token,
     data: payload,
   });
 };
 
 const deleteUser = (token, id) => {
-  return makeApiCall({ url: `/users/${id}`, method: 'DELETE', token });
+  return makeApiCall({ url: `/users/${id}`, method: "DELETE", token });
 };
 
 const getContacts = token => {
@@ -119,7 +120,7 @@ const getContact = (token, id) => {
 const createContact = (token, payload) => {
   return makeApiCall({
     url: `/contacts/`,
-    method: 'POST',
+    method: "POST",
     token,
     data: payload,
     baseURL: BASE_URL_TWO,
@@ -130,7 +131,7 @@ const updateContact = (token, payload) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/contacts/${payload.id}/`,
-    method: 'PUT',
+    method: "PUT",
     token,
     data: payload,
   });
@@ -139,7 +140,7 @@ const updateContact = (token, payload) => {
 const deleteContact = (token, id) => {
   return makeApiCall({
     url: `/contacts/${id}`,
-    method: 'DELETE',
+    method: "DELETE",
     token,
     baseURL: BASE_URL_TWO,
   });
@@ -150,29 +151,29 @@ const getProfile = token => {
 };
 
 const getWhatsappAlerts = token => {
-  return makeApiCall({ baseURL: BASE_URL_TWO, url: '/whatsapp/', token });
+  return makeApiCall({ baseURL: BASE_URL_TWO, url: "/whatsapp/", token });
 };
 
 const sendWhatsappAlert = (token, payload) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
-    url: '/whatsapp/',
+    url: "/whatsapp/",
     token,
-    method: 'POST',
+    method: "POST",
     data: payload,
   });
 };
 
 const getWeatherForecastLogs = token => {
-  return makeApiCall({ baseURL: BASE_URL_TWO, url: '/earthnetworks/', token });
+  return makeApiCall({ baseURL: BASE_URL_TWO, url: "/earthnetworks/", token });
 };
 
 const getWeatherForecast = (token, payload) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
-    url: '/earthnetworks/',
+    url: "/earthnetworks/",
     token,
-    method: 'POST',
+    method: "POST",
     data: payload,
   });
 };
@@ -185,7 +186,7 @@ const getWeatherData = token => {
   return makeApiCall({ baseURL: BASE_URL_TWO, url: `/weatherlink/`, token });
 };
 
-const getWeatherStationCurrentData = (token, station_name="") => {
+const getWeatherStationCurrentData = (token, station_name = "") => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/weatherlink/${station_name.toLowerCase()}/`,
@@ -193,7 +194,21 @@ const getWeatherStationCurrentData = (token, station_name="") => {
   });
 };
 
-const getWeatherStationData = (token, station_name="") => {
+const getWeatherStationData = (token, station_name, start_date, end_date) => {
+  return makeApiCall({
+    method: "POST",
+    data: {
+      station_name,
+      start: start_date,
+      end: end_date,
+    },
+    baseURL: BASE_URL_TWO,
+    url: `/weatherlink/historical-data/`,
+    token,
+  });
+};
+
+const getAllWeatherStationData = (token, station_name = '') => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/weatherlink/${station_name}/`,
@@ -201,13 +216,39 @@ const getWeatherStationData = (token, station_name="") => {
   });
 };
 
-const exportWeatherData = (token, station_name) => {
+
+const exportWeatherData = (token, station_name, start_date, end_date) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/weatherlink/export/`,
     token,
-    method: 'POST',
-    data: {station: station_name}
+    method: "POST",
+    data: {
+      station: station_name,
+      start_date: formatDate(start_date, "M/D/YYYY"),
+      end_date: formatDate(end_date, "M/D/YYYY"),
+    },
+  });
+};
+
+const exportCompareData = (
+  token,
+  station_names,
+  weather_type,
+  start_date,
+  end_date
+) => {
+  return makeApiCall({
+    baseURL: BASE_URL_TWO,
+    url: `/weatherlink/compared/`,
+    token,
+    method: "POST",
+    data: {
+      station_names,
+      weather_type,
+      start_date: formatDate(start_date, "M/D/YYYY"),
+      end_date: formatDate(end_date, "M/D/YYYY"),
+    },
   });
 };
 
@@ -236,5 +277,7 @@ export default {
   getWeatherData,
   getWeatherStationData,
   exportWeatherData,
-  getWeatherStationCurrentData
+  exportCompareData,
+  getAllWeatherStationData,
+  getWeatherStationCurrentData,
 };

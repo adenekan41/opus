@@ -29,6 +29,10 @@ const CompareChart = ({ type, data, observationTimes }) => {
               gridLines: {
                 display: false,
               },
+              ticks: {
+                maxRotation: 90,
+                minRotation: 90,
+              },
             },
           ],
           yAxes: [

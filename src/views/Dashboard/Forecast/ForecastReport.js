@@ -1,64 +1,107 @@
-import React, { Component } from 'react';
-import moment from 'moment';
-import { Box, Flex, Text } from 'rebass';
-import Breadcrumbs, { BreadcrumbItem } from '../../../components/Breadcrumb';
-import DatePicker from '../../../components/DatePicker';
-import Dropdown from '../../../components/Select';
-import Button from '../../../components/Button';
-import Card from '../../../components/Card';
-import { Icon } from '../../../components/Icon';
-import ReportChart from './charts/ReportChart';
-import { createCSV } from '../../../helpers/functions';
-import { WEATHER_OPTIONS } from '../../../helpers/constants';
+import React, { Component } from "react";
+import moment from "moment";
+import { Box, Flex, Text } from "rebass";
+import Breadcrumbs, { BreadcrumbItem } from "../../../components/Breadcrumb";
+import DatePicker from "../../../components/DatePicker";
+import Dropdown from "../../../components/Select";
+import Button from "../../../components/Button";
+import Card from "../../../components/Card";
+import { Icon } from "../../../components/Icon";
+import ReportChart from "./charts/ReportChart";
+import { createCSV } from "../../../helpers/functions";
+import { WEATHER_OPTIONS } from "../../../helpers/constants";
+import { Toast } from "../../../components/Toast";
+import { Spinner } from "../../../components/Spinner";
 
 export default class ForecastReport extends Component {
   state = {
     data: [],
+    error: false,
     loading: false,
+    buttonLoading: false,
+    errorMessage: "",
     observationTimes: [],
-    startDate: moment(new Date()),
+    startDate: moment(new Date()).subtract(1, "days"),
     endDate: moment(new Date()),
   };
 
   componentDidMount() {
     const { weatherStation, history, type } = this.props;
     if (Object.values(weatherStation).length === 0) {
-      history.push('/dashboard/weather-data/map');
+      history.push("/dashboard/weather-data/map");
     }
     this.getWeatherTypeData(type, {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: moment(new Date()).subtract(1, "days"),
+      endDate: moment(new Date()),
     });
   }
 
   getWeatherTypeData = (type, dates) => {
-    const { dispatch, actions } = this.props;
-    let data = dispatch({
-      type: actions.FILTER_WEATHER_DATA_BY_TYPE,
-      value: { type, dates },
-    });
-    let { result, observationTimes } = data;
+    const { dispatch, actions, weatherStation } = this.props;
+
     this.setState({
-      data: result,
-      observationTimes,
+      loading: true,
+    });
+
+    dispatch({
+      type: actions.FILTER_WEATHER_DATA_BY_TYPE,
+      value: {
+        type,
+        ...{ ...dates, station_name: weatherStation.station_name },
+      },
+    }).then(data => {
+      let { result, observationTimes } = data;
+      this.setState({
+        data: result,
+        observationTimes,
+        loading: false,
+      });
+    }).catch(() => {
+      this.setState({
+        loading: false,
+        error: true,
+        errorMessage: "An error occured. Please try again"
+      })
     });
   };
 
   exportWeatherData = () => {
     const { dispatch, actions, weatherStation } = this.props;
-    this.setState({ loading: true });
+    const { startDate, endDate } = this.state;
+
+    this.setState({ buttonLoading: true, error: false, errorMessage: "" });
+
     dispatch({
       type: actions.EXPORT_WEATHER_DATA,
-      value: weatherStation.station_name,
-    }).then(data => {
-      this.setState({ loading: false });
-      createCSV(data);
-    });
+      value: {
+        station_name: weatherStation.station_name,
+        start_date: startDate,
+        end_date: endDate,
+      },
+    })
+      .then(data => {
+        this.setState({ buttonLoading: false });
+        createCSV(data);
+      })
+      .catch(() => {
+        this.setState({
+          buttonLoading: false,
+          error: true,
+          errorMessage: "Unable to export data. Please try again.",
+        });
+      });
   };
 
   render() {
     const { weatherStation, type } = this.props;
-    let { data, startDate, endDate, observationTimes } = this.state;
+    let {
+      data,
+      error,
+      startDate,
+      endDate,
+      errorMessage,
+      observationTimes,
+    } = this.state;
     return (
       <Box py="40px" px="40px">
         <Box mb="40px">
@@ -83,8 +126,8 @@ export default class ForecastReport extends Component {
               options={WEATHER_OPTIONS}
               onChange={weatherType =>
                 this.getWeatherTypeData(weatherType.value, {
-                  startDate: new Date(),
-                  endDate: new Date(),
+                  startDate: this.state.startDate,
+                  endDate: this.state.endDate,
                 })
               }
               label="Select graph"
@@ -94,12 +137,16 @@ export default class ForecastReport extends Component {
           <Box className="col-md-4">
             <DatePicker
               isOutsideRange={() => false}
+              startDate={this.state.startDate}
+              endDate={this.state.endDate}
               onChange={({ startDate, endDate }) => {
-                this.setState({
-                  startDate,
-                  endDate,
-                });
-                this.getWeatherTypeData(type, { startDate, endDate });
+                this.setState(
+                  {
+                    startDate,
+                    endDate,
+                  },
+                  () => this.getWeatherTypeData(type, { startDate, endDate })
+                );
               }}
             />
           </Box>
@@ -112,7 +159,7 @@ export default class ForecastReport extends Component {
                 display: flex;
                 align-items: center;
               `}
-              isLoading={this.state.loading}
+              isLoading={this.state.buttonLoading}
               onClick={this.exportWeatherData}
             >
               <Icon name="asset" color="#fff" size={24} />
@@ -121,27 +168,49 @@ export default class ForecastReport extends Component {
           </Box>
         </Box>
         <Box mt="30px">
-          <Card padding="16px">
-            <Flex alignItems="center" justifyContent="space-between" mb="16px">
-              <Text fontSize="12px">
-                <span style={{ fontWeight: 'bold' }}>
-                  {weatherStation.station_name} -{' '}
-                </span>
-                <span style={{ fontStyle: 'italic' }}>
-                  {moment(startDate).format('DD MMM, YYYY hh:mm')} to{' '}
-                  {moment(endDate).format('DD MMM, YYYY hh:mm')}
-                </span>
-              </Text>
+          {this.state.loading ? (
+            <Flex alignItems="center" justifyContent="center" py="30vh">
+              <Spinner />
             </Flex>
-            <ReportChart
-              {...{
-                type,
-                data,
-                observationTimes,
-              }}
-            />
-          </Card>
+          ) : (
+            <Card padding="16px">
+              <Flex
+                alignItems="center"
+                justifyContent="space-between"
+                mb="16px"
+              >
+                <Text fontSize="12px">
+                  <span style={{ fontWeight: "bold" }}>
+                    {weatherStation.station_name} -{" "}
+                  </span>
+                  <span style={{ fontStyle: "italic" }}>
+                    {moment(startDate).format("DD MMM, YYYY hh:mm")} to{" "}
+                    {moment(endDate).format("DD MMM, YYYY hh:mm")}
+                  </span>
+                </Text>
+              </Flex>
+              <ReportChart
+                {...{
+                  type,
+                  data,
+                  observationTimes,
+                }}
+              />
+            </Card>
+          )}
         </Box>
+        {error && (
+          <Toast
+            showToast={error}
+            title="Error"
+            status="error"
+            showCloseButton
+            autoClose={false}
+            onClose={() => this.setState({ error: false })}
+          >
+            {errorMessage}
+          </Toast>
+        )}
       </Box>
     );
   }
