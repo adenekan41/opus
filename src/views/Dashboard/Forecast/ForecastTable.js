@@ -19,7 +19,7 @@ const ForecastTableColumns = [
     id: "time",
     accessor: "time",
     Cell: ({ original: { time } }) => (
-      <span>{moment(time).format("DD/MM/YY - hh:mm")}</span>
+      <span>{moment(time).format("DD/MM/YY - HH:mm")}</span>
     ),
     fixed: "left",
     style: {
