@@ -11,9 +11,10 @@ export const fahrenheitToCelcius = value => {
 
 export const createCSV = text => {
   var hiddenElement = document.createElement("a");
+  var date = moment(new Date()).format("YY/MM/DD/HH:mm");
   hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(text);
   hiddenElement.target = "_blank";
-  hiddenElement.download = "weather_data.csv";
+  hiddenElement.download = `${date}_weather_data.csv`;
   hiddenElement.click();
 };
 
