@@ -16,6 +16,22 @@ const FileUploaderContainer = styled(Box)`
   }
 `;
 
+export function FileUploader({ children, onUpload = () => {} }) {
+  const onDrop = useCallback(acceptedFiles => {
+    // Do something with the files
+    console.log(acceptedFiles);
+    onUpload(acceptedFiles);
+  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  return (
+    <div {...getRootProps({ className: 'file-uploader' })}>
+      <input {...getInputProps()} />
+      {children({ isDragActive })}
+    </div>
+  );
+}
+
 export function DragAndDropUploader({
   render,
   children,

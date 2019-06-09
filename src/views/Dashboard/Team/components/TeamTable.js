@@ -1,12 +1,10 @@
 import React from 'react';
-import moment from 'moment';
 import Table from '../../../../components/Table';
 import Avatar from '../../../../components/Avatar';
-import Button from '../../../../components/Button';
 import TableActions from '../../../../components/Table/TableActions';
 import TeamForm from './TeamForm';
 
-const team_columns = (onTeamEdit, onTeamDelete) => [
+const team_columns = (onUserEdit, onUserDelete) => [
   {
     Header: '',
     accessor: '',
@@ -29,6 +27,11 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
     accessor: 'first_name',
     id: 'first_name',
   },
+  {
+    Header: 'Middle Name',
+    accessor: 'middle_name',
+    id: 'middle_name',
+  },
 
   {
     Header: 'Last Name',
@@ -41,23 +44,9 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
     id: 'email',
   },
   {
-    Header: 'Date Added',
-    Cell: ({ original: { created_at } }) => (
-      <span>{moment(created_at).format('DD MMMM, YYYY')}</span>
-    ),
-    id: 'date',
-  },
-  {
-    Header: 'Status',
-    accessor: 'status',
-    id: 'status',
-      Cell: ({ original: {status} }) => (
-      <Button
-        background={status === 'pending' ? '#ffc502' : '#29cb98'}
-        height="25px"
-       
-      >{status}</Button>
-    ),
+    Header: 'Phone',
+    accessor: 'phone_number',
+    id: 'phone_number',
   },
   
   {
@@ -69,8 +58,8 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
       <TableActions
         model="user"
         data={original}
-        onEdit={onTeamEdit}
-        onDelete={onTeamDelete}
+        onEdit={onUserEdit}
+        onDelete={onUserDelete}
         editModalHeading="Edit User"
         renderEditForm={({ data, onEdit, closeModal }) => (
           <TeamForm
@@ -97,8 +86,8 @@ const TeamTable = ({
   onPageChange,
   onPageSizeChange,
   onFetchData,
-  onTeamEdit,
-  onTeamDelete,
+  onUserEdit,
+  onUserDelete,
 }) => {
   return (
     <Table
@@ -127,7 +116,7 @@ const TeamTable = ({
       data={teams}
       noDataText="No Team Added Yet"
       errorText="Oops! There was an issue fetching your users"
-      columns={team_columns(onTeamEdit, onTeamDelete)}
+      columns={team_columns(onUserEdit, onUserDelete)}
     />
   );
 };

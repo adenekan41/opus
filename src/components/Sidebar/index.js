@@ -86,7 +86,8 @@ Sidebar.defaultProps = {
     },
     { icon: 'user', label: 'Contacts', url: '/dashboard/contacts' },
     { icon: 'send', label: 'Alerts', url: '/dashboard/alerts' },
-    { icon: 'team', label: 'Team', url: '/dashboard/team' },
+    { icon: 'team', label: 'customers', url: '/dashboard/customers' },
+    { icon: 'team', label: 'users', url: '/dashboard/users' },
     { icon: 'chart', label: 'Compare', url: '/dashboard/compare' },
   ],
 };

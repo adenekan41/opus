@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import DashboardLayout from '.';
 import Contacts from '../../../views/Dashboard/Contacts';
 import Alerts from '../../../views/Dashboard/Alerts';
-import Teams from '../../../views/Dashboard/Team';
+import Users from '../../../views/Dashboard/Team';
 import Account from '../../../views/Dashboard/Account';
 import Forecast from '../../../views/Dashboard/Forecast';
 import { DataProvider } from '../../../api/provider';
@@ -48,9 +48,13 @@ const DashboardRoutes = ({ token, ...rest }) => {
                   )}
                 />
                 <Route
-                  path="/dashboard/team"
-                  render={() => <Teams {...rest} {...{ ...state, dispatch, actions }} />}
+                  path="/dashboard/users"
+                  render={() => <Users {...rest} {...{ ...state, dispatch, actions }} />}
                 />
+                {/* <Route
+                  path="/dashboard/customers"
+                  render={() => <Users {...rest} {...{ ...state, dispatch, actions }} />}
+                /> */}
                 <Route
                   path="/dashboard/profile/"
                   render={() => (

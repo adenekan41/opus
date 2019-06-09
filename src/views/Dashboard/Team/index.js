@@ -1,12 +1,12 @@
-import React from 'react';
-import TeamTable from './components/TeamTable';
-import SearchInput from '../../../components/SearchInput';
-import AdminTeamTable from './components/AdminTeamTable';
-import EmptyState, { ComingSoon } from '../../../components/EmptyState';
-import emptyStateImage from '../../../assets/img/empty-states/contacts.png';
-import CreateButton from './components/CreateButton';
+import React from "react";
+import TeamTable from "./components/TeamTable";
+import SearchInput from "../../../components/SearchInput";
+import AdminTeamTable from "./components/AdminTeamTable";
+import EmptyState from "../../../components/EmptyState";
+import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
+import CreateButton from "./components/CreateButton";
 
-class Teams extends React.Component {
+class Users extends React.Component {
   constructor() {
     super();
 
@@ -17,7 +17,7 @@ class Teams extends React.Component {
 
   onUserCreate = (values, callback) => {
     const { dispatch, actions } = this.props;
-    let payload = { ...values, password: 'password', is_superuser: false };
+    let payload = { ...values, password: "password", is_superuser: false };
     this.setState({
       loading: true,
     });
@@ -37,7 +37,7 @@ class Teams extends React.Component {
       });
   };
 
-  onTeamEdit = (values, callback) => {
+  onUserEdit = (values, callback) => {
     const { dispatch, actions } = this.props;
     this.setState({
       loading: true,
@@ -54,7 +54,7 @@ class Teams extends React.Component {
       );
   };
 
-  onTeamDelete = (id, callback) => {
+  onUserDelete = (id, callback) => {
     const { dispatch, actions } = this.props;
     this.setState({
       loading: true,
@@ -74,57 +74,46 @@ class Teams extends React.Component {
   };
 
   render() {
-    // const { profile, users } = this.props;
-    // let isAdmin = profile.username === 'admin';
+    const { users } = this.props;
+
     return (
-      <div style={{ padding: '40px' }}>
-        <ComingSoon />
-        {/* <div className="row">
-            <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
-              <SearchInput placeholder="Search team members" mb="8px" />
-            </div>
-            <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
+      <div style={{ padding: "40px" }}>
+        <div className="row">
+          <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
+            <SearchInput placeholder="Search users" mb="8px" />
+          </div>
+          <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
+            <CreateButton
+              isLoading={this.state.loading}
+              onSubmit={this.onUserCreate}
+            />
+          </div>
+        </div>
+        <br /> <br />
+        {users.length > 0 ? (
+          <TeamTable
+            teams={users}
+            onUserDelete={this.onUserDelete}
+            onUserEdit={this.onUserEdit}
+          />
+        ) : (
+          <EmptyState
+            image={emptyStateImage}
+            margin="80px"
+            heading="No Team Members"
+            helpText="You haven’t invited any team members yet,
+              click the button below to invite someone."
+            renderButton={() => (
               <CreateButton
-                isAdmin={isAdmin}
                 isLoading={this.state.loading}
                 onSubmit={this.onUserCreate}
               />
-            </div>
-          </div>
-          <br /> <br />
-          {users.length > 0 ? (
-            isAdmin ? (
-              <AdminTeamTable
-                teams={users}
-                onTeamDelete={this.onTeamDelete}
-                onTeamEdit={this.onTeamEdit}
-              />
-            ) : (
-              <TeamTable
-                teams={users}
-                onTeamDelete={this.onTeamDelete}
-                onTeamEdit={this.onTeamEdit}
-              />
-            )
-          ) : (
-            <EmptyState
-              image={emptyStateImage}
-              margin="80px"
-              heading="No Team Members"
-              helpText="You haven’t invited any team members yet,
-              click the button below to invite someone."
-              renderButton={() => (
-                <CreateButton
-                  isAdmin={isAdmin}
-                  isLoading={this.state.loading}
-                  onSubmit={this.onUserCreate}
-                />
-              )}
-            />
-          )} */}
+            )}
+          />
+        )}
       </div>
     );
   }
 }
 
-export default Teams;
+export default Users;
