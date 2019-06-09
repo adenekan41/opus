@@ -46,6 +46,7 @@ export class Modal extends React.Component {
       isFullScreenOnMobile,
       domNode,
       overflow,
+      shouldCloseOnOverlayClick
     } = this.props;
     const closeIcon = (
       <EmptyButton onClick={onCloseModal} className="Modal__Header__close-btn">
@@ -63,7 +64,7 @@ export class Modal extends React.Component {
           contentLabel="Modal Example"
           headingCSS={headingCSS}
           onRequestClose={onCloseModal}
-          shouldCloseOnOverlayClick={false}
+          shouldCloseOnOverlayClick={shouldCloseOnOverlayClick}
           closeTimeoutMS={150}
           removeHeading={Boolean(heading)}
           role="dialog"
@@ -108,6 +109,7 @@ Modal.defaultProps = {
   showCloseIcon: false,
   closeIconSize: 18,
   domNode: null,
+  shouldCloseOnOverlayClick: true
 };
 
 export class Confirm extends React.Component {

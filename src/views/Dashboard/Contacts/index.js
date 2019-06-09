@@ -1,10 +1,12 @@
 import React from 'react';
 import ContactTable from './components/ContactTable';
 import SearchInput from '../../../components/SearchInput';
-import EmptyState, { ComingSoon } from '../../../components/EmptyState';
+import EmptyState from '../../../components/EmptyState';
 import emptyStateImage from '../../../assets/img/empty-states/contacts.png';
 import CreateContactButton from './components/CreateContactButton';
 import { countries, getCitites } from '../../../helpers/countries';
+import UploadContactsButton from "./components/UploadContactsButton";
+import Axios from "axios";
 
 class Contacts extends React.Component {
   constructor() {
@@ -12,6 +14,7 @@ class Contacts extends React.Component {
     this.state = {
       buttonLoading: false,
       cities: [],
+      percent: 0,
     };
   }
 
@@ -88,19 +91,49 @@ class Contacts extends React.Component {
       });
   };
 
+  onContactsUpload = files => {
+    this.setState({ percent: 0 });
+    let data = new FormData();
+    files.forEach(file => {
+      data.append('files[]', file, file.name);
+    });
+
+    const url = 'http://localhost:3000';
+
+    const config = {
+      headers: { 'content-type': 'multipart/form-data' },
+      onUploadProgress: progressEvent => {
+        var percent = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+        if (percent >= 100) {
+          this.setState({ percent: 100 });
+        } else {
+          this.setState({ percent });
+        }
+      }
+    };
+
+    Axios.post(url, data, config)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({ percent: 0 });
+      });
+  };
+
   render() {
-    // const { profile, contacts, crops } = this.props;
-    // let { buttonLoading, cities } = this.state;
-    // let isAdmin = profile.username === 'admin';
-    // let formatCrops = crops.map(crop => ({
-    //   label: crop.name,
-    //   value: crop.name,
-    // }));
+    const { profile, contacts, crops } = this.props;
+    let { buttonLoading, cities, percent } = this.state;
+    let isAdmin = profile.username === 'admin';
+    let formatCrops = crops.map(crop => ({
+      label: crop.name,
+      value: crop.name,
+    }));
     return (
       <div style={{ padding: '40px' }}>
-        <ComingSoon image={emptyStateImage}/>
-        {/* <div className="row">
-            <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
+        <div className="row">
+            <div className="col-md-6 col-xs-12 col-sm-6 col-lg-6">
               <SearchInput placeholder="Search contacts" mb="8px" />
             </div>
             <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
@@ -113,6 +146,14 @@ class Contacts extends React.Component {
                 isLoading={buttonLoading}
                 onSubmit={this.onContactCreate}
                 getCountryCities={this.getCountryCities}
+              />
+            </div>
+            <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
+              <UploadContactsButton
+                mb="8px"
+                isAdmin={isAdmin}
+                progress={percent}
+                onSubmit={this.onContactsUpload}
               />
             </div>
           </div>
@@ -147,7 +188,7 @@ class Contacts extends React.Component {
                 />
               )}
             />
-          )} */}
+          )}
       </div>
     );
   }

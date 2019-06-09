@@ -135,11 +135,28 @@ const ToastDiv = styled.div`
 `;
 
 export class Toast extends React.Component {
+  state = {
+    showToast: this.props.showToast
+  }
+
   componentDidMount() {
     if (this.props.autoClose) {
       this.timeout = setTimeout(() => {
-        this.props.onClose();
+        if(this.props.onClose) {
+          this.props.onClose();
+        }
+        else {
+          this.setState({ showToast: false })
+        }
       }, 5000);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.showToast !== this.props.showToast) {
+      this.setState({
+        showToast: this.props.showToast
+      })
     }
   }
 
@@ -170,7 +187,7 @@ export class Toast extends React.Component {
 
     return (
       <Fragment>
-        {this.props.showToast && (
+        {this.state.showToast && (
           <ToastDiv status={status}>
             <div className="Toast__wrapper" role="alert">
               <div className="Toast__header">
