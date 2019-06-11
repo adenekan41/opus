@@ -133,7 +133,8 @@ class ContactForm extends React.Component {
                         name="crop_managed"
                         label="Crop managed"
                         touched={touched.crop_managed}
-                        options={crops}
+                        options={[{value: "Cashew", label: "Cashew"}]}
+                        // options={crops || [{value: "Cashew", label: "Cashew"}]}
                         errorMessage={errors.crop_managed}
                         isInvalid={errors.crop_managed && touched.crop_managed}
                         onChange={crop =>

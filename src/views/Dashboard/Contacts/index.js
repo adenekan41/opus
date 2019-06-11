@@ -140,7 +140,7 @@ class Contacts extends React.Component {
               <CreateContactButton
                 mb="8px"
                 cities={cities}
-                isAdmin={isAdmin}
+                isAdmin={false}
                 crops={formatCrops}
                 countries={countries}
                 isLoading={buttonLoading}

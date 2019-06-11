@@ -35,17 +35,29 @@ const contact_columns = data => {
     },
     {
       Header: 'First Name',
-      accessor: 'first_name',
+      Cell: ({ original }) => (
+        <span>
+          {original.first_name || "-"}
+        </span>
+      ),
       id: 'first_name',
     },
     {
       Header: 'Middle Name',
-      accessor: 'middle_name',
+      Cell: ({ original }) => (
+        <span>
+          {original.middle_name || "-"}
+        </span>
+      ),
       id: 'middle_name',
     },
     {
       Header: 'Last Name',
-      accessor: 'last_name',
+      Cell: ({ original }) => (
+        <span>
+          {original.last_name || "-"}
+        </span>
+      ),
       id: 'last_name',
     },
     {
@@ -69,12 +81,20 @@ const contact_columns = data => {
     },
     {
       Header: 'Customer',
-      accessor: 'customer',
+      Cell: ({ original }) => (
+        <span>
+          {original.customer || "-"}
+        </span>
+      ),
       id: 'customer',
     },
     {
       Header: 'Language',
-      accessor: 'language',
+      Cell: ({ original }) => (
+        <span>
+          {original.language || "-"}
+        </span>
+      ),
       id: 'language',
     },
     {
