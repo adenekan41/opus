@@ -25,7 +25,7 @@ export function FileUploader({ children, onUpload = () => {} }) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div {...getRootProps({ className: 'file-uploader' })}>
+    <div {...getRootProps({ className: "file-uploader" })}>
       <input {...getInputProps()} />
       {children({ isDragActive })}
     </div>
@@ -39,12 +39,12 @@ export function DragAndDropUploader({
   accept,
   progress,
   onUpload = () => {},
+  closeModal,
   ...rest
 }) {
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
-    console.log(acceptedFiles);
-    onUpload(acceptedFiles);
+    onUpload(acceptedFiles, closeModal);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -60,7 +60,11 @@ export function DragAndDropUploader({
         </div>
         {render && render()}
       </FileUploaderContainer>
-      {progress > 0 && <Progressbar width={progress} />}
+      {progress > 0 && (
+        <Box mt={2}>
+          <Progressbar width={progress} />
+        </Box>
+      )}
     </>
   );
 }

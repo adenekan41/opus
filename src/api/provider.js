@@ -83,7 +83,7 @@ export class DataProvider extends React.Component {
       // this.getCrops(opus1_token),
       // this.getUsers(opus1_token),
       this.getWeatherData(token),
-      this.getContacts(token),
+      this.getContacts({ token }),
     ]).then(data => {
       return {
         // profile: data[0],
@@ -128,7 +128,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.FILTER_COMPARE_LOGS_BY_TYPE]: this.filterCompareLogByType,
       [ACTIONS.EXPORT_COMPARE_DATA_CSV]: this.exportCompareData,
       [ACTIONS.SET_WINDY_MAP]: this.setWindyMap,
-      [ACTIONS.CLEAR_COMPARE_LOGS]: this.clearComparelogs
+      [ACTIONS.CLEAR_COMPARE_LOGS]: this.clearComparelogs,
     };
     console.log({ type });
     return options[type](value);
@@ -307,8 +307,19 @@ export class DataProvider extends React.Component {
       });
   };
 
-  getContacts = token => {
+  getContacts = ({ token, refresh = false }) => {
     let { contacts = [] } = this.state;
+
+    if (refresh) {
+      return this.getAdapter()
+        .getContacts(token)
+        .then(data => {
+          this.updateState({
+            contacts: data,
+          });
+          return data;
+        });
+    }
 
     if (contacts.length > 0) {
       return new Promise(resolve => resolve(contacts));
@@ -548,7 +559,7 @@ export class DataProvider extends React.Component {
       let observationTimes =
         weatherStationLogs &&
         weatherStationLogs[0] &&
-        weatherStationLogs[0].data && 
+        weatherStationLogs[0].data &&
         weatherStationLogs[0].data.map(value =>
           moment(value.observation_time).format("DD/MM")
         );
@@ -616,7 +627,11 @@ export class DataProvider extends React.Component {
   };
 
   clearComparelogs = () => {
-    this.updateState({ compareStationLogs: [], compareStationCsvData: [], compareType: "Temperature" });
+    this.updateState({
+      compareStationLogs: [],
+      compareStationCsvData: [],
+      compareType: "Temperature",
+    });
   };
 
   render() {

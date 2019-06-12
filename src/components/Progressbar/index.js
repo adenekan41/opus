@@ -9,7 +9,6 @@ const ProgressbarContainer = styled.div`
 `;
 
 const ProgressIndicator = styled.div`
-  position: absolute;
   border-radius: 100px;
   width: ${props => `${props.width}%`};
   height: ${props => `${props.height}px`};
@@ -32,5 +31,5 @@ export default function Progressbar({
 Progressbar.defaultProps = {
   height: 10,
   bgColor: "#22bdff",
-  containerBgColor: "#f4f4f4"
+  containerBgColor: "#e5e4e4"
 };

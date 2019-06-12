@@ -76,7 +76,7 @@ class Contacts extends React.Component {
       });
   };
 
-  onContactEdit = (values) => {
+  onContactEdit = values => {
     const { dispatch, actions } = this.props;
     let { phone_number, secondary_phone_number, ...rest } = values;
     let payload = {
@@ -101,7 +101,7 @@ class Contacts extends React.Component {
       });
   };
 
-  onContactDelete = (id) => {
+  onContactDelete = id => {
     const { dispatch, actions } = this.props;
     this.setState({
       buttonLoading: true,
@@ -121,14 +121,15 @@ class Contacts extends React.Component {
       });
   };
 
-  onContactsUpload = files => {
+  onContactsUpload = (files, callback) => {
     this.setState({ percent: 0 });
     let data = new FormData();
     files.forEach(file => {
-      data.append("files[]", file, file.name);
+      data.append("file", file, file.name);
     });
 
-    const url = "http://localhost:3000";
+    const url = `${process.env.REACT_APP_BASE_URL}/contacts/import-contacts/`;
+    const { dispatch, actions } = this.props;
 
     const config = {
       headers: { "content-type": "multipart/form-data" },
@@ -145,8 +146,13 @@ class Contacts extends React.Component {
     };
 
     Axios.post(url, data, config)
-      .then(response => {
-        console.log(response);
+      .then(() => {
+        dispatch({ type: actions.GET_CONTACTS, value: { refresh: true } }).then(
+          () => {
+            this.setState({ percent: 0 });
+            callback && callback();
+          }
+        );
       })
       .catch(error => {
         console.log(error);
@@ -195,6 +201,7 @@ class Contacts extends React.Component {
                 isAdmin={isAdmin}
                 progress={percent}
                 onSubmit={this.onContactsUpload}
+                sampleFile="/static/files/contacts.csv"
               />
             </div>
           </div>

@@ -14,6 +14,7 @@ export default function UploadContactsButton({
   onSubmit,
   isAdmin,
   progress,
+  sampleFile,
   ...rest
 }) {
   return (
@@ -56,6 +57,7 @@ export default function UploadContactsButton({
                 progress={progress}
                 accept=""
                 onUpload={onSubmit}
+                closeModal={closeModal}
                 styles={DragAndDropUploaderStyle}
               >
                 {({ isDragActive }) =>
@@ -71,7 +73,7 @@ export default function UploadContactsButton({
 
               <Text fontSize="14px" mt={3}>
                 <span>Need some help?</span>{" "}
-                <a href="#" download>
+                <a href={sampleFile} download>
                   Download Sample CSV
                 </a>
               </Text>
