@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from 'rebass';
 import AlertTables from './components/alertTables';
-import SearchInput from '../../../components/SearchInput';
+import SearchInput from '../../../components/SelectSearchInput';
 import Button from '../../../components/Button';
 import { Icon } from '../../../components/Icon';
 import EmptyState, { ComingSoon } from '../../../components/EmptyState';

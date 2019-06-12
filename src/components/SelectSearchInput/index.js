@@ -79,7 +79,7 @@ const formatGroupLabel = data => (
   </div>
 );
 
-export const SelectSearch = ({ options, placeholder, className, onChange, isGrouped, ...rest }) => {
+const SelectSearch = ({ options, placeholder, className, onChange, isGrouped, ...rest }) => {
   let groupedProps = isGrouped ? {formatGroupLabel} : {};
   return (
     <SelectSearchContainer className={className} mb={rest.mb}>

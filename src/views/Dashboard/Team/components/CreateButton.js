@@ -1,8 +1,7 @@
 import React from "react";
-import { Text } from "rebass";
 import Modal, { ToggleModal } from "../../../../components/Modal";
 import Button from "../../../../components/Button";
-import TeamForm from "./TeamForm";
+import UserForm from "./UserForm";
 import { Icon } from "../../../../components/Icon";
 
 export default function CreateButton({ onSubmit, isLoading }) {
@@ -20,7 +19,7 @@ export default function CreateButton({ onSubmit, isLoading }) {
             onCloseModal={closeModal}
             heading="Add user"
           >
-            <TeamForm
+            <UserForm
               isAdd
               onCancel={closeModal}
               onSubmit={onSubmit}

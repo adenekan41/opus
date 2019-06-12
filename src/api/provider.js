@@ -81,16 +81,16 @@ export class DataProvider extends React.Component {
       // this.getProfile(opus1_token),
       // this.getWhatsappAlerts(token),
       // this.getCrops(opus1_token),
-      // this.getUsers(opus1_token),
       this.getWeatherData(token),
       this.getContacts({ token }),
+      this.getUsers(token),
     ]).then(data => {
       return {
         // profile: data[0],
         // alerts: data[1],
         // crops: data[2],
         contacts: data[1],
-        // users: data[4],
+        users: data[2],
         weatherStations: data[0],
       };
     });
@@ -183,18 +183,19 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .getUsers(token)
       .then(data => {
+        const { results } = data;
         this.updateState({
-          users: data,
+          users: results,
         });
-        return data;
+        return results;
       });
   };
 
   getUser = id => {
-    let { opus1_token } = this.state;
+    let { token } = this.state;
 
     return this.getAdapter()
-      .getUser(opus1_token, id)
+      .getUser(token, id)
       .then(data => {
         this.updateState({
           user: data,
@@ -204,10 +205,10 @@ export class DataProvider extends React.Component {
   };
 
   createUser = payload => {
-    let { opus1_token, users } = this.state;
+    let { token, users } = this.state;
 
     return this.getAdapter()
-      .createUser(opus1_token, payload)
+      .createUser(token, payload)
       .then(data => {
         this.updateState({ users: [data, ...users] });
         return data;
@@ -215,10 +216,10 @@ export class DataProvider extends React.Component {
   };
 
   adminCreateUser = payload => {
-    let { opus1_token, users } = this.state;
+    let { token, users } = this.state;
 
     return this.getAdapter()
-      .adminCreateUser(opus1_token, payload)
+      .adminCreateUser(token, payload)
       .then(data => {
         this.updateState({ users: [data, ...users] });
         return data;
@@ -226,10 +227,10 @@ export class DataProvider extends React.Component {
   };
 
   updateUser = payload => {
-    let { opus1_token, users } = this.state;
+    let { token, users } = this.state;
 
     return this.getAdapter()
-      .updateUser(opus1_token, payload)
+      .updateUser(token, payload)
       .then(data => {
         let result = users.map(user => {
           if (user.id === payload.id) {
@@ -243,10 +244,10 @@ export class DataProvider extends React.Component {
   };
 
   patchUser = payload => {
-    let { opus1_token, users } = this.state;
+    let { token, users } = this.state;
 
     return this.getAdapter()
-      .patchUser(opus1_token, payload)
+      .patchUser(token, payload)
       .then(data => {
         let result = users.map(user => {
           if (user.id === payload.id) {
@@ -260,10 +261,10 @@ export class DataProvider extends React.Component {
   };
 
   deleteUser = id => {
-    let { opus1_token, users } = this.state;
+    let { token, users } = this.state;
 
     return this.getAdapter()
-      .deleteUser(opus1_token, id)
+      .deleteUser(token, id)
       .then(data => {
         let result = users.filter(user => user.id !== id);
         this.updateState({ users: result });

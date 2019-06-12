@@ -18,7 +18,7 @@ const AvatarDiv = styled(Flex)`
   background-image: url(${props => props.backgroundImage});
 `;
 
-const teamFormValidation = yup.object().shape({
+const userFormValidation = yup.object().shape({
   email: yup
     .string()
     .email()
@@ -28,14 +28,13 @@ const teamFormValidation = yup.object().shape({
   phone_number: yup.string().required("Phone number is required"),
 });
 
-const TeamForm = ({
+const UserForm = ({
   id,
   onSubmit,
-  isAdd,
   email,
   first_name,
   last_name,
-  middle_name,
+  other_name,
   phone_number,
   isLoading,
   onCancel,
@@ -61,13 +60,13 @@ const TeamForm = ({
           onCancel();
         })
       }
-      validationSchema={teamFormValidation}
+      validationSchema={userFormValidation}
       initialValues={{
         id: id || "",
         email: email || "",
         first_name: first_name || "",
         last_name: last_name || "",
-        middle_name: middle_name || "",
+        other_name: other_name || "",
         phone_number: phone_number || "",
       }}
     >
@@ -90,7 +89,7 @@ const TeamForm = ({
                 {!image && !image.preview && <Icon name="team" size={30} />}
               </AvatarDiv>
 
-              <FileUploader onUpload={onPhotoDrop}>
+              <FileUploader accept="image/*" onUpload={onPhotoDrop}>
                 {() => (
                   <Button width="220px" kind="green">
                     Change photo
@@ -117,15 +116,15 @@ const TeamForm = ({
             <div className="col-md-6">
               <Input
                 mb="20px"
-                id="middle_name"
-                name="middle_name"
+                id="other_name"
+                name="other_name"
                 type="text"
                 label="Middle name"
-                touched={touched.middle_name}
-                value={values.middle_name}
+                touched={touched.other_name}
+                value={values.other_name}
                 onChange={handleChange}
-                errorMessage={errors.middle_name}
-                isInvalid={errors.middle_name && touched.middle_name}
+                errorMessage={errors.other_name}
+                isInvalid={errors.other_name && touched.other_name}
               />
             </div>
           </div>
@@ -200,8 +199,8 @@ const TeamForm = ({
   );
 };
 
-TeamForm.defaultProps = {
+UserForm.defaultProps = {
   onSubmit: values => console.log(values),
 };
 
-export default TeamForm;
+export default UserForm;

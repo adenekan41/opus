@@ -1,9 +1,9 @@
-import React from 'react';
-import Media from 'react-media';
-import { SidebarContainer, StyledCombinedSidebar } from './style';
-import { CompanyMenu, MenuLink } from './components';
-import { ToggleHandler } from '../../helpers/ToggleHandler';
-import Logo from '../Logo';
+import React from "react";
+import Media from "react-media";
+import { SidebarContainer, StyledCombinedSidebar } from "./style";
+import { CompanyMenu, MenuLink } from "./components";
+import { ToggleHandler } from "../../helpers/ToggleHandler";
+import Logo from "../Logo";
 
 export class Sidebar extends React.Component {
   render() {
@@ -13,9 +13,9 @@ export class Sidebar extends React.Component {
       useNavlink,
       history,
       user = {
-        first_name: 'John',
-        last_name: 'Doe',
-        role: 'Customer',
+        first_name: "John",
+        last_name: "Doe",
+        role: "Customer",
       },
     } = this.props;
     return (
@@ -44,7 +44,7 @@ export class Sidebar extends React.Component {
           </div>
 
           <div className="Sidebar__Main">
-            {user.username === 'admin' && (
+            {user.username === "admin" && (
               <MenuLink
                 key="Dashboard"
                 url="/dashboard/stats"
@@ -56,18 +56,20 @@ export class Sidebar extends React.Component {
                 Dashboard
               </MenuLink>
             )}
-            {menus.map((menu, i) => (
-              <MenuLink
-                key={menu.label}
-                url={menu.url}
-                icon={menu.icon}
-                isCollapsed={isCollapsed}
-                Navlink={useNavlink}
-                title={menu.label}
-              >
-                {menu.label}
-              </MenuLink>
-            ))}
+            {menus.map(menu => {
+              return (
+                <MenuLink
+                  key={menu.label}
+                  url={menu.url}
+                  icon={menu.icon}
+                  isCollapsed={isCollapsed}
+                  Navlink={useNavlink}
+                  title={menu.label}
+                >
+                  {menu.label}
+                </MenuLink>
+              );
+            })}
           </div>
           <div className="Sidebar__Footer">{this.props.render()}</div>
         </div>
@@ -80,15 +82,16 @@ Sidebar.defaultProps = {
   showGetStarted: true,
   menus: [
     {
-      icon: 'weather',
-      label: 'Weather Data',
-      url: '/dashboard/weather-data/map',
+      icon: "weather",
+      label: "Weather Data",
+      url: "/dashboard/weather-data/map",
     },
-    { icon: 'user', label: 'Contacts', url: '/dashboard/contacts' },
-    { icon: 'send', label: 'Alerts', url: '/dashboard/alerts' },
-    { icon: 'team', label: 'Customers', url: '/dashboard/customers' },
-    { icon: 'team', label: 'Users', url: '/dashboard/users' },
-    { icon: 'chart', label: 'Compare', url: '/dashboard/compare' },
+    { icon: "user", label: "Contacts", url: "/dashboard/contacts" },
+    { icon: "send", label: "Alerts", url: "/dashboard/alerts" },
+    // { icon: 'customers', label: 'Customers', url: '/dashboard/customers' },
+    { icon: "team", label: "Users", url: "/dashboard/users" },
+    // { icon: 'chart', label: 'Assets', url: '/dashboard/assets' },
+    { icon: "chart", label: "Compare", url: "/dashboard/compare" },
   ],
 };
 
@@ -101,7 +104,7 @@ class CombinedSidebar extends React.Component {
           {matches => {
             return (
               <ToggleHandler>
-                {({isOpen, onToggle}) => (
+                {({ isOpen, onToggle }) => (
                   <React.Fragment>
                     <Sidebar
                       {...{ user, useNavlink, history }}
@@ -109,13 +112,13 @@ class CombinedSidebar extends React.Component {
                       render={() => (
                         <MenuLink
                           icon={
-                            !isOpen ? 'framed-right-arrow' : 'framed-left-arrow'
+                            !isOpen ? "framed-right-arrow" : "framed-left-arrow"
                           }
                           onClick={matches ? openSideBar : onToggle}
                           className="Sidebar__toggle-button"
                           isCollapsed={!isOpen}
                         >
-                          {!matches ? `Hide Sidebar`:``}
+                          {!matches ? `Hide Sidebar` : ``}
                         </MenuLink>
                       )}
                     />

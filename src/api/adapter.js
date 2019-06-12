@@ -1,18 +1,13 @@
 import axios from "axios";
 import { formatDate } from "../helpers/functions";
 
-const BASE_URL_ONE =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_BASE_URL_ONE_DEVELOPMENT
-    : process.env.REACT_APP_BASE_URL_ONE_DEVELOPMENT;
-
 const BASE_URL_TWO =
   process.env.NODE_ENV === "production"
     ? process.env.REACT_APP_BASE_URL
     : process.env.REACT_APP_BASE_URL;
 
 export const makeApiCall = async ({
-  baseURL = BASE_URL_ONE,
+  baseURL = BASE_URL_TWO,
   url,
   method = "get",
   params,
@@ -66,30 +61,34 @@ const newPassword = payload => {
   });
 };
 
+const getProfile = token => {
+  return makeApiCall({ url: `/profile`, token });
+};
+
 const getUsers = token => {
-  return makeApiCall({ url: `/users/`, token });
+  return makeApiCall({ url: `/user/`, token });
 };
 
 const getUser = (token, id) => {
-  return makeApiCall({ url: `/users/${id}`, token });
+  return makeApiCall({ url: `/user/${id}`, token });
 };
 
 const createUser = (token, payload) => {
-  return makeApiCall({ url: `/users/`, method: "POST", token, data: payload });
+  return makeApiCall({ url: `/user/`, method: "POST", token, data: payload });
 };
 
 const adminCreateUser = (token, payload) => {
   return makeApiCall({
-    url: `/users/admins/create/`,
+    url: `/user`,
     method: "POST",
     token,
-    data: payload,
+    data: {...payload, is_admin: true},
   });
 };
 
 const patchUser = (token, payload) => {
   return makeApiCall({
-    url: `/users/${payload.id}/`,
+    url: `/user/${payload.id}/`,
     method: "PATCH",
     token,
     data: payload,
@@ -98,7 +97,7 @@ const patchUser = (token, payload) => {
 
 const updateUser = (token, payload) => {
   return makeApiCall({
-    url: `/users/${payload.id}/`,
+    url: `/user/${payload.id}/`,
     method: "PUT",
     token,
     data: payload,
@@ -106,7 +105,7 @@ const updateUser = (token, payload) => {
 };
 
 const deleteUser = (token, id) => {
-  return makeApiCall({ url: `/users/${id}`, method: "DELETE", token });
+  return makeApiCall({ url: `/user/${id}`, method: "DELETE", token });
 };
 
 const getContacts = token => {
@@ -144,10 +143,6 @@ const deleteContact = (token, id) => {
     token,
     baseURL: BASE_URL_TWO,
   });
-};
-
-const getProfile = token => {
-  return makeApiCall({ url: `/users/me/`, token });
 };
 
 const getWhatsappAlerts = token => {

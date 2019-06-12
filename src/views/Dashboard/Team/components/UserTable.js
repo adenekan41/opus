@@ -2,9 +2,8 @@ import React from 'react';
 import Table from '../../../../components/Table';
 import Avatar from '../../../../components/Avatar';
 import TableActions from '../../../../components/Table/TableActions';
-import TeamForm from './TeamForm';
 
-const team_columns = (onUserEdit, onUserDelete) => [
+const user_columns = (onUserEdit, onUserDelete) => [
   {
     Header: '',
     accessor: '',
@@ -24,28 +23,48 @@ const team_columns = (onUserEdit, onUserDelete) => [
   },
   {
     Header: 'First Name',
-    accessor: 'first_name',
+    Cell: ({ original }) => (
+      <span>
+        {original.first_name || "-"}
+      </span>
+    ),
     id: 'first_name',
   },
   {
     Header: 'Middle Name',
-    accessor: 'middle_name',
+    Cell: ({ original }) => (
+      <span>
+        {original.other_name || "-"}
+      </span>
+    ),
     id: 'middle_name',
   },
 
   {
     Header: 'Last Name',
-    accessor: 'last_name',
+    Cell: ({ original }) => (
+      <span>
+        {original.last_name || "-"}
+      </span>
+    ),
     id: 'last_name',
   },
   {
     Header: 'Email',
-    accessor: 'email',
+    Cell: ({ original }) => (
+      <span>
+        {original.email || "-"}
+      </span>
+    ),
     id: 'email',
   },
   {
     Header: 'Phone',
-    accessor: 'phone_number',
+    Cell: ({ original }) => (
+      <span>
+        {original.phone_number || "-"}
+      </span>
+    ),
     id: 'phone_number',
   },
   
@@ -57,24 +76,15 @@ const team_columns = (onUserEdit, onUserDelete) => [
     Cell: ({ original }) => (
       <TableActions
         model="user"
-        data={original}
-        onEdit={onUserEdit}
-        onDelete={onUserDelete}
-        editModalHeading="Edit User"
-        renderEditForm={({ data, onEdit, closeModal }) => (
-          <TeamForm
-            {...data}
-            isAdd={false}
-            onsubmit={onEdit}
-            onCancel={closeModal}
-          />
-        )}
+        placement="bottom"
+        onEdit={() => onUserEdit(original)}
+        onDelete={() => onUserDelete(original)}
       />
     ),
   },
 ];
 
-const TeamTable = ({
+const UserTable = ({
   isLoading,
   pageSize,
   currentPage,
@@ -116,14 +126,14 @@ const TeamTable = ({
       data={teams}
       noDataText="No Team Added Yet"
       errorText="Oops! There was an issue fetching your users"
-      columns={team_columns(onUserEdit, onUserDelete)}
+      columns={user_columns(onUserEdit, onUserDelete)}
     />
   );
 };
 
-export default TeamTable;
+export default UserTable;
 
-TeamTable.defaultProps = {
+UserTable.defaultProps = {
   teams: [
     {
       firstName: 'Faith',

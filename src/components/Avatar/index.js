@@ -75,7 +75,7 @@ const StyledAvatar = styled.div`
   flex-shrink: 0;
   justify-content: center;
   text-transform: uppercase;
-  font-weight: bold;
+  font-weight: 500;
   background-color: ${props => props.bgColor};
   background-position: center;
   background-image: url(${props => props.photo_url});

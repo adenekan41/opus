@@ -11,6 +11,7 @@ import { DataContext } from '../../../api/context';
 import { FullScreenSpinner } from '../../../components/Spinner';
 import Home from '../../../views/Dashboard/Home';
 import Compare from '../../../views/Dashboard/Compare';
+import AssetManagement from "../../../views/Dashboard/Assets";
 
 const DashboardRoutes = ({ token, ...rest }) => {
   return (
@@ -65,6 +66,12 @@ const DashboardRoutes = ({ token, ...rest }) => {
                   path="/dashboard/compare/"
                   render={() => (
                     <Compare {...rest} {...{ ...state, dispatch, actions }} />
+                  )}
+                />
+                <Route
+                  path="/dashboard/assets/"
+                  render={() => (
+                    <AssetManagement {...rest} {...{ ...state, dispatch, actions }} />
                   )}
                 />
               </Switch>

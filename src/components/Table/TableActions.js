@@ -16,7 +16,7 @@ const TableActions = ({
       </Button>
     }
     placement={placement}
-    triggerClickOutside={false}
+    triggerClickOutside={true}
   >
     {() => (
       <>
