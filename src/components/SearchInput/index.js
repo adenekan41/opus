@@ -5,6 +5,7 @@ import Select from 'react-select';
 
 const SelectSearchContainer = styled.div`
   position: relative;
+  margin-bottom: ${props => props.mb};
   .Icon {
     position: absolute;
     z-index: 2;
@@ -81,7 +82,7 @@ const formatGroupLabel = data => (
 export const SelectSearch = ({ options, placeholder, className, onChange, isGrouped, ...rest }) => {
   let groupedProps = isGrouped ? {formatGroupLabel} : {};
   return (
-    <SelectSearchContainer className={className}>
+    <SelectSearchContainer className={className} mb={rest.mb}>
       <Icon name="search" color="#000000" />
       <Select
         {...rest}

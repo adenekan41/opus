@@ -55,7 +55,6 @@ class ContactForm extends React.Component {
       isLoading,
       countries,
       cities,
-      crops,
       getCountryCities,
     } = this.props;
     return (

@@ -148,7 +148,7 @@ export class Confirm extends React.Component {
               className="confirm__btn-group__primary-btn"
               onClick={() => {
                 onConfirm();
-                onCloseModal();
+                // onCloseModal();
               }}
               {...primaryButtonProps}
             >

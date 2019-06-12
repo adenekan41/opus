@@ -2,18 +2,11 @@ import React from 'react';
 import Table from '../../../../components/Table';
 import Avatar from '../../../../components/Avatar';
 import TableActions from '../../../../components/Table/TableActions';
-import ContactForm from './ContactForm';
 
 const contact_columns = data => {
   let {
     onContactEdit,
     onContactDelete,
-    isLoading,
-    crops,
-    countries,
-    cities,
-    isAdmin,
-    getCountryCities,
   } = data;
   return [
     {
@@ -103,24 +96,10 @@ const contact_columns = data => {
       id: 'actions',
       Cell: ({ original }) => (
         <TableActions
-          data={original}
           model="contact"
-          isLoading={isLoading}
-          onDelete={onContactDelete}
-          editModalHeading="Edit Contact"
-          renderEditForm={({ closeModal }) => (
-            <ContactForm
-              {...original}
-              crops={crops}
-              cities={cities}
-              onSubmit={onContactEdit}
-              isAdmin={isAdmin}
-              countries={countries}
-              onCancel={closeModal}
-              isLoading={isLoading}
-              getCountryCities={getCountryCities}
-            />
-          )}
+          placement="bottom"
+          onDelete={() => onContactDelete(original)}
+          onEdit={() => onContactEdit(original)}
         />
       ),
     },
@@ -128,11 +107,6 @@ const contact_columns = data => {
 };
 
 const ContactTable = ({
-  crops,
-  countries,
-  cities,
-  isAdmin,
-  isLoading,
   pageSize,
   currentPage,
   totalPages,
@@ -145,7 +119,6 @@ const ContactTable = ({
   onFetchData,
   onContactEdit,
   onContactDelete,
-  getCountryCities,
 }) => {
   return (
     <Table
@@ -192,12 +165,6 @@ const ContactTable = ({
       columns={contact_columns({
         onContactEdit,
         onContactDelete,
-        getCountryCities,
-        isLoading,
-        crops,
-        countries,
-        cities,
-        isAdmin,
       })}
     />
   );

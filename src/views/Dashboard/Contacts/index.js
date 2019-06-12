@@ -1,20 +1,26 @@
-import React from 'react';
-import ContactTable from './components/ContactTable';
-import SearchInput from '../../../components/SearchInput';
-import EmptyState from '../../../components/EmptyState';
-import emptyStateImage from '../../../assets/img/empty-states/contacts.png';
-import CreateContactButton from './components/CreateContactButton';
-import { countries, getCitites } from '../../../helpers/countries';
+import React from "react";
+import ContactTable from "./components/ContactTable";
+import SearchInput from "../../../components/SearchInput";
+import EmptyState from "../../../components/EmptyState";
+import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
+import CreateContactButton from "./components/CreateContactButton";
+import { countries, getCitites } from "../../../helpers/countries";
 import UploadContactsButton from "./components/UploadContactsButton";
 import Axios from "axios";
+import Modal, { Confirm } from "../../../components/Modal";
+import ContactForm from "./components/ContactForm";
 
 class Contacts extends React.Component {
   constructor() {
     super();
     this.state = {
       buttonLoading: false,
+      showEditModal: false,
+      showDeleteConfirm: false,
       cities: [],
       percent: 0,
+      contactToEdit: {},
+      contactToDelete: {},
     };
   }
 
@@ -22,6 +28,28 @@ class Contacts extends React.Component {
     this.setState({
       cities: getCitites(country.toLowerCase()),
     });
+  };
+
+  handleEditClick = values => {
+    this.setState({
+      contactToEdit: values,
+      showEditModal: true,
+    });
+  };
+
+  handleDeleteClick = values => {
+    this.setState({
+      contactToDelete: values,
+      showDeleteConfirm: true,
+    });
+  };
+
+  closeEditModal = () => {
+    this.setState({ showEditModal: false });
+  };
+
+  closeDeleteConfirm = () => {
+    this.setState({ showDeleteConfirm: false });
   };
 
   onContactCreate = (values, callback) => {
@@ -48,7 +76,7 @@ class Contacts extends React.Component {
       });
   };
 
-  onContactEdit = (values, callback) => {
+  onContactEdit = (values) => {
     const { dispatch, actions } = this.props;
     let { phone_number, secondary_phone_number, ...rest } = values;
     let payload = {
@@ -62,8 +90,9 @@ class Contacts extends React.Component {
       .then(() => {
         this.setState({
           buttonLoading: false,
+          contactToEdit: {},
+          showEditModal: false,
         });
-        callback();
       })
       .catch(() => {
         this.setState({
@@ -72,7 +101,7 @@ class Contacts extends React.Component {
       });
   };
 
-  onContactDelete = (id, callback) => {
+  onContactDelete = (id) => {
     const { dispatch, actions } = this.props;
     this.setState({
       buttonLoading: true,
@@ -81,8 +110,9 @@ class Contacts extends React.Component {
       .then(() => {
         this.setState({
           buttonLoading: false,
+          contactToDelete: {},
+          showDeleteConfirm: false,
         });
-        callback();
       })
       .catch(() => {
         this.setState({
@@ -95,28 +125,30 @@ class Contacts extends React.Component {
     this.setState({ percent: 0 });
     let data = new FormData();
     files.forEach(file => {
-      data.append('files[]', file, file.name);
+      data.append("files[]", file, file.name);
     });
 
-    const url = 'http://localhost:3000';
+    const url = "http://localhost:3000";
 
     const config = {
-      headers: { 'content-type': 'multipart/form-data' },
+      headers: { "content-type": "multipart/form-data" },
       onUploadProgress: progressEvent => {
-        var percent = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+        var percent = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
         if (percent >= 100) {
           this.setState({ percent: 100 });
         } else {
           this.setState({ percent });
         }
-      }
+      },
     };
 
     Axios.post(url, data, config)
-      .then((response) => {
+      .then(response => {
         console.log(response);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
         this.setState({ percent: 0 });
       });
@@ -124,15 +156,24 @@ class Contacts extends React.Component {
 
   render() {
     const { profile, contacts, crops } = this.props;
-    let { buttonLoading, cities, percent } = this.state;
-    let isAdmin = profile.username === 'admin';
+    let {
+      buttonLoading,
+      cities,
+      percent,
+      contactToEdit,
+      contactToDelete,
+      showEditModal,
+      showDeleteConfirm,
+    } = this.state;
+    let isAdmin = profile.username === "admin";
     let formatCrops = crops.map(crop => ({
       label: crop.name,
       value: crop.name,
     }));
     return (
-      <div style={{ padding: '40px' }}>
-        <div className="row">
+      <>
+        <div style={{ padding: "40px" }}>
+          <div className="row">
             <div className="col-md-6 col-xs-12 col-sm-6 col-lg-6">
               <SearchInput placeholder="Search contacts" mb="8px" />
             </div>
@@ -162,11 +203,9 @@ class Contacts extends React.Component {
               cities={cities}
               isAdmin={isAdmin}
               contacts={contacts}
-              crops={formatCrops}
               countries={countries}
-              isLoading={buttonLoading}
-              onContactEdit={this.onContactEdit}
-              onContactDelete={this.onContactDelete}
+              onContactEdit={this.handleEditClick}
+              onContactDelete={this.handleDeleteClick}
               getCountryCities={this.getCountryCities}
             />
           ) : (
@@ -189,7 +228,38 @@ class Contacts extends React.Component {
               )}
             />
           )}
-      </div>
+        </div>
+
+        <Modal
+          showModal={showEditModal}
+          heading="Edit Contact"
+          onCloseModal={this.closeEditModal}
+          size="medium"
+        >
+          <ContactForm
+            {...contactToEdit}
+            crops={crops}
+            cities={cities}
+            onSubmit={this.onContactEdit}
+            isAdmin={isAdmin}
+            countries={countries}
+            onCancel={this.closeEditModal}
+            isLoading={buttonLoading}
+            getCountryCities={this.getCountryCities}
+          />
+        </Modal>
+
+        <Confirm
+          showModal={showDeleteConfirm}
+          heading="Delete Contact"
+          onConfirm={() => {
+            this.onContactDelete(contactToDelete.id);
+          }}
+          isLoading={buttonLoading}
+          onCloseModal={this.closeDeleteConfirm}
+          description="Are you sure you want to delete this contact?"
+        />
+      </>
     );
   }
 }
