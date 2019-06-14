@@ -13,7 +13,7 @@ const changeEmailFormValidation = yup.object().shape({
     .required("Email is required"),
 });
 
-const ChangeEmailForm = ({ isLoading, onSubmit }) => (
+const ChangeEmailForm = ({ email, id, isLoading, onSubmit }) => (
   <ToggleModal>
     {(show, openModal, closeModal) => (
       <>
@@ -37,7 +37,7 @@ const ChangeEmailForm = ({ isLoading, onSubmit }) => (
             new address.
           </Text>
           <Formik
-            initialValues={{ email: "" }}
+            initialValues={{ email: email || "", id: id || "" }}
             onSubmit={values => onSubmit(values, closeModal)}
             validationSchema={changeEmailFormValidation}
           >

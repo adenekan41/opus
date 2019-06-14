@@ -235,3 +235,12 @@ export const valueInDecimal = value => {
     return parseFloat(value).toFixed(1);
   }
 };
+
+export const getBase64Url = (file, callback) => {
+  var reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    file = reader.result;
+    callback(file);
+  };
+};

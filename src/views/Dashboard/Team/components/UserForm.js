@@ -7,6 +7,7 @@ import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
 import { Icon } from "../../../../components/Icon";
 import { FileUploader } from "../../../../components/FileUpload";
+import { getBase64Url } from "../../../../helpers/functions";
 
 const AvatarDiv = styled(Flex)`
   height: 129px;
@@ -40,26 +41,39 @@ const UserForm = ({
   onCancel,
 }) => {
   const [files, setFiles] = React.useState([]);
+  const [profilePicture, setProfilePicture] = React.useState("");
+  const image = files.length > 0 && files[0];
+
+  React.useEffect(
+    () => () => {
+      files.forEach(file => URL.revokeObjectURL(file.preview));
+    },
+    [files]
+  );
+
 
   const onPhotoDrop = acceptedFiles => {
     setFiles(
-      acceptedFiles.map(file =>
-        Object.assign(file, {
+      acceptedFiles.map(file => {
+        getBase64Url(file, setProfilePicture);
+        return Object.assign(file, {
           preview: URL.createObjectURL(file),
-        })
-      )
+        });
+      })
     );
   };
-  const image = files.length > 0 && files[0];
+
+  const submit = values => {
+    const payload = { ...values, profile_picture: profilePicture };
+    onSubmit(payload, () => {
+      setFiles([]);
+      onCancel();
+    });
+  };
 
   return (
     <Formik
-      onSubmit={values =>
-        onSubmit(values, () => {
-          setFiles([]);
-          onCancel();
-        })
-      }
+      onSubmit={values => submit(values)}
       validationSchema={userFormValidation}
       initialValues={{
         id: id || "",

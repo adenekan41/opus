@@ -5,6 +5,8 @@ import Avatar from "../../../../components/Avatar";
 import ProfileForm from "./ProfileForm";
 import Button from "../../../../components/Button";
 import toaster from "../../../../components/Toaster";
+import { FileUploader } from "../../../../components/FileUpload";
+import { getBase64Url } from "../../../../helpers/functions";
 const ProfileStyle = styled.div`
   .card {
     border-radius: 3px;
@@ -66,23 +68,27 @@ const ProfileStyle = styled.div`
 `;
 class Profile extends React.Component {
   state = {
+    files: [],
+    profilePicture: "",
     loading: false,
     emailLoading: false,
-    passwordLoading: false
+    passwordLoading: false,
   };
 
   onProfileUpdate = values => {
     const { dispatch, actions } = this.props;
     this.setState({ loading: true });
-    return dispatch({ type: actions.UPDATE_PROFILE, value: {...values, is_admin: true} })
-      .then((data) => {
-        debugger;
-        console.log(data)
+    return dispatch({
+      type: actions.UPDATE_PROFILE,
+      value: { ...values, profile_picture: this.state.profilePicture },
+    })
+      .then(data => {
+        console.log(data);
         this.setState({
           loading: false,
         });
       })
-      .catch((error) => {
+      .catch(error => {
         const errorPayload = error.response.data;
         this.setState({
           loading: false,
@@ -101,7 +107,7 @@ class Profile extends React.Component {
         });
         closeModal();
       })
-      .catch((error) => {
+      .catch(error => {
         const errorPayload = error.response.data;
         this.setState({
           emailLoading: false,
@@ -118,9 +124,9 @@ class Profile extends React.Component {
         this.setState({
           passwordLoading: false,
         });
-        closeModal()
+        closeModal();
       })
-      .catch((error) => {
+      .catch(error => {
         const errorPayload = error.response.data;
         this.setState({
           passwordLoading: false,
@@ -129,8 +135,27 @@ class Profile extends React.Component {
       });
   };
 
+  setProfilePicture = file => {
+    this.setState({
+      profilePicture: file,
+    });
+  };
+
+  onPhotoDrop = acceptedFiles => {
+    const filesWithPreview = acceptedFiles.map(file => {
+      getBase64Url(file, this.setProfilePicture);
+      return Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
+    });
+    this.setState({
+      files: filesWithPreview
+    })
+  };
+
   render() {
     const { profile, clearAllState } = this.props;
+    const image = this.state.files.length > 0 && this.state.files[0];
     let initials =
       Object.values(profile).length > 0
         ? `${profile.first_name && profile.first_name[0]}${profile.last_name &&
@@ -147,7 +172,7 @@ class Profile extends React.Component {
                     <Avatar
                       isRound
                       size="8vw"
-                      photo_url={profile.profile_picture}
+                      photo_url={profile.profile_picture || image.preview}
                       color="#ff9901"
                       bgColor="rgba(255,153,1,.15)"
                       initial={initials}
@@ -155,10 +180,13 @@ class Profile extends React.Component {
                   </center>
                   <br />
                   <div className="change_photo">
-                    <input type="file" />
-                    <button className="btn btn-success btn-block">
-                      Change photo
-                    </button>
+                    <FileUploader accept="image/*" onUpload={this.onPhotoDrop}>
+                      {() => (
+                        <Button width="220px" kind="green">
+                          Change photo
+                        </Button>
+                      )}
+                    </FileUploader>
                   </div>
                   <Button onClick={clearAllState} width="100%" mt="16px">
                     Log out

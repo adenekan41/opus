@@ -130,7 +130,7 @@ Sidebar.defaultProps = {
     { icon: "send", label: "Alerts", url: "/dashboard/alerts" },
     // { icon: 'customers', label: 'Customers', url: '/dashboard/customers' },
     { icon: "team", label: "Users", url: "/dashboard/users" },
-    // { icon: 'chart', label: 'Assets', url: '/dashboard/assets' },
+    { icon: 'chart', label: 'Assets', url: '/dashboard/assets' },
     { icon: "chart", label: "Compare", url: "/dashboard/compare" },
   ],
 };

@@ -128,7 +128,7 @@ const ProfileForm = ({
             />
           </div>
           <div className="col-md-4">
-            <ChangeEmailForm onSubmit={onEmailChange} isLoading={emailLoading} />
+            <ChangeEmailForm id={id} email={email} onSubmit={onEmailChange} isLoading={emailLoading} />
           </div>
         </div>
 

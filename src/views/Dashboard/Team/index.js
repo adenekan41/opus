@@ -44,14 +44,12 @@ class Users extends React.Component {
     this.setState({ showDeleteConfirm: false });
   };
 
-  onUserCreate = (values, callback) => {
+  onUserCreate = (values, closeModal) => {
     const { dispatch, actions } = this.props;
     let payload = {
       ...values,
       password: "password",
       is_admin: true,
-      asset: {},
-      weather_stations: [],
     };
     this.setState({
       loading: true,
@@ -62,18 +60,18 @@ class Users extends React.Component {
         this.setState({
           loading: false,
         });
-        callback();
+        closeModal();
       })
       .catch(error => {
-        console.log(error);
+        const errorPayload = error.response.data;
         this.setState({
           loading: false,
         });
-        toaster.error("An error occurred, please try again");
+        toaster.error(errorPayload && errorPayload.detail);
       });
   };
 
-  onUserEdit = (values, callback) => {
+  onUserEdit = (values, closeModal) => {
     const { dispatch, actions } = this.props;
     this.setState({
       loading: true,
@@ -81,13 +79,14 @@ class Users extends React.Component {
     dispatch({ type: actions.PATCH_USER, value: values })
       .then(() => {
         this.setState({ loading: false });
-        callback();
+        closeModal();
       })
-      .catch(() => {
+      .catch((error) => {
+        const errorPayload = error.response.data;
         this.setState({
           loading: false,
         });
-        toaster.error("An error occurred, please try again");
+        toaster.error(errorPayload && errorPayload.detail);
       });
   };
 
@@ -103,11 +102,12 @@ class Users extends React.Component {
         });
         callback();
       })
-      .catch(() => {
+      .catch((error) => {
+        const errorPayload = error.response.data;
         this.setState({
           loading: false,
         });
-        toaster.error("An error occurred, please try again");
+        toaster.error(errorPayload && errorPayload.detail);
       });
   };
 

@@ -115,8 +115,8 @@ const Avatar = ({
   );
 };
 
-Avatar.defaultProps = {
-  photo_url: clientPhoto,
-};
+// Avatar.defaultProps = {
+//   photo_url: clientPhoto,
+// };
 
 export default Avatar;

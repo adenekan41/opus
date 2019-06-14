@@ -9,7 +9,7 @@ export const StyledContainer = styled("div")(props => ({
   flexDirection: "column",
   right: 0,
   left: 0,
-  zIndex: 999999999999,
+  zIndex: 999999999999999,
   overflow: "hidden",
   margin: "0 auto",
   padding: "0 20px 20px",
@@ -43,7 +43,7 @@ const containerPos = {
 class ToastManager extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { toasts: [], direction: "left" };
+    this.state = { toasts: [], direction: "top" };
     props.bindNotify(this.notify);
     props.bindGetToasts(this.getToasts);
     props.bindCloseAll(this.closeAll);

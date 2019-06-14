@@ -18,8 +18,6 @@ const FileUploaderContainer = styled(Box)`
 
 export function FileUploader({ accept, children, onUpload = () => {} }) {
   const onDrop = useCallback(acceptedFiles => {
-    // Do something with the files
-    console.log(acceptedFiles);
     onUpload(acceptedFiles);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
