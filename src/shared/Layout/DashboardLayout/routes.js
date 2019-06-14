@@ -6,10 +6,12 @@ import Alerts from '../../../views/Dashboard/Alerts';
 import Teams from '../../../views/Dashboard/Team';
 import Account from '../../../views/Dashboard/Account';
 import Forecast from '../../../views/Dashboard/Forecast';
+import Assets from '../../../views/Dashboard/AssetsManagement';
 import { DataProvider } from '../../../api/provider';
 import { DataContext } from '../../../api/context';
 import { FullScreenSpinner } from '../../../components/Spinner';
 import Home from '../../../views/Dashboard/Home';
+import Customer from '../../../views/Dashboard/Customer'
 import Compare from '../../../views/Dashboard/Compare';
 
 const DashboardRoutes = ({ token, ...rest }) => {
@@ -63,7 +65,20 @@ const DashboardRoutes = ({ token, ...rest }) => {
                     <Compare {...rest} {...{ ...state, dispatch, actions }} />
                   )}
                 />
+                <Route
+                  path="/dashboard/assets/"
+                  render={() => (
+                    <Assets {...rest} {...{ ...state, dispatch, actions }} />
+                  )}
+                /> 
+                <Route
+                  path="/dashboard/customer/"
+                  render={() => (
+                    <Customer {...rest} {...{ ...state, dispatch, actions }} />
+                  )}
+                /> 
               </Switch>
+              
             </DashboardLayout>
           )
         }

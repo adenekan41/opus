@@ -88,6 +88,7 @@ Sidebar.defaultProps = {
     { icon: 'send', label: 'Alerts', url: '/dashboard/alerts' },
     { icon: 'team', label: 'Team', url: '/dashboard/team' },
     { icon: 'chart', label: 'Compare', url: '/dashboard/compare' },
+    { icon: 'team', label: 'Customers', url: '/dashboard/customer' },
   ],
 };
 
