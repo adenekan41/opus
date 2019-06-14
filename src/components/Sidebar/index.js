@@ -5,6 +5,18 @@ import { CompanyMenu, MenuLink } from "./components";
 import { ToggleHandler } from "../../helpers/ToggleHandler";
 import Logo from "../Logo";
 
+const getUserRole = (user) => {
+  if(user.is_admin) {
+    return "admin"
+  }
+  if(user.is_customer) {
+    return "customer"
+  }
+  if(user.is_employee) {
+    return "employee"
+  }
+}
+
 export class Sidebar extends React.Component {
   render() {
     const {
@@ -34,8 +46,8 @@ export class Sidebar extends React.Component {
           </div>
           <div className="Sidebar__Header">
             <CompanyMenu
-              role={user.username}
-              photo={user.photo}
+              role={getUserRole(user)}
+              photo={user.profile_picture}
               customerName={`${user.first_name} ${user.last_name}`}
               theme="dark"
               history={history}
@@ -57,6 +69,34 @@ export class Sidebar extends React.Component {
               </MenuLink>
             )}
             {menus.map(menu => {
+              // if(user.is_admin && menu.label.toLowerCase() === "users") {
+              //   return (
+              //     <MenuLink
+              //       key={menu.label}
+              //       url={menu.url}
+              //       icon={menu.icon}
+              //       isCollapsed={isCollapsed}
+              //       Navlink={useNavlink}
+              //       title={menu.label}
+              //     >
+              //       {menu.label}
+              //     </MenuLink>
+              //   );
+              // }
+              // if(user.is_customer && menu.label.toLowerCase() === "contacts") {
+              //   return (
+              //     <MenuLink
+              //       key={menu.label}
+              //       url={menu.url}
+              //       icon={menu.icon}
+              //       isCollapsed={isCollapsed}
+              //       Navlink={useNavlink}
+              //       title={menu.label}
+              //     >
+              //       {menu.label}
+              //     </MenuLink>
+              //   );
+              // }
               return (
                 <MenuLink
                   key={menu.label}

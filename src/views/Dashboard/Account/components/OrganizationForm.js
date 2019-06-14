@@ -6,27 +6,27 @@ import Button from '../../../../components/Button';
 import Dropdown from '../../../../components/Select';
 
 const organizationValdationSchema = yup.object().shape({
-  company_name: yup.string().required('Company name is required'),
+  organization_name: yup.string().required('Company name is required'),
 });
 
 const OrganizationForm = ({
   onSubmit,
-  company_name,
+  organization_name,
   country,
   city,
-  zip_code,
-  plot_number,
-  street,
+  organization_zip_code,
+  organization_plot_number,
+  organization_street,
 }) => {
   return (
     <Formik
       initialValues={{
-        company_name: company_name || '',
+        organization_name: organization_name || '',
         country: country || '',
         city: city || '',
-        zip_code: zip_code || '',
-        plot_number: plot_number || '',
-        street: street || '',
+        organization_zip_code: organization_zip_code || '',
+        organization_plot_number: organization_plot_number || '',
+        organization_street: organization_street || '',
       }}
       onSubmit={values => onSubmit(values)}
       validationSchema={organizationValdationSchema}
@@ -39,15 +39,15 @@ const OrganizationForm = ({
                 <div className="col-md-12">
                   <Input
                     mb="20px"
-                    id="company_name"
-                    name="company_name"
+                    id="organization_name"
+                    name="organization_name"
                     type="text"
                     label="Company name"
-                    touched={touched.company_name}
-                    value={values.company_name}
+                    touched={touched.organization_name}
+                    value={values.organization_name}
                     onChange={handleChange}
-                    errorMessage={errors.company_name}
-                    isInvalid={errors.company_name && touched.company_name}
+                    errorMessage={errors.organization_name}
+                    isInvalid={errors.organization_name && touched.organization_name}
                   />
                 </div>
                 <div className="col-md-6">
@@ -93,43 +93,43 @@ const OrganizationForm = ({
                 <div className="col-md-6">
                   <Input
                     mb="20px"
-                    id="zip_code"
-                    name="zip_code"
+                    id="organization_zip_code"
+                    name="organization_zip_code"
                     type="text"
                     label="Zip code"
-                    touched={touched.zip_code}
-                    value={values.zip_code}
+                    touched={touched.organization_zip_code}
+                    value={values.organization_zip_code}
                     onChange={handleChange}
-                    errorMessage={errors.zip_code}
-                    isInvalid={errors.zip_code && touched.zip_code}
+                    errorMessage={errors.organization_zip_code}
+                    isInvalid={errors.organization_zip_code && touched.organization_zip_code}
                   />
                 </div>
                 <div className="col-md-6">
                   <Input
                     mb="20px"
-                    id="plot_number"
-                    name="plot_number"
+                    id="organization_plot_number"
+                    name="organization_plot_number"
                     type="text"
                     label="Plot number"
-                    touched={touched.plot_number}
-                    value={values.plot_number}
+                    touched={touched.organization_plot_number}
+                    value={values.organization_plot_number}
                     onChange={handleChange}
-                    errorMessage={errors.plot_number}
-                    isInvalid={errors.plot_number && touched.plot_number}
+                    errorMessage={errors.organization_plot_number}
+                    isInvalid={errors.organization_plot_number && touched.organization_plot_number}
                   />
                 </div>
                 <div className="col-md-12">
                   <Input
                     mb="20px"
-                    id="street"
-                    name="street"
+                    id="organization_street"
+                    name="organization_street"
                     type="text"
                     label="Street"
-                    touched={touched.street}
-                    value={values.street}
+                    touched={touched.organization_street}
+                    value={values.organization_street}
                     onChange={handleChange}
-                    errorMessage={errors.street}
-                    isInvalid={errors.street && touched.street}
+                    errorMessage={errors.organization_street}
+                    isInvalid={errors.organization_street && touched.organization_street}
                   />
                 </div>
               </div>

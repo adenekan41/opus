@@ -1,9 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Box, Flex } from 'rebass';
-import Avatar from '../../../../components/Avatar';
-import ProfileForm from './ProfileForm';
-import Button from '../../../../components/Button';
+import React from "react";
+import styled from "styled-components";
+import { Box, Flex } from "rebass";
+import Avatar from "../../../../components/Avatar";
+import ProfileForm from "./ProfileForm";
+import Button from "../../../../components/Button";
+import toaster from "../../../../components/Toaster";
 const ProfileStyle = styled.div`
   .card {
     border-radius: 3px;
@@ -64,15 +65,80 @@ const ProfileStyle = styled.div`
   }
 `;
 class Profile extends React.Component {
+  state = {
+    loading: false,
+    emailLoading: false,
+    passwordLoading: false
+  };
+
+  onProfileUpdate = values => {
+    const { dispatch, actions } = this.props;
+    this.setState({ loading: true });
+    return dispatch({ type: actions.UPDATE_PROFILE, value: {...values, is_admin: true} })
+      .then((data) => {
+        debugger;
+        console.log(data)
+        this.setState({
+          loading: false,
+        });
+      })
+      .catch((error) => {
+        const errorPayload = error.response.data;
+        this.setState({
+          loading: false,
+        });
+        toaster.error(errorPayload && errorPayload.detail);
+      });
+  };
+
+  onEmailUpdate = (values, closeModal) => {
+    const { dispatch, actions } = this.props;
+    this.setState({ emailLoading: true });
+    return dispatch({ type: actions.UPDATE_PROFILE, value: values })
+      .then(() => {
+        this.setState({
+          emailLoading: false,
+        });
+        closeModal();
+      })
+      .catch((error) => {
+        const errorPayload = error.response.data;
+        this.setState({
+          emailLoading: false,
+        });
+        toaster.error(errorPayload && errorPayload.detail);
+      });
+  };
+
+  onPasswordUpdate = (values, closeModal) => {
+    const { dispatch, actions } = this.props;
+    this.setState({ passwordLoading: true });
+    return dispatch({ type: actions.UPDATE_PROFILE, value: values })
+      .then(() => {
+        this.setState({
+          passwordLoading: false,
+        });
+        closeModal()
+      })
+      .catch((error) => {
+        const errorPayload = error.response.data;
+        this.setState({
+          passwordLoading: false,
+        });
+        toaster.error(errorPayload && errorPayload.detail);
+      });
+  };
+
   render() {
     const { profile, clearAllState } = this.props;
     let initials =
       Object.values(profile).length > 0
-        ? `${profile.first_name[0]}${profile.last_name[0]}`
+        ? `${profile.first_name && profile.first_name[0]}${profile.last_name &&
+            profile.last_name[0]}`
         : ``;
     return (
       <ProfileStyle>
-        <div style={{ padding: '0px' }}>
+        <div style={{ padding: "0px" }}>
           <Flex width="100%">
             <Box className="photo-section">
               <div className="card d-flex justify-content-center">
@@ -81,7 +147,7 @@ class Profile extends React.Component {
                     <Avatar
                       isRound
                       size="8vw"
-                      photo_url={profile.photo}
+                      photo_url={profile.profile_picture}
                       color="#ff9901"
                       bgColor="rgba(255,153,1,.15)"
                       initial={initials}
@@ -102,7 +168,15 @@ class Profile extends React.Component {
             </Box>
             <Box mx="32px" />
             <Box className="form-section">
-              <ProfileForm {...profile} />
+              <ProfileForm
+                {...profile}
+                isLoading={this.state.loading}
+                onSubmit={this.onProfileUpdate}
+                onEmailChange={this.onEmailUpdate}
+                emailLoading={this.state.emailLoading}
+                onPasswordChange={this.onPasswordUpdate}
+                passwordLoading={this.state.passwordLoading}
+              />
             </Box>
           </Flex>
         </div>

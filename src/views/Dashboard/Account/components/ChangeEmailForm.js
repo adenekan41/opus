@@ -1,16 +1,16 @@
-import React from 'react';
-import { Formik } from 'formik';
-import { Text } from 'rebass';
-import * as yup from 'yup';
-import Input from '../../../../components/Input';
-import Button from '../../../../components/Button';
-import Modal, { ToggleModal } from '../../../../components/Modal';
+import React from "react";
+import { Formik } from "formik";
+import { Text } from "rebass";
+import * as yup from "yup";
+import Input from "../../../../components/Input";
+import Button from "../../../../components/Button";
+import Modal, { ToggleModal } from "../../../../components/Modal";
 
 const changeEmailFormValidation = yup.object().shape({
   email: yup
     .string()
-    .email('Invalid Email')
-    .required('Email is required'),
+    .email("Invalid Email")
+    .required("Email is required"),
 });
 
 const ChangeEmailForm = ({ isLoading, onSubmit }) => (
@@ -37,8 +37,8 @@ const ChangeEmailForm = ({ isLoading, onSubmit }) => (
             new address.
           </Text>
           <Formik
-            initialValues={{ email: '' }}
-            onSubmit={values => onSubmit(values)}
+            initialValues={{ email: "" }}
+            onSubmit={values => onSubmit(values, closeModal)}
             validationSchema={changeEmailFormValidation}
           >
             {({ values, touched, errors, handleChange, handleSubmit }) => (
@@ -65,14 +65,18 @@ const ChangeEmailForm = ({ isLoading, onSubmit }) => (
                       block
                       type="button"
                       kind="gray"
-                      isLoading={isLoading}
                       onClick={closeModal}
                     >
                       Cancel
                     </Button>
                   </div>
                   <div className="col-md-6">
-                    <Button block type="button" kind="orange">
+                    <Button
+                      block
+                      type="submit"
+                      kind="orange"
+                      isLoading={isLoading}
+                    >
                       Update
                     </Button>
                   </div>

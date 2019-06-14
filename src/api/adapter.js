@@ -62,7 +62,7 @@ const newPassword = payload => {
 };
 
 const getProfile = token => {
-  return makeApiCall({ url: `/profile`, token });
+  return makeApiCall({ url: `/profile/`, token });
 };
 
 const getUsers = token => {

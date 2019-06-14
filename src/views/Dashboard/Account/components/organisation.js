@@ -1,6 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import OrganizationForm from './OrganizationForm';
+import React from "react";
+import styled from "styled-components";
+import OrganizationForm from "./OrganizationForm";
+import toaster from "../../../../components/Toaster";
 const OragnisationStyle = styled.div`
   .footer_button button.btn-warning {
     background: #ff9901;
@@ -49,11 +50,35 @@ const OragnisationStyle = styled.div`
   }
 `;
 class Organisation extends React.Component {
+  state = {
+    loading: false,
+  };
+
+  onProfileUpdate = values => {
+    const { dispatch, actions } = this.props;
+    this.setState({ loading: true });
+    return dispatch({ type: actions.UPDATE_PROFILE, value: values })
+      .then(() => {
+        this.setState({
+          loading: false,
+        });
+      })
+      .catch(error => {
+        const errorPayload = error.response.data;
+        this.setState({
+          loading: false,
+        });
+        toaster.error(errorPayload && errorPayload.detail);
+      });
+  };
+
   render() {
+    const { profile } = this.props;
+
     return (
       <OragnisationStyle>
-        <div style={{ padding: '0px' }}>
-          <OrganizationForm />
+        <div style={{ padding: "0px" }}>
+          <OrganizationForm {...profile} />
         </div>
       </OragnisationStyle>
     );

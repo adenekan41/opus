@@ -35,11 +35,7 @@ export class DataProvider extends React.Component {
       observationTimes: [],
       compareStationCsvData: [],
       compareType: "Temperature",
-      profile: {
-        username: "admin",
-        first_name: "Micha",
-        last_name: "Van Winkelhof",
-      },
+      profile: {},
       ...this.loadTokenFromStorage(),
     };
     this.state.context = {
@@ -77,21 +73,39 @@ export class DataProvider extends React.Component {
 
   initialize = tokens => {
     let { token } = tokens;
+    return this.getProfile(token).then(data => {
+      const userProfile = data;
+      if (userProfile.is_admin) {
+        return Promise.all([
+          this.getUsers(token),
+          this.getWeatherData(token),
+        ]).then(response => {
+          return {
+            profile: userProfile,
+            users: response[0],
+            weatherStations: data[1],
+          };
+        });
+      }
+    });
     return Promise.all([
-      // this.getProfile(opus1_token),
+      this.getProfile(token),
       // this.getWhatsappAlerts(token),
       // this.getCrops(opus1_token),
-      this.getWeatherData(token),
-      this.getContacts({ token }),
-      this.getUsers(token),
+      // this.getWeatherData(token),
+      // this.getContacts({ token }),
+      // this.getUsers(token),
     ]).then(data => {
+      const userProfile = data[0];
+      if (userProfile.is_admin) {
+      }
       return {
-        // profile: data[0],
+        profile: data[0],
         // alerts: data[1],
         // crops: data[2],
-        contacts: data[1],
-        users: data[2],
-        weatherStations: data[0],
+        // contacts: data[1],
+        // users: data[2],
+        // weatherStations: data[0],
       };
     });
   };
@@ -129,6 +143,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.EXPORT_COMPARE_DATA_CSV]: this.exportCompareData,
       [ACTIONS.SET_WINDY_MAP]: this.setWindyMap,
       [ACTIONS.CLEAR_COMPARE_LOGS]: this.clearComparelogs,
+      [ACTIONS.UPDATE_PROFILE]: this.updateProfile,
     };
     console.log({ type });
     return options[type](value);
@@ -164,12 +179,23 @@ export class DataProvider extends React.Component {
     if (Object.values(profile).length > 0) {
       return new Promise(resolve => resolve(profile));
     }
+
     return this.getAdapter()
       .getProfile(token)
       .then(data => {
         this.updateState({
           profile: data,
         });
+        return data;
+      });
+  };
+
+  updateProfile = payload => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .updateUser(token, payload)
+      .then(data => {
         return data;
       });
   };

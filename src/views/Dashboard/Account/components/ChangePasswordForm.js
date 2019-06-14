@@ -1,14 +1,14 @@
-import React from 'react';
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import Input from '../../../../components/Input';
-import Button from '../../../../components/Button';
-import Modal, { ToggleModal } from '../../../../components/Modal';
+import React from "react";
+import { Formik } from "formik";
+import * as yup from "yup";
+import Input from "../../../../components/Input";
+import Button from "../../../../components/Button";
+import Modal, { ToggleModal } from "../../../../components/Modal";
 
 const changePasswordFormValidation = yup.object().shape({
-  old_password: yup.string().required('Old password is required'),
-  new_password: yup.string().required('New password is required'),
-  confirm_password: yup.string().required('Confirm password is required'),
+  old_password: yup.string().required("Old password is required"),
+  new_password: yup.string().required("New password is required"),
+  confirm_password: yup.string().required("Confirm password is required"),
 });
 
 const ChangePasswordForm = ({ isLoading, onSubmit }) => (
@@ -32,11 +32,11 @@ const ChangePasswordForm = ({ isLoading, onSubmit }) => (
         >
           <Formik
             initialValues={{
-              old_password: '',
-              new_password: '',
-              confirm_password: '',
+              old_password: "",
+              new_password: "",
+              confirm_password: "",
             }}
-            onSubmit={values => onSubmit(values)}
+            onSubmit={values => onSubmit(values, closeModal)}
             validationSchema={changePasswordFormValidation}
           >
             {({ values, touched, errors, handleChange, handleSubmit }) => (
@@ -93,14 +93,18 @@ const ChangePasswordForm = ({ isLoading, onSubmit }) => (
                       block
                       type="button"
                       kind="gray"
-                      isLoading={isLoading}
                       onClick={closeModal}
                     >
                       Cancel
                     </Button>
                   </div>
                   <div className="col-md-6">
-                    <Button block type="button" kind="orange">
+                    <Button
+                      block
+                      type="submit"
+                      kind="orange"
+                      isLoading={isLoading}
+                    >
                       Update
                     </Button>
                   </div>
