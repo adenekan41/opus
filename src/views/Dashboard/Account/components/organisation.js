@@ -62,6 +62,7 @@ class Organisation extends React.Component {
         this.setState({
           loading: false,
         });
+        toaster.success("Profile update successful");
       })
       .catch(error => {
         const errorPayload = error.response.data;
@@ -78,7 +79,11 @@ class Organisation extends React.Component {
     return (
       <OragnisationStyle>
         <div style={{ padding: "0px" }}>
-          <OrganizationForm {...profile} />
+          <OrganizationForm
+            {...profile}
+            isLoading={this.state.loading}
+            onSubmit={this.onProfileUpdate}
+          />
         </div>
       </OragnisationStyle>
     );

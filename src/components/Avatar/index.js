@@ -1,6 +1,5 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import clientPhoto from './Micha-van-Winkelhof.jpeg'
 
 export const sharedProps = css`
   margin: ${props => props.m};

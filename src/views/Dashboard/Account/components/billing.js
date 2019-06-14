@@ -1,6 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import BillingForm from './BillingForm';
+import React from "react";
+import styled from "styled-components";
+import BillingForm from "./BillingForm";
+import toaster from "../../../../components/Toaster";
+
 const BillingStyle = styled.div`
   .footer_button button.btn-warning {
     background: #ff9901;
@@ -48,11 +50,36 @@ const BillingStyle = styled.div`
     border-left: 3px solid #19272d !important;
   }
 `;
+
 class Billing extends React.Component {
+  state = {
+    loading: false,
+  };
+
+  onProfileUpdate = values => {
+    const { dispatch, actions } = this.props;
+    this.setState({ loading: true });
+    return dispatch({ type: actions.UPDATE_PROFILE, value: values })
+      .then(() => {
+        this.setState({
+          loading: false,
+        });
+        toaster.success("Profile update successful");
+      })
+      .catch(error => {
+        const errorPayload = error.response.data;
+        this.setState({
+          loading: false,
+        });
+        toaster.error(errorPayload && errorPayload.detail);
+      });
+  };
+
   render() {
+    const { profile } = this.props;
     return (
       <BillingStyle>
-        <BillingForm />
+        <BillingForm {...profile} onSubmit={this.onProfileUpdate} />
       </BillingStyle>
     );
   }

@@ -6,7 +6,7 @@ import Dropdown from '../../../../components/Select';
 import Input from '../../../../components/Input';
 import Button, { EmptyButton } from '../../../../components/Button';
 import { Icon } from '../../../../components/Icon';
-import { getCitites } from '../../../../helpers/countries';
+import { getCountryStates } from '../../../../helpers/countries';
 
 const AddContactButtonStyle = `
 height: 60px;
@@ -176,7 +176,7 @@ class ContactForm extends React.Component {
                         name="city"
                         label="City"
                         touched={touched.city}
-                        options={country ? getCitites(country) : cities}
+                        options={country ? getCountryStates(country) : cities}
                         errorMessage={errors.city}
                         isInvalid={errors.city && touched.city}
                         onChange={city =>

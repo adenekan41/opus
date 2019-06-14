@@ -76,17 +76,22 @@ class Profile extends React.Component {
   };
 
   onProfileUpdate = values => {
-    const { dispatch, actions } = this.props;
+    const { dispatch, actions, profile } = this.props;
+    const { profilePicture } = this.state;
+    const payload = profile.profile_picture
+      ? values
+      : { ...values, profile_picture: profilePicture };
+
     this.setState({ loading: true });
     return dispatch({
       type: actions.UPDATE_PROFILE,
-      value: { ...values, profile_picture: this.state.profilePicture },
+      value: payload,
     })
-      .then(data => {
-        console.log(data);
+      .then(() => {
         this.setState({
           loading: false,
         });
+        toaster.success("Profile update successful");
       })
       .catch(error => {
         const errorPayload = error.response.data;
@@ -106,6 +111,7 @@ class Profile extends React.Component {
           emailLoading: false,
         });
         closeModal();
+        toaster.success("Profile update successful");
       })
       .catch(error => {
         const errorPayload = error.response.data;
@@ -125,6 +131,7 @@ class Profile extends React.Component {
           passwordLoading: false,
         });
         closeModal();
+        toaster.success("Profile update successful");
       })
       .catch(error => {
         const errorPayload = error.response.data;
@@ -149,18 +156,19 @@ class Profile extends React.Component {
       });
     });
     this.setState({
-      files: filesWithPreview
-    })
+      files: filesWithPreview,
+    });
   };
 
   render() {
     const { profile, clearAllState } = this.props;
     const image = this.state.files.length > 0 && this.state.files[0];
-    let initials =
+    const initials =
       Object.values(profile).length > 0
         ? `${profile.first_name && profile.first_name[0]}${profile.last_name &&
             profile.last_name[0]}`
         : ``;
+
     return (
       <ProfileStyle>
         <div style={{ padding: "0px" }}>
@@ -172,7 +180,7 @@ class Profile extends React.Component {
                     <Avatar
                       isRound
                       size="8vw"
-                      photo_url={profile.profile_picture || image.preview}
+                      photo_url={`${process.env.REACT_APP_API_URL}${profile.profile_picture}` || image.preview}
                       color="#ff9901"
                       bgColor="rgba(255,153,1,.15)"
                       initial={initials}

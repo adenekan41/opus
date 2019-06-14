@@ -75,7 +75,7 @@ export class DataProvider extends React.Component {
     let { token } = tokens;
     return this.getProfile(token).then(data => {
       const userProfile = data;
-      if (userProfile.is_admin) {
+      if (userProfile.is_admin || userProfile.is_superuser) {
         return Promise.all([
           this.getUsers(token),
           this.getWeatherData(token),
@@ -87,26 +87,6 @@ export class DataProvider extends React.Component {
           };
         });
       }
-    });
-    return Promise.all([
-      this.getProfile(token),
-      // this.getWhatsappAlerts(token),
-      // this.getCrops(opus1_token),
-      // this.getWeatherData(token),
-      // this.getContacts({ token }),
-      // this.getUsers(token),
-    ]).then(data => {
-      const userProfile = data[0];
-      if (userProfile.is_admin) {
-      }
-      return {
-        profile: data[0],
-        // alerts: data[1],
-        // crops: data[2],
-        // contacts: data[1],
-        // users: data[2],
-        // weatherStations: data[0],
-      };
     });
   };
 
@@ -194,8 +174,9 @@ export class DataProvider extends React.Component {
     let { token } = this.state;
 
     return this.getAdapter()
-      .updateUser(token, payload)
+      .updateProfile(token, payload)
       .then(data => {
+        this.updateState({ profile: data });
         return data;
       });
   };

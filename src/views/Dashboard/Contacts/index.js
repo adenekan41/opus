@@ -3,7 +3,7 @@ import ContactTable from "./components/ContactTable";
 import EmptyState from "../../../components/EmptyState";
 import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
 import CreateContactButton from "./components/CreateContactButton";
-import { countries, getCitites } from "../../../helpers/countries";
+import { countries, getCountryStates } from "../../../helpers/countries";
 import UploadContactsButton from "./components/UploadContactsButton";
 import Axios from "axios";
 import Modal, { Confirm } from "../../../components/Modal";
@@ -28,7 +28,7 @@ class Contacts extends React.Component {
 
   getCountryCities = country => {
     this.setState({
-      cities: getCitites(country.toLowerCase()),
+      cities: getCountryStates(country.toLowerCase()),
     });
   };
 

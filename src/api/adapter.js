@@ -3,7 +3,7 @@ import { formatDate } from "../helpers/functions";
 
 const BASE_URL_TWO =
   process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_BASE_URL
+    ? process.env.REACT_APP_BASE_URL_PRODUCTION
     : process.env.REACT_APP_BASE_URL;
 
 export const makeApiCall = async ({
@@ -63,6 +63,10 @@ const newPassword = payload => {
 
 const getProfile = token => {
   return makeApiCall({ url: `/profile/`, token });
+};
+
+const updateProfile = (token, payload) => {
+  return makeApiCall({ url: `/profile/`, token, method: "PUT", data: payload });
 };
 
 const getUsers = token => {
@@ -253,6 +257,7 @@ export default {
   getCrops,
   getUsers,
   getProfile,
+  updateProfile,
   patchUser,
   updateUser,
   createUser,

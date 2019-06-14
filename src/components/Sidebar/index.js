@@ -5,17 +5,17 @@ import { CompanyMenu, MenuLink } from "./components";
 import { ToggleHandler } from "../../helpers/ToggleHandler";
 import Logo from "../Logo";
 
-const getUserRole = (user) => {
-  if(user.is_admin) {
-    return "admin"
+const getUserRole = user => {
+  if (user.is_admin) {
+    return "admin";
   }
-  if(user.is_customer) {
-    return "customer"
+  if (user.is_customer) {
+    return "customer";
   }
-  if(user.is_employee) {
-    return "employee"
+  if (user.is_employee) {
+    return "employee";
   }
-}
+};
 
 export class Sidebar extends React.Component {
   render() {
@@ -47,7 +47,11 @@ export class Sidebar extends React.Component {
           <div className="Sidebar__Header">
             <CompanyMenu
               role={getUserRole(user)}
-              photo={user.profile_picture}
+              photo={
+                user.profile_picture
+                  ? `${process.env.REACT_APP_API_URL}${user.profile_picture}`
+                  : ""
+              }
               customerName={`${user.first_name} ${user.last_name}`}
               theme="dark"
               history={history}
@@ -56,47 +60,7 @@ export class Sidebar extends React.Component {
           </div>
 
           <div className="Sidebar__Main">
-            {user.username === "admin" && (
-              <MenuLink
-                key="Dashboard"
-                url="/dashboard/stats"
-                icon="boxes"
-                isCollapsed={isCollapsed}
-                Navlink={useNavlink}
-                title="Dashboard"
-              >
-                Dashboard
-              </MenuLink>
-            )}
             {menus.map(menu => {
-              // if(user.is_admin && menu.label.toLowerCase() === "users") {
-              //   return (
-              //     <MenuLink
-              //       key={menu.label}
-              //       url={menu.url}
-              //       icon={menu.icon}
-              //       isCollapsed={isCollapsed}
-              //       Navlink={useNavlink}
-              //       title={menu.label}
-              //     >
-              //       {menu.label}
-              //     </MenuLink>
-              //   );
-              // }
-              // if(user.is_customer && menu.label.toLowerCase() === "contacts") {
-              //   return (
-              //     <MenuLink
-              //       key={menu.label}
-              //       url={menu.url}
-              //       icon={menu.icon}
-              //       isCollapsed={isCollapsed}
-              //       Navlink={useNavlink}
-              //       title={menu.label}
-              //     >
-              //       {menu.label}
-              //     </MenuLink>
-              //   );
-              // }
               return (
                 <MenuLink
                   key={menu.label}
@@ -130,7 +94,7 @@ Sidebar.defaultProps = {
     { icon: "send", label: "Alerts", url: "/dashboard/alerts" },
     // { icon: 'customers', label: 'Customers', url: '/dashboard/customers' },
     { icon: "team", label: "Users", url: "/dashboard/users" },
-    { icon: 'chart', label: 'Assets', url: '/dashboard/assets' },
+    { icon: "chart", label: "Assets", url: "/dashboard/assets" },
     { icon: "chart", label: "Compare", url: "/dashboard/compare" },
   ],
 };
