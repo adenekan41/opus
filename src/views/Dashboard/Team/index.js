@@ -57,13 +57,21 @@ class Users extends React.Component {
   };
 
   onUserCreate = (values, closeModal) => {
-    const { dispatch, actions } = this.props;
-    let payload = {
-      ...values,
-      password: "password",
-      is_admin: true,
-      weather_stations: [],
-    };
+    const { dispatch, actions, profile } = this.props;
+
+    let payload = profile.is_superuser
+      ? {
+          ...values,
+          password: "password",
+          is_admin: true,
+          weather_stations: [],
+        }
+      : {
+          ...values,
+          password: "password",
+          is_employee: true,
+          weather_stations: [],
+        };
     this.setState({
       loading: true,
     });
@@ -183,7 +191,12 @@ class Users extends React.Component {
           </div>
           <br /> <br />
           {searchLoading ? (
-            <FullScreenSpinner size={32} thickness="4px" height="calc(100vh - 140px)" width="calc(100% - 344px)"/>
+            <FullScreenSpinner
+              size={32}
+              thickness="4px"
+              height="calc(100vh - 140px)"
+              width="calc(100% - 344px)"
+            />
           ) : users.length > 0 ? (
             <UserTable
               teams={users}
