@@ -129,6 +129,7 @@ class Users extends React.Component {
       .then(() => {
         this.setState({
           loading: false,
+          userToDelete: {}
         });
         closeConfirm();
         toaster.success("User deleted successfully");

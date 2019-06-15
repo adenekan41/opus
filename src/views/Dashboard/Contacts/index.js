@@ -3,13 +3,13 @@ import ContactTable from "./components/ContactTable";
 import EmptyState from "../../../components/EmptyState";
 import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
 import CreateContactButton from "./components/CreateContactButton";
-import { countries, getCountryStates } from "../../../helpers/countries";
 import UploadContactsButton from "./components/UploadContactsButton";
 import Axios from "axios";
 import Modal, { Confirm } from "../../../components/Modal";
 import ContactForm from "./components/ContactForm";
 import SearchInput from "../../../components/Search";
 import toaster from "../../../components/Toaster";
+import { errorCallback } from "../../../helpers/functions";
 
 class Contacts extends React.Component {
   constructor(props) {
@@ -18,19 +18,13 @@ class Contacts extends React.Component {
       buttonLoading: false,
       showEditModal: false,
       showDeleteConfirm: false,
-      cities: [],
       percent: 0,
+      apiErrors: {},
       contactToEdit: {},
       contactToDelete: {},
       contacts: this.props.contacts,
     };
   }
-
-  getCountryCities = country => {
-    this.setState({
-      cities: getCountryStates(country.toLowerCase()),
-    });
-  };
 
   handleEditClick = values => {
     this.setState({
@@ -54,6 +48,12 @@ class Contacts extends React.Component {
     this.setState({ showDeleteConfirm: false });
   };
 
+  setApiErrors = errorPayload => {
+    this.setState({
+      apiErrors: errorPayload,
+    });
+  };
+
   onContactCreate = (values, callback) => {
     const { dispatch, actions } = this.props;
     let { phone_number, secondary_phone_number, ...rest } = values;
@@ -70,12 +70,13 @@ class Contacts extends React.Component {
           buttonLoading: false,
         });
         callback();
+        toaster.success("User created successfully");
       })
-      .catch(() => {
+      .catch((error) => {
         this.setState({
           buttonLoading: false,
         });
-        toaster.error("An error occurred, please try again");
+        errorCallback(error, this.setApiErrors)
       });
   };
 
@@ -96,12 +97,13 @@ class Contacts extends React.Component {
           contactToEdit: {},
           showEditModal: false,
         });
+        toaster.success("Contact updated successfully");
       })
-      .catch(() => {
+      .catch(error => {
         this.setState({
           buttonLoading: false,
         });
-        toaster.error("An error occurred, please try again");
+        errorCallback(error, this.setApiErrors);
       });
   };
 
@@ -117,12 +119,13 @@ class Contacts extends React.Component {
           contactToDelete: {},
           showDeleteConfirm: false,
         });
+        toaster.success("Contact deleted successfully");
       })
-      .catch(() => {
+      .catch(error => {
         this.setState({
           buttonLoading: false,
         });
-        toaster.error("An error occurred, please try again");
+        errorCallback(error, this.setApiErrors);
       });
   };
 
@@ -191,7 +194,6 @@ class Contacts extends React.Component {
   render() {
     const { profile, crops } = this.props;
     let {
-      cities,
       percent,
       contacts,
       buttonLoading,
@@ -200,7 +202,7 @@ class Contacts extends React.Component {
       contactToDelete,
       showDeleteConfirm,
     } = this.state;
-    let isAdmin = profile.username === "admin";
+    let isAdmin = profile.is_admin;
     let formatCrops = crops.map(crop => ({
       label: crop.name,
       value: crop.name,
@@ -219,13 +221,10 @@ class Contacts extends React.Component {
             <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
               <CreateContactButton
                 mb="8px"
-                cities={cities}
-                isAdmin={false}
+                isAdmin={isAdmin}
                 crops={formatCrops}
-                countries={countries}
                 isLoading={buttonLoading}
                 onSubmit={this.onContactCreate}
-                getCountryCities={this.getCountryCities}
               />
             </div>
             <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
@@ -240,13 +239,10 @@ class Contacts extends React.Component {
           </div>
           {contacts.length > 0 ? (
             <ContactTable
-              cities={cities}
               isAdmin={isAdmin}
               contacts={contacts}
-              countries={countries}
               onContactEdit={this.handleEditClick}
               onContactDelete={this.handleDeleteClick}
-              getCountryCities={this.getCountryCities}
             />
           ) : (
             <EmptyState
@@ -257,13 +253,10 @@ class Contacts extends React.Component {
               click the button below to add a new one."
               renderButton={() => (
                 <CreateContactButton
-                  cities={cities}
                   isAdmin={isAdmin}
                   crops={formatCrops}
-                  countries={countries}
                   isLoading={buttonLoading}
                   onSubmit={this.onContactCreate}
-                  getCountryCities={this.getCountryCities}
                 />
               )}
             />
@@ -279,13 +272,10 @@ class Contacts extends React.Component {
           <ContactForm
             {...contactToEdit}
             crops={crops}
-            cities={cities}
-            onSubmit={this.onContactEdit}
             isAdmin={isAdmin}
-            countries={countries}
-            onCancel={this.closeEditModal}
             isLoading={buttonLoading}
-            getCountryCities={this.getCountryCities}
+            onSubmit={this.onContactEdit}
+            onCancel={this.closeEditModal}
           />
         </Modal>
 

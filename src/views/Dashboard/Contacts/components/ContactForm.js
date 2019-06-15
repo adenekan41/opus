@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Field } from 'formik';
 import { Box, Flex, Text } from 'rebass';
 import * as yup from 'yup';
@@ -6,7 +6,7 @@ import Dropdown from '../../../../components/Select';
 import Input from '../../../../components/Input';
 import Button, { EmptyButton } from '../../../../components/Button';
 import { Icon } from '../../../../components/Icon';
-import { getCountryStates } from '../../../../helpers/countries';
+import { getCountryStates, allCountries, countries } from '../../../../helpers/countries';
 
 const AddContactButtonStyle = `
 height: 60px;
@@ -53,10 +53,9 @@ class ContactForm extends React.Component {
       customer,
       onCancel,
       isLoading,
-      countries,
-      cities,
-      getCountryCities,
     } = this.props;
+    const [cities, setCities] = useState([]);
+
     return (
       <Formik
         onSubmit={values => onSubmit(values, onCancel)}
@@ -159,8 +158,12 @@ class ContactForm extends React.Component {
                         errorMessage={errors.country}
                         isInvalid={errors.country && touched.country}
                         onChange={country => {
-                          form.setFieldValue('country', country.value);
-                          getCountryCities(country.value);
+                          const value = country.value;
+                          const selectedCountryId = allCountries.find(
+                            country => country.name === value
+                          );
+                          form.setFieldValue('country', value);
+                          setCities(getCountryStates(selectedCountryId.id));
                         }}
                       />
                     )}
@@ -176,7 +179,7 @@ class ContactForm extends React.Component {
                         name="city"
                         label="City"
                         touched={touched.city}
-                        options={country ? getCountryStates(country) : cities}
+                        options={cities}
                         errorMessage={errors.city}
                         isInvalid={errors.city && touched.city}
                         onChange={city =>

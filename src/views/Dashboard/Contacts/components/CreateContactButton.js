@@ -30,13 +30,10 @@ export default function CreateContactButton({
           >
             <ContactForm
               crops={crops}
-              cities={cities}
               isAdmin={isAdmin}
               onSubmit={onSubmit}
-              countries={countries}
               onCancel={closeModal}
               isLoading={isLoading}
-              getCountryCities={getCountryCities}
             />
           </Modal>
         </>
