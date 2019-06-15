@@ -12,6 +12,7 @@ import { FullScreenSpinner } from "../../../components/Spinner";
 import Home from "../../../views/Dashboard/Home";
 import Compare from "../../../views/Dashboard/Compare";
 import AssetManagement from "../../../views/Dashboard/Assets";
+import Customer from '../../../views/Dashboard/Customer'
 
 const DashboardRoutes = ({ token, clearAllState, ...rest }) => {
   return (
@@ -85,7 +86,14 @@ const DashboardRoutes = ({ token, clearAllState, ...rest }) => {
                     />
                   )}
                 />
+                <Route
+                  path="/dashboard/customer/"
+                  render={() => (
+                    <Customer {...rest} {...{ ...state, dispatch, actions }} />
+                  )}
+                /> 
               </Switch>
+              
             </DashboardLayout>
           )
         }

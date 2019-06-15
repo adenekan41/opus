@@ -81,6 +81,8 @@ Sidebar.defaultProps = {
     { icon: 'user', label: 'Contacts', url: '/admin/dashboard/contacts' },
     { icon: 'send', label: 'Alerts', url: '/admin/dashboard/alerts' },
     { icon: 'team', label: 'Users', url: '/admin/dashboard/team' },
+    { icon: 'team', label: 'Customers', url: '/admin/dashboard/customers' },
+    
   ],
 };
 
