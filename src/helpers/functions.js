@@ -1,4 +1,5 @@
 import moment from "moment";
+import toaster from "../components/Toaster";
 
 export const convertStringToNumber = string => (string ? Number(string) : 0);
 export const fahrenheitToCelcius = value => {
@@ -59,7 +60,7 @@ function generateChartOptions(list) {
       label: station,
       backgroundColor: "transparent",
       borderColor: getStationLabelColor(list)[station],
-      data: data.map(item => item ? item : 0),
+      data: data.map(item => (item ? item : 0)),
       borderWidth: 1,
     };
   });
@@ -221,8 +222,8 @@ export const getDatesForFilter = ({ startDate, endDate }) => {
 };
 
 export const getValue = (value, unit = "") => {
-  if(value === "--") {
-    return "--"
+  if (value === "--") {
+    return "--";
   }
   if (value) {
     return `${value} ${unit}`;
@@ -243,4 +244,34 @@ export const getBase64Url = (file, callback) => {
     file = reader.result;
     callback(file);
   };
+};
+
+export const setProfilePicture = data => {
+  if (data === "null") {
+    return "";
+  }
+  if (!data) {
+    return "";
+  }
+  return data;
+};
+
+export const getApiErrors = errors => {
+  const result = [];
+  errors &&
+    Object.keys(errors).length > 0 &&
+    Object.keys(errors).forEach(key => {
+      result.push(...errors[key]);
+    });
+  return result;
+};
+
+export const errorCallback = (error, setApiResponse) => {
+  const errorPayload = error && error.response && error.response.data;
+  if (errorPayload && errorPayload.detail) {
+    toaster.error(errorPayload && errorPayload.detail);
+  } else {
+    setApiResponse && setApiResponse(errorPayload);
+    toaster.error("Wrong parameters");
+  }
 };

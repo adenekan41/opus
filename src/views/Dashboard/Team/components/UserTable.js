@@ -2,18 +2,19 @@ import React from 'react';
 import Table from '../../../../components/Table';
 import Avatar from '../../../../components/Avatar';
 import TableActions from '../../../../components/Table/TableActions';
+import { setProfilePicture } from "../../../../helpers/functions";
 
 const user_columns = (onUserEdit, onUserDelete) => [
   {
     Header: '',
     accessor: '',
     id: 'contact_initals',
-    Cell: ({ original: { first_name, last_name } }) => {
+    Cell: ({ original: { first_name, last_name, profile_picture } }) => {
       return (
         <Avatar
           isRound
           size="38px"
-          photo_url=""
+          photo_url={setProfilePicture(profile_picture)}
           color="#ff9901"
           bgColor="rgba(255,153,1,.15)"
           initial={first_name && last_name ? `${first_name[0]}${last_name[0]}` : `U`}

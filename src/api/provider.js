@@ -101,6 +101,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.UPDATE_USER]: this.updateUser,
       [ACTIONS.PATCH_USER]: this.patchUser,
       [ACTIONS.DELETE_USER]: this.deleteUser,
+      [ACTIONS.SEARCH_USERS]: this.searchUsers,
       [ACTIONS.GET_WHATSAPP_ALERTS]: this.getWhatsappAlerts,
       [ACTIONS.SEND_WHATSAPP_ALERT]: this.sendWhatsappAlert,
       [ACTIONS.GET_CONTACTS]: this.getContacts,
@@ -217,6 +218,7 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .createUser(token, payload)
       .then(data => {
+        console.log(data);
         this.updateState({ users: [data, ...users] });
         return data;
       });
@@ -276,6 +278,20 @@ export class DataProvider extends React.Component {
         let result = users.filter(user => user.id !== id);
         this.updateState({ users: result });
         return data;
+      });
+  };
+
+  searchUsers = search => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .searchUsers(token, search)
+      .then(data => {
+        const { results } = data;
+        this.updateState({
+          users: results,
+        });
+        return results;
       });
   };
 

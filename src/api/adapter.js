@@ -112,6 +112,10 @@ const deleteUser = (token, id) => {
   return makeApiCall({ url: `/user/${id}`, method: "DELETE", token });
 };
 
+const searchUsers = (token, search) => {
+  return makeApiCall({ url: `/user/`, params: {search}, token });
+};
+
 const getContacts = token => {
   return makeApiCall({ url: `/contacts/`, token, baseURL: BASE_URL_TWO });
 };
@@ -262,6 +266,7 @@ export default {
   updateUser,
   createUser,
   deleteUser,
+  searchUsers,
   newPassword,
   resetPassword,
   getContacts,

@@ -8,6 +8,7 @@ import Button from "../../../../components/Button";
 import { Icon } from "../../../../components/Icon";
 import { FileUploader } from "../../../../components/FileUpload";
 import { getBase64Url } from "../../../../helpers/functions";
+import { ErrorAlertComponent } from "../../../../components/AlertComponent";
 
 const AvatarDiv = styled(Flex)`
   height: 129px;
@@ -37,11 +38,13 @@ const UserForm = ({
   last_name,
   other_name,
   phone_number,
+  profile_picture,
   isLoading,
   onCancel,
+  apiErrors,
 }) => {
   const [files, setFiles] = React.useState([]);
-  const [profilePicture, setProfilePicture] = React.useState("");
+  const [profilePicture, setProfilePicture] = React.useState(profile_picture);
   const image = files.length > 0 && files[0];
 
   React.useEffect(
@@ -50,7 +53,6 @@ const UserForm = ({
     },
     [files]
   );
-
 
   const onPhotoDrop = acceptedFiles => {
     setFiles(
@@ -86,6 +88,9 @@ const UserForm = ({
     >
       {({ values, errors, touched, handleSubmit, handleChange }) => (
         <form onSubmit={handleSubmit}>
+          <Box my={3}>
+            <ErrorAlertComponent errors={apiErrors} />
+          </Box>
           <Box>
             <Flex
               my={4}
@@ -98,9 +103,10 @@ const UserForm = ({
                 width="129px"
                 alignItems="center"
                 justifyContent="center"
-                backgroundImage={image.preview}
+                backgroundImage={profilePicture || image.preview}
               >
-                {!image && !image.preview && <Icon name="team" size={30} />}
+                {(!image && !image.preview) ||
+                  (!profilePicture && <Icon name="team" size={30} />)}
               </AvatarDiv>
 
               <FileUploader accept="image/*" onUpload={onPhotoDrop}>

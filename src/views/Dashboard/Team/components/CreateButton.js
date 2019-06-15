@@ -4,7 +4,7 @@ import Button from "../../../../components/Button";
 import UserForm from "./UserForm";
 import { Icon } from "../../../../components/Icon";
 
-export default function CreateButton({ onSubmit, isLoading }) {
+export default function CreateButton({ apiErrors, onSubmit, isLoading }) {
   return (
     <ToggleModal>
       {(show, openModal, closeModal) => (
@@ -21,6 +21,7 @@ export default function CreateButton({ onSubmit, isLoading }) {
           >
             <UserForm
               isAdd
+              apiErrors={apiErrors}
               onCancel={closeModal}
               onSubmit={onSubmit}
               isLoading={isLoading}

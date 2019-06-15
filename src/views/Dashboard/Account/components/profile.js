@@ -6,7 +6,7 @@ import ProfileForm from "./ProfileForm";
 import Button from "../../../../components/Button";
 import toaster from "../../../../components/Toaster";
 import { FileUploader } from "../../../../components/FileUpload";
-import { getBase64Url } from "../../../../helpers/functions";
+import { getBase64Url, setProfilePicture, errorCallback } from "../../../../helpers/functions";
 const ProfileStyle = styled.div`
   .card {
     border-radius: 3px;
@@ -94,11 +94,10 @@ class Profile extends React.Component {
         toaster.success("Profile update successful");
       })
       .catch(error => {
-        const errorPayload = error.response.data;
         this.setState({
           loading: false,
         });
-        toaster.error(errorPayload && errorPayload.detail);
+        errorCallback(error);
       });
   };
 
@@ -114,11 +113,10 @@ class Profile extends React.Component {
         toaster.success("Profile update successful");
       })
       .catch(error => {
-        const errorPayload = error.response.data;
         this.setState({
           emailLoading: false,
         });
-        toaster.error(errorPayload && errorPayload.detail);
+        errorCallback(error);
       });
   };
 
@@ -134,11 +132,10 @@ class Profile extends React.Component {
         toaster.success("Profile update successful");
       })
       .catch(error => {
-        const errorPayload = error.response.data;
         this.setState({
           passwordLoading: false,
         });
-        toaster.error(errorPayload && errorPayload.detail);
+        errorCallback(error);
       });
   };
 
@@ -168,6 +165,7 @@ class Profile extends React.Component {
         ? `${profile.first_name && profile.first_name[0]}${profile.last_name &&
             profile.last_name[0]}`
         : ``;
+    const profilePhoto = setProfilePicture(profile.profile_picture);
 
     return (
       <ProfileStyle>
@@ -180,7 +178,11 @@ class Profile extends React.Component {
                     <Avatar
                       isRound
                       size="8vw"
-                      photo_url={`${process.env.REACT_APP_API_URL}${profile.profile_picture}` || image.preview}
+                      photo_url={
+                        profilePhoto
+                          ? `${process.env.REACT_APP_API_URL}${profilePhoto}`
+                          : "" || image.preview
+                      }
                       color="#ff9901"
                       bgColor="rgba(255,153,1,.15)"
                       initial={initials}
