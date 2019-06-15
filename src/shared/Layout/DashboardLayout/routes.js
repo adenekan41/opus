@@ -57,10 +57,6 @@ const DashboardRoutes = ({ token, clearAllState, ...rest }) => {
                     <Users {...rest} {...{ ...state, dispatch, actions }} />
                   )}
                 />
-                {/* <Route
-                  path="/dashboard/customers"
-                  render={() => <Users {...rest} {...{ ...state, dispatch, actions }} />}
-                /> */}
                 <Route
                   path="/dashboard/profile/"
                   render={() => (
