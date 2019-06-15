@@ -26,6 +26,12 @@ class Users extends React.Component {
     };
   }
 
+  handleSearchChange = value => {
+    this.setState({
+      search: value,
+    });
+  };
+
   handleEditClick = values => {
     this.setState({
       userToEdit: values,
@@ -97,10 +103,14 @@ class Users extends React.Component {
     this.setState({
       loading: true,
     });
-    dispatch({ type: actions.UPDATE_USER, value: values })
+    dispatch({
+      type: actions.PATCH_USER,
+      value: values,
+    })
       .then(() => {
         this.setState({ loading: false });
         closeModal();
+        toaster.success("User updated successfully");
       })
       .catch(error => {
         this.setState({
@@ -110,7 +120,7 @@ class Users extends React.Component {
       });
   };
 
-  onUserDelete = (id, callback) => {
+  onUserDelete = (id, closeConfirm) => {
     const { dispatch, actions } = this.props;
     this.setState({
       loading: true,
@@ -120,7 +130,8 @@ class Users extends React.Component {
         this.setState({
           loading: false,
         });
-        callback();
+        closeConfirm();
+        toaster.success("User deleted successfully");
       })
       .catch(error => {
         this.setState({
@@ -128,12 +139,6 @@ class Users extends React.Component {
         });
         errorCallback(error, this.setApiErrors);
       });
-  };
-
-  onSearchChange = value => {
-    this.setState({
-      search: value,
-    });
   };
 
   onUserSearch = e => {
@@ -178,7 +183,7 @@ class Users extends React.Component {
                 <SearchInput
                   mb="8px"
                   placeholder="Search first name, last name, email"
-                  onChange={e => this.onSearchChange(e.target.value)}
+                  onChange={e => this.handleSearchChange(e.target.value)}
                 />
               </form>
             </div>

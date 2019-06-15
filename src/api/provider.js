@@ -25,6 +25,8 @@ export class DataProvider extends React.Component {
       users: [],
       crops: [],
       alerts: [],
+      assets: [],
+      formattedAssets: [],
       contacts: [],
       fetching: false,
       weatherStation: {},
@@ -79,11 +81,23 @@ export class DataProvider extends React.Component {
         return Promise.all([
           this.getUsers(token),
           this.getWeatherData(token),
+          this.getAssets(token),
         ]).then(response => {
           return {
             profile: userProfile,
             users: response[0],
             weatherStations: data[1],
+            assets: data[2],
+          };
+        });
+      }
+      if(userProfile.is_customer) {
+        return Promise.all([
+          this.getWeatherData(token),
+        ]).then(response => {
+          return {
+            profile: userProfile,
+            weatherStations: response[0],
           };
         });
       }
@@ -125,6 +139,11 @@ export class DataProvider extends React.Component {
       [ACTIONS.SET_WINDY_MAP]: this.setWindyMap,
       [ACTIONS.CLEAR_COMPARE_LOGS]: this.clearComparelogs,
       [ACTIONS.UPDATE_PROFILE]: this.updateProfile,
+      [ACTIONS.GET_ASSETS]: this.getAssets,
+      [ACTIONS.CREATE_ASSET]: this.createAsset,
+      [ACTIONS.UPDATE_ASSET]: this.updateAsset,
+      [ACTIONS.DELETE_ASSET]: this.deleteAsset,
+      [ACTIONS.SEARCH_ASSETS]: this.searchAssets
     };
     console.log({ type });
     return options[type](value);
@@ -147,9 +166,24 @@ export class DataProvider extends React.Component {
 
   clearAllState = () => {
     this.setState({
+      user: {},
+      map: null,
       users: [],
+      crops: [],
+      alerts: [],
+      assets: [],
+      formattedAssets: [],
+      contacts: [],
       fetching: false,
-      profile: this.props.profile || {},
+      weatherStation: {},
+      weatherStations: [],
+      type: "Temperature",
+      weatherStationLogs: [],
+      compareStationLogs: [],
+      observationTimes: [],
+      compareStationCsvData: [],
+      compareType: "Temperature",
+      profile: {},
     });
     clearState();
   };
@@ -218,7 +252,6 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .createUser(token, payload)
       .then(data => {
-        console.log(data);
         this.updateState({ users: [data, ...users] });
         return data;
       });
@@ -656,6 +689,104 @@ export class DataProvider extends React.Component {
       compareStationCsvData: [],
       compareType: "Temperature",
     });
+  };
+
+  getAssets = () => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .getAssets(token)
+      .then(data => {
+        const { results } = data;
+        const crops = results.filter(asset => asset.is_crop);
+        const countries = results.filter(asset => asset.is_country);
+        const formattedAssets = [
+          { name: "Crop", data: crops },
+          { name: "Country", data: countries },
+        ];
+        this.updateState({ assets: results, formattedAssets });
+        return formattedAssets;
+      });
+  };
+
+  createAsset = payload => {
+    let { token, assets } = this.state;
+
+    return this.getAdapter()
+      .createAsset(token, payload)
+      .then(data => {
+        let newAssets = [data, ...assets];
+        const crops = newAssets.filter(asset => asset.is_crop);
+        const countries = newAssets.filter(asset => asset.is_country);
+        const formattedAssets = [
+          { name: "Crop", data: crops },
+          { name: "Country", data: countries },
+        ];
+        this.updateState({ assets: newAssets, formattedAssets });
+        return data;
+      });
+  };
+
+  updateAsset = payload => {
+    let { token, assets } = this.state;
+
+    return this.getAdapter()
+      .updateAsset(token, payload)
+      .then(data => {
+        let newAssets = assets.map(asset => {
+          if (asset.id === payload.id) {
+            return data;
+          }
+          return asset;
+        });
+        const crops = newAssets.filter(asset => asset.is_crop);
+        const countries = newAssets.filter(asset => asset.is_country);
+        const formattedAssets = [
+          { name: "Crop", data: crops },
+          { name: "Country", data: countries },
+        ];
+        this.updateState({ assets: newAssets, formattedAssets });
+        return data;
+      });
+  };
+
+  deleteAsset = id => {
+    let { token, assets } = this.state;
+
+    return this.getAdapter()
+      .deleteAsset(token, id)
+      .then(data => {
+        const newAssets = assets.filter(asset => asset.id !== id);
+        const crops = newAssets.filter(asset => asset.is_crop);
+        const countries = newAssets.filter(asset => asset.is_country);
+        const formattedAssets = [
+          { name: "Crop", data: crops },
+          { name: "Country", data: countries },
+        ];
+        this.updateState({ assets: newAssets, formattedAssets });
+        return data;
+      });
+  };
+
+  searchAssets = search => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .searchAssets(token, search)
+      .then(data => {
+        const { results } = data;
+        const crops = results.filter(asset => asset.is_crop);
+        const countries = results.filter(asset => asset.is_country);
+        const formattedAssets = [
+          { name: "Crop", data: crops },
+          { name: "Country", data: countries },
+        ];
+        this.updateState({
+          assets: results,
+          formattedAssets
+        });
+        return formattedAssets;
+      });
   };
 
   render() {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Text } from "rebass";
+import { Box } from "rebass";
 
 const bgColors = {
   error: "#f66262",

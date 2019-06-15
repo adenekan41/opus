@@ -1,21 +1,24 @@
 import React, { Component } from "react";
-import { Box, Flex } from "rebass";
-import styled from "styled-components";
-import Button from "../../../components/Button";
+import { Box } from "rebass";
+import isEqual from "lodash.isequal";
 import Card from "../../../components/Card";
-import Modal, { ToggleModal } from "../../../components/Modal";
-import Input from "../../../components/Input";
+import Modal, { Confirm } from "../../../components/Modal";
 import SearchInput from "../../../components/Search";
-import { Icon } from "../../../components/Icon";
-import Table from "../../../components/Table";
 import TableActions from "../../../components/Table/TableActions";
+import { getApiErrors, errorCallback } from "../../../helpers/functions";
+import toaster from "../../../components/Toaster";
+import AssetForm from "./components/AssetForm";
+import { AssetManagementStyle } from "./components/Layout";
+import CreateAssetButton from "./components/CreateAssetButton";
+import AssetTable from "./components/AssetTable";
+import { FullScreenSpinner } from "../../../components/Spinner";
 
 const assets_columns = (name, data) => {
-  let { onContactEdit, onContactDelete } = data;
+  let { onEdit, onDelete } = data;
   return [
     {
       Header: name,
-      Cell: ({ original }) => <span>{original.first_name || "-"}</span>,
+      Cell: ({ original }) => <span>{original.name || "-"}</span>,
       id: "name",
     },
     {
@@ -26,139 +29,201 @@ const assets_columns = (name, data) => {
         <TableActions
           model="asset"
           placement="bottom"
-          onDelete={() => onContactDelete(original)}
-          onEdit={() => onContactEdit(original)}
+          onEdit={() => onEdit(original)}
+          onDelete={() => onDelete(original)}
         />
       ),
     },
   ];
 };
 
-const AssetManagementStyle = styled.div`
-  .asset-list-section {
-    height: calc(100vh - 80px);
-
-    .assets-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      .asset-item {
-        display: flex;
-        align-content: center;
-        justify-content: space-between;
-        border-bottom: 1px solid #efefef;
-        padding: 12px 32px;
-        transition: all 0.3s;
-
-        &:hover {
-          cursor: pointer;
-          background-color: #e5e5e5;
-        }
-
-        .asset-item-count {
-          padding: 0 8px;
-          border-radius: 3px;
-          border: solid 1px #eff0f3;
-          background-color: #f9fafb;
-          color: #8c8c8c;
-          width: 40px;
-          text-align: center;
-          font-size: 14px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        p,
-        div {
-          padding: 0;
-          margin: 0;
-        }
-      }
-    }
-    .footer {
-      position: absolute;
-      width: calc(100% - 32px);
-      bottom: 0;
-      padding: 16px 32px;
-    }
-  }
-
-  .table-section {
-    height: calc(100vh - 80px);
-  }
-`;
-
-const AssetTable = ({
-  data,
-  model,
-  pageSize,
-  totalPages,
-  onClickRow,
-  onEdit,
-  onDelete,
-  currentPage,
-}) => {
-  return (
-    <Table
-      mt="30px"
-      resized={[
-        {
-          id: model,
-          value: 80,
-        },
-      ]}
-      onClickRow={onClickRow}
-      pageSize={pageSize}
-      currentPage={currentPage}
-      showPagination={data && data.length > pageSize}
-      totalPages={totalPages}
-      data={data}
-      noDataText="No Asset Added Yet"
-      errorText="Oops! There was an issue fetching your assets"
-      columns={assets_columns(model, {
-        onEdit,
-        onDelete,
-      })}
-    />
-  );
-};
-
 export default class AssetManagement extends Component {
   state = {
-    assets: [{ name: "Crop", count: 5, data: [] }],
-    assetType: "",
+    search: "",
     selectedAsset: { data: [] },
+    showEditModal: false,
+    showDeleteConfirm: false,
+    assetToEdit: {},
+    assetToDelete: {},
+    loading: false,
+    apiErrors: {},
+    searchLoading: false,
   };
 
   componentDidMount() {
-    const { assets } = this.state;
+    const { formattedAssets } = this.props;
     this.setState({
-      selectedAsset: assets[0],
+      selectedAsset: formattedAssets[0],
     });
   }
 
-  handleAssetTypeChange = e => {
+  componentDidUpdate(prevProps) {
+    const { formattedAssets: newFormattedAssets } = this.props;
+    const { formattedAssets: prevFormattedAssets } = prevProps;
+
+    if (!isEqual(prevFormattedAssets, newFormattedAssets)) {
+      this.setState({
+        selectedAsset: newFormattedAssets[0],
+      });
+    }
+  }
+
+  setSelectedAsset = asset => {
     this.setState({
-      assetType: e.target.value,
+      selectedAsset: asset,
     });
   };
 
-  handleAssetTypeSubmit = (e, closeModal) => {
-    e.preventDefault();
-    const { assetType } = this.state;
-    this.setState(
-      ({ assets }) => ({
-        assets: [...assets, { name: assetType, count: 0 }],
-      }),
-      () => {
+  handleSearchChange = value => {
+    this.setState({
+      search: value,
+    });
+  };
+
+  handleEditClick = values => {
+    this.setState({
+      assetToEdit: values,
+      showEditModal: true,
+      apiErrors: {},
+    });
+  };
+
+  handleDeleteClick = values => {
+    this.setState({
+      assetToDelete: values,
+      showDeleteConfirm: true,
+      apiErrors: {},
+    });
+  };
+
+  closeEditModal = () => {
+    this.setState({ showEditModal: false });
+  };
+
+  closeDeleteConfirm = () => {
+    this.setState({ showDeleteConfirm: false });
+  };
+
+  setApiErrors = errorPayload => {
+    this.setState({
+      apiErrors: errorPayload,
+    });
+  };
+
+  onAssetCreate = (values, closeModal) => {
+    const { dispatch, actions } = this.props;
+    const { selectedAsset } = this.state;
+    const payload =
+      selectedAsset.name.toLowerCase() === "crop"
+        ? {
+            ...values,
+            is_crop: true,
+          }
+        : {
+            ...values,
+            is_country: true,
+          };
+
+    this.setState({
+      loading: true,
+    });
+
+    dispatch({ type: actions.CREATE_ASSET, value: payload })
+      .then(() => {
+        this.setState({
+          loading: false,
+        });
         closeModal();
-      }
-    );
+        toaster.success("Asset created successfully");
+      })
+      .catch(error => {
+        this.setState({
+          loading: false,
+        });
+        errorCallback(error, this.setApiErrors);
+      });
+  };
+
+  onAssetEdit = (values, closeModal) => {
+    const { dispatch, actions } = this.props;
+
+    this.setState({
+      loading: true,
+    });
+
+    dispatch({
+      type: actions.UPDATE_ASSET,
+      value: values,
+    })
+      .then(() => {
+        this.setState({ loading: false });
+        closeModal();
+        toaster.success("Asset updated successfully");
+      })
+      .catch(error => {
+        this.setState({
+          loading: false,
+        });
+        errorCallback(error, this.setApiErrors);
+      });
+  };
+
+  onAssetDelete = (id, closeConfirm) => {
+    const { dispatch, actions } = this.props;
+
+    this.setState({
+      loading: true,
+    });
+
+    dispatch({ type: actions.DELETE_ASSET, value: id })
+      .then(() => {
+        this.setState({
+          loading: false,
+        });
+        closeConfirm();
+        toaster.success("Asset deleted successfully");
+      })
+      .catch(error => {
+        this.setState({
+          loading: false,
+        });
+        errorCallback(error, this.setApiErrors);
+      });
+  };
+
+  onAssetSearch = e => {
+    e.preventDefault();
+    const { dispatch, actions } = this.props;
+    this.setState({
+      searchLoading: true,
+    });
+    dispatch({ type: actions.SEARCH_ASSETS, value: this.state.search })
+      .then(() => {
+        this.setState({
+          search: "",
+          searchLoading: false,
+        });
+      })
+      .catch(error => {
+        this.setState({
+          searchLoading: false,
+        });
+        errorCallback(error);
+      });
   };
 
   render() {
-    const { selectedAsset } = this.state;
+    const {
+      selectedAsset,
+      assetToDelete,
+      assetToEdit,
+      loading,
+      showEditModal,
+      apiErrors,
+      showDeleteConfirm,
+      searchLoading,
+    } = this.state;
+    const { formattedAssets } = this.props;
 
     return (
       <Box py="40px" px="40px">
@@ -166,96 +231,98 @@ export default class AssetManagement extends Component {
           <div className="row">
             <div className="col-md-4">
               <Card className="asset-list-section">
-                <SearchInput placeholder="Search contacts" mb="8px" />
+                {/* <SearchInput placeholder="Search assets" mb="8px" /> */}
                 <ul className="assets-list">
-                  {this.state.assets.map((asset, i) => (
-                    <li className="asset-item" key={i}>
+                  {formattedAssets.map((asset, i) => (
+                    <li
+                      className={`asset-item ${selectedAsset.name ===
+                        asset.name && "active"}`}
+                      key={i}
+                      onClick={() => this.setSelectedAsset(asset)}
+                    >
                       <p className="asset-item-name">{asset.name}</p>
-                      <div className="asset-item-count">{asset.count}</div>
+                      <div className="asset-item-count">
+                        {asset.data.length}
+                      </div>
                     </li>
                   ))}
                 </ul>
-                <div className="footer">
-                  <ToggleModal>
-                    {(show, openModal, closeModal) => (
-                      <>
-                        <Button kind="green" width="100%" onClick={openModal}>
-                          <Icon name="add" color="#ffffff" />
-                          &nbsp;&nbsp;Add asset
-                        </Button>
-                        <Modal
-                          size="medium"
-                          showModal={show}
-                          onCloseModal={closeModal}
-                          heading="Add Asset Type"
-                        >
-                          <form
-                            onSubmit={e =>
-                              this.handleAssetTypeSubmit(e, closeModal)
-                            }
-                          >
-                            <Input
-                              label="Asset type"
-                              onChange={this.handleAssetTypeChange}
-                              value={this.state.assetType}
-                              type="text"
-                            />
-                            <Flex
-                              mt={3}
-                              alignItems="center"
-                              justifyContent="space-between"
-                            >
-                              <Box width="48.5%">
-                                <Button
-                                  type="button"
-                                  kind="gray"
-                                  onClick={closeModal}
-                                  block
-                                >
-                                  Cancel
-                                </Button>
-                              </Box>
-                              <Box width="48.5%">
-                                <Button type="submit" kind="orange" block>
-                                  Add Asset
-                                </Button>
-                              </Box>
-                            </Flex>
-                          </form>
-                        </Modal>
-                      </>
-                    )}
-                  </ToggleModal>
-                </div>
               </Card>
             </div>
             <div className="col-md-8">
               <div className="table-section">
                 <div className="row">
                   <div className="col-md-8 col-xs-12 col-sm-8 col-lg-8">
-                    <SearchInput
-                      placeholder={`Search ${selectedAsset.name}`}
-                      mb="8px"
-                    />
+                    <form onSubmit={e => this.onAssetSearch(e)}>
+                      <SearchInput
+                        placeholder={`Search ${selectedAsset.name}`}
+                        mb="8px"
+                        onChange={e => this.handleSearchChange(e.target.value)}
+                      />
+                    </form>
                   </div>
                   <div className="col-md-4 col-xs-12 col-sm-4 col-lg-4">
-                    <Button kind="green" width="100%">
-                      Add {selectedAsset.name}
-                    </Button>
+                    <CreateAssetButton
+                      isLoading={loading}
+                      label={selectedAsset.name}
+                      onSubmit={this.onAssetCreate}
+                      apiErrors={getApiErrors(apiErrors)}
+                    />
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-md-12">
-                    <AssetTable
-                      model={selectedAsset.name}
-                      data={selectedAsset.data || []}
-                    />
+                    {searchLoading ? (
+                      <FullScreenSpinner
+                        size={32}
+                        thickness="4px"
+                        height="calc(100vh - 140px)"
+                        width="100%"
+                      />
+                    ) : (
+                      <AssetTable
+                        columns={assets_columns}
+                        model={selectedAsset.name}
+                        data={selectedAsset.data || []}
+                        onEdit={this.handleEditClick}
+                        onDelete={this.handleDeleteClick}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </AssetManagementStyle>
+
+        <Modal
+          showModal={showEditModal}
+          heading={`Edit ${selectedAsset.name}`}
+          onCloseModal={this.closeEditModal}
+          size="medium"
+        >
+          <AssetForm
+            {...assetToEdit}
+            isLoading={loading}
+            label={selectedAsset.name}
+            onSubmit={this.onAssetEdit}
+            onCancel={this.closeEditModal}
+            apiErrors={getApiErrors(apiErrors)}
+          />
+        </Modal>
+
+        <Confirm
+          showModal={showDeleteConfirm}
+          heading={`Delete ${selectedAsset.name &&
+            selectedAsset.name.toLowerCase()}`}
+          onConfirm={() => {
+            this.onAssetDelete(assetToDelete.id, this.closeDeleteConfirm);
+          }}
+          isLoading={loading}
+          onCloseModal={this.closeDeleteConfirm}
+          description={`Are you sure you want to delete this ${selectedAsset.name &&
+            selectedAsset.name.toLowerCase()}?`}
+        />
       </Box>
     );
   }

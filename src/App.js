@@ -17,9 +17,11 @@ class App extends Component {
       return true;
     }
   };
+  
   getAdapter = () => {
     return this.props.adapter;
   };
+
   onLogin = (payload, errorCallback = () => {}) => {
     return this.getAdapter()
       .login(payload)
@@ -36,18 +38,20 @@ class App extends Component {
       })
       .catch(error => errorCallback(error));
   };
-  onResetPassword = (payload, errorCallback = () => {}) => {
+
+  onResetPassword = (payload) => {
     return this.getAdapter()
-      .resetPassword(payload)
+      .setNewUserPassword(payload)
       .then(data => {
-        console.log(data)
+        return data;
       })
-      .catch(error => errorCallback(error));
   };
+
   clearAllState = history => {
     clearState();
     history.push('/');
   };
+
   render() {
     return (
       <Router>

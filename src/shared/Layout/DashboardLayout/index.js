@@ -3,7 +3,7 @@ import { StyledDashboardLayout } from './style';
 import CombinedSidebar from '../../../components/Sidebar';
 
 const getUserMenu = (profile) => {
-  if(profile.is_admin || profile.is_superuser) {
+  if(profile.is_superuser) {
     return [
       {
         icon: 'boxes',
@@ -18,6 +18,24 @@ const getUserMenu = (profile) => {
       { icon: "send", label: "Alerts", url: "/dashboard/alerts" },
       { icon: 'customers', label: 'Customers', url: '/dashboard/customers' },
       { icon: "team", label: "Users", url: "/dashboard/users" },
+      { icon: "chart", label: "Assets", url: "/dashboard/assets" },
+      { icon: "chart", label: "Compare", url: "/dashboard/compare" },
+    ]
+  }
+  if(profile.is_admin) {
+    return [
+      {
+        icon: 'boxes',
+        label: 'Dashboard',
+        url: '/dashboard/stats',
+      },
+      {
+        icon: "weather",
+        label: "Weather Data",
+        url: "/dashboard/weather-data/map",
+      },
+      { icon: "send", label: "Alerts", url: "/dashboard/alerts" },
+      { icon: 'customers', label: 'Customers', url: '/dashboard/customers' },
       { icon: "chart", label: "Assets", url: "/dashboard/assets" },
       { icon: "chart", label: "Compare", url: "/dashboard/compare" },
     ]

@@ -86,7 +86,7 @@ const adminCreateUser = (token, payload) => {
     url: `/user`,
     method: "POST",
     token,
-    data: {...payload, is_admin: true},
+    data: { ...payload, is_admin: true },
   });
 };
 
@@ -113,7 +113,16 @@ const deleteUser = (token, id) => {
 };
 
 const searchUsers = (token, search) => {
-  return makeApiCall({ url: `/user/`, params: {search}, token });
+  return makeApiCall({ url: `/user/`, params: { search }, token });
+};
+
+const setNewUserPassword = payload => {
+  return makeApiCall({
+    url: `/password/set`,
+    data: payload,
+    method: "POST",
+    headers: {},
+  });
 };
 
 const getContacts = token => {
@@ -211,14 +220,13 @@ const getWeatherStationData = (token, station_name, start_date, end_date) => {
   });
 };
 
-const getAllWeatherStationData = (token, station_name = '') => {
+const getAllWeatherStationData = (token, station_name = "") => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/weatherlink/${station_name}/`,
     token,
   });
 };
-
 
 const exportWeatherData = (token, station_name, start_date, end_date) => {
   return makeApiCall({
@@ -255,6 +263,43 @@ const exportCompareData = (
   });
 };
 
+const getAssets = (token) => {
+  return makeApiCall({
+    url: `/asset/`,
+    token,
+  })
+}
+
+const createAsset = (token, data) => {
+  return makeApiCall({
+    url: `/asset/`,
+    token,
+    data,
+    method: "POST"
+  })
+}
+
+const updateAsset = (token, data) => {
+  return makeApiCall({
+    url: `/asset/${data.id}/`,
+    token,
+    data,
+    method: "PUT"
+  })
+}
+
+const deleteAsset = (token, id) => {
+  return makeApiCall({
+    url: `/asset/${id}`,
+    token,
+    method: "DELETE"
+  })
+}
+
+const searchAssets = (token, search) => {
+  return makeApiCall({ url: `/asset/`, params: { search }, token });
+};
+
 export default {
   login,
   getUser,
@@ -278,6 +323,7 @@ export default {
   getWhatsappAlerts,
   sendWhatsappAlert,
   getWeatherForecast,
+  setNewUserPassword,
   getWeatherForecastLogs,
   getWeatherData,
   getWeatherStationData,
@@ -285,4 +331,9 @@ export default {
   exportCompareData,
   getAllWeatherStationData,
   getWeatherStationCurrentData,
+  getAssets,
+  createAsset,
+  updateAsset,
+  deleteAsset,
+  searchAssets
 };

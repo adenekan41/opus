@@ -44,6 +44,7 @@ const UserForm = ({
   apiErrors,
 }) => {
   const [files, setFiles] = React.useState([]);
+  const [isNew, setIsNew] = React.useState(false);
   const [profilePicture, setProfilePicture] = React.useState(profile_picture);
   const image = files.length > 0 && files[0];
 
@@ -63,12 +64,16 @@ const UserForm = ({
         });
       })
     );
+    setIsNew(true);
   };
 
   const submit = values => {
-    const payload = { ...values, profile_picture: profilePicture };
+    const payload = isNew
+      ? { ...values, profile_picture: profilePicture }
+      : values;
     onSubmit(payload, () => {
       setFiles([]);
+      setIsNew(false);
       onCancel();
     });
   };
