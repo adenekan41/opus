@@ -58,8 +58,7 @@ class Users extends React.Component {
 
   onUserCreate = (values, closeModal) => {
     const { dispatch, actions, profile } = this.props;
-
-    let payload = profile.is_superuser
+    const payload = profile.is_superuser
       ? {
           ...values,
           password: "password",
@@ -72,9 +71,11 @@ class Users extends React.Component {
           is_employee: true,
           weather_stations: [],
         };
+
     this.setState({
       loading: true,
     });
+
     dispatch({ type: actions.CREATE_USER, value: payload })
       .then(() => {
         this.setState({
@@ -96,7 +97,7 @@ class Users extends React.Component {
     this.setState({
       loading: true,
     });
-    dispatch({ type: actions.PATCH_USER, value: values })
+    dispatch({ type: actions.UPDATE_USER, value: values })
       .then(() => {
         this.setState({ loading: false });
         closeModal();
@@ -212,6 +213,7 @@ class Users extends React.Component {
               click the button below to invite someone."
               renderButton={() => (
                 <CreateButton
+                  apiErrors={getApiErrors(apiErrors)}
                   isLoading={this.state.loading}
                   onSubmit={this.onUserCreate}
                 />

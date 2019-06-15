@@ -101,7 +101,14 @@ Sidebar.defaultProps = {
 
 class CombinedSidebar extends React.Component {
   render() {
-    const { user, history, useNavlink, isCollapsed, openSideBar } = this.props;
+    const {
+      user,
+      menus,
+      history,
+      useNavlink,
+      isCollapsed,
+      openSideBar,
+    } = this.props;
     return (
       <StyledCombinedSidebar>
         <Media query="(max-width: 1024px)">
@@ -111,7 +118,7 @@ class CombinedSidebar extends React.Component {
                 {({ isOpen, onToggle }) => (
                   <React.Fragment>
                     <Sidebar
-                      {...{ user, useNavlink, history }}
+                      {...{ user, menus, useNavlink, history }}
                       isCollapsed={matches ? isCollapsed : !isOpen}
                       render={() => (
                         <MenuLink
