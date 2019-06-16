@@ -10,6 +10,7 @@ import ContactForm from "./components/ContactForm";
 import SearchInput from "../../../components/Search";
 import toaster from "../../../components/Toaster";
 import { errorCallback } from "../../../helpers/functions";
+import { loadState } from "../../../localStorage";
 
 class Contacts extends React.Component {
   constructor(props) {
@@ -72,11 +73,11 @@ class Contacts extends React.Component {
         callback();
         toaster.success("User created successfully");
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({
           buttonLoading: false,
         });
-        errorCallback(error, this.setApiErrors)
+        errorCallback(error, this.setApiErrors);
       });
   };
 
@@ -130,8 +131,13 @@ class Contacts extends React.Component {
   };
 
   onContactsUpload = (files, callback) => {
-    this.setState({ percent: 0 });
     let data = new FormData();
+    let auth =
+      (loadState() || { auth: { token: "" } } || { auth: { token: "" } })
+        .auth || "";
+
+    this.setState({ percent: 0 });
+
     files.forEach(file => {
       data.append("file", file, file.name);
     });
@@ -140,7 +146,10 @@ class Contacts extends React.Component {
     const { dispatch, actions } = this.props;
 
     const config = {
-      headers: { "content-type": "multipart/form-data" },
+      headers: {
+        "content-type": "multipart/form-data",
+        Authorization: `JWT ${auth.token}`,
+      },
       onUploadProgress: progressEvent => {
         var percent = Math.round(
           (progressEvent.loaded * 100) / progressEvent.total
@@ -192,21 +201,31 @@ class Contacts extends React.Component {
   };
 
   render() {
-    const { profile, crops } = this.props;
+    const { profile, assets, users } = this.props;
     let {
       percent,
       contacts,
+      apiErrors,
       buttonLoading,
       contactToEdit,
       showEditModal,
       contactToDelete,
       showDeleteConfirm,
     } = this.state;
-    let isAdmin = profile.is_admin;
-    let formatCrops = crops.map(crop => ({
-      label: crop.name,
-      value: crop.name,
-    }));
+    let isAdmin = profile.is_admin || profile.is_superuser;
+    let crops = assets
+      .filter(asset => asset.is_crop)
+      .map(crop => ({ label: crop.name, value: crop.id }));
+    let countries = assets
+      .filter(asset => asset.is_country)
+      .map(country => ({ label: country.name, value: country.id }));
+    let customers = users
+      .filter(user => user.is_customer)
+      .map(customer => ({
+        label: `${customer.first_name} ${customer.last_name}`,
+        value: customer.id,
+      }));
+
     return (
       <>
         <div style={{ padding: "40px" }}>
@@ -221,8 +240,11 @@ class Contacts extends React.Component {
             <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
               <CreateContactButton
                 mb="8px"
+                crops={crops}
                 isAdmin={isAdmin}
-                crops={formatCrops}
+                apiErrors={apiErrors}
+                countries={countries}
+                customers={customers}
                 isLoading={buttonLoading}
                 onSubmit={this.onContactCreate}
               />
@@ -253,8 +275,11 @@ class Contacts extends React.Component {
               click the button below to add a new one."
               renderButton={() => (
                 <CreateContactButton
+                  crops={crops}
                   isAdmin={isAdmin}
-                  crops={formatCrops}
+                  apiErrors={apiErrors}
+                  customers={customers}
+                  countries={countries}
                   isLoading={buttonLoading}
                   onSubmit={this.onContactCreate}
                 />
@@ -273,6 +298,9 @@ class Contacts extends React.Component {
             {...contactToEdit}
             crops={crops}
             isAdmin={isAdmin}
+            apiErrors={apiErrors}
+            countries={countries}
+            customers={customers}
             isLoading={buttonLoading}
             onSubmit={this.onContactEdit}
             onCancel={this.closeEditModal}

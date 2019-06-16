@@ -1,6 +1,6 @@
 import React from 'react';
 import CustomerAdvisoryModuleTable from './CustomerAdvisoryModuleTable';
-import SearchInput from '../../../../../components/SearchInput';
+import SearchInput from '../../../../../components/Search';
 
 
 class CustomerAdvisoryModules extends React.Component {

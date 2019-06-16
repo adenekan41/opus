@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import SelectSearch from '../../../../../components/SearchInput';
+import SearchInput from '../../../../../components/Search';
 import WindyMap from '../../../../../components/WindyMap';
 import Card from '../../../../../components/Card'
 const CustomerForecastContainer = styled.div`
@@ -120,7 +120,7 @@ export default class CustomerForecastMap extends Component {
         <div className="row">
             <div className="col-md-3 pr-0">
                 <Card className="station_name">
-                    <SelectSearch
+                    <SearchInput
                         className="Search_Input"
                         placeholder="Search Stations"
                     />
@@ -134,10 +134,8 @@ export default class CustomerForecastMap extends Component {
             </div>
             <div className="col-md pl-0">
                 <div className="SearchInput__wrapper">
-                    <SelectSearch
+                    <SearchInput
                         className="SearchInput"
-                        openMenuOnClick={true}
-                        options={this.getSearchOptions()}
                         onChange={station => this.setMapCenter(station.value)}
                     />
                     </div>

@@ -17,6 +17,7 @@ const getUserMenu = (profile) => {
       },
       { icon: "send", label: "Alerts", url: "/dashboard/alerts" },
       { icon: 'customers', label: 'Customers', url: '/dashboard/customers' },
+      { icon: "contacts", label: "Contacts", url: "/dashboard/contacts" },
       { icon: "team", label: "Users", url: "/dashboard/users" },
       { icon: "chart", label: "Assets", url: "/dashboard/assets" },
       { icon: "chart", label: "Compare", url: "/dashboard/compare" },
@@ -36,6 +37,7 @@ const getUserMenu = (profile) => {
       },
       { icon: "send", label: "Alerts", url: "/dashboard/alerts" },
       { icon: 'customers', label: 'Customers', url: '/dashboard/customers' },
+      { icon: "contacts", label: "Contacts", url: "/dashboard/contacts" },
       { icon: "chart", label: "Assets", url: "/dashboard/assets" },
       { icon: "chart", label: "Compare", url: "/dashboard/compare" },
     ]
@@ -53,6 +55,7 @@ const getUserMenu = (profile) => {
         url: "/dashboard/weather-data/map",
       },
       { icon: "send", label: "Alerts", url: "/dashboard/alerts" },
+      { icon: "contacts", label: "Contacts", url: "/dashboard/contacts" },
       { icon: "chart", label: "Compare", url: "/dashboard/compare" },
     ]
   }

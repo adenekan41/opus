@@ -6,7 +6,6 @@ import Dropdown from '../../../../components/Select';
 import Input from '../../../../components/Input';
 import Button, { EmptyButton } from '../../../../components/Button';
 import { Icon } from '../../../../components/Icon';
-import { getCitites } from '../../../../helpers/countries';
 
 const AddCustomerButtonStyle = `
 height: 60px;
@@ -174,7 +173,7 @@ class CustomerForm extends React.Component {
                         name="city"
                         label="City"
                         touched={touched.city}
-                        options={country ? getCitites(country) : cities}
+                        options={cities}
                         errorMessage={errors.city}
                         isInvalid={errors.city && touched.city}
                         onChange={city =>

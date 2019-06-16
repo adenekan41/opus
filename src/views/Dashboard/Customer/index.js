@@ -9,11 +9,11 @@ export default class Customer extends Component {
       <>
         <Route
           exact
-          path="/dashboard/customer"
+          path="/dashboard/customers"
           render={props => <Customers {...props} {...this.props}/>}
         />
         <Route
-          path="/dashboard/customer/bulletin"
+          path="/dashboard/customers/bulletin"
           render={props => <CustomerBulletin {...props} {...this.props} />}
         />
       </>

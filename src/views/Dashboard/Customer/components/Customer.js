@@ -1,9 +1,9 @@
 import React from 'react';
 import CustomerTable from './CustomersTable';
-import SearchInput from '../../../../components/SearchInput';
-import EmptyState, { ComingSoon } from '../../../../components/EmptyState';
+import SearchInput from '../../../../components/Search';
+import EmptyState from '../../../../components/EmptyState';
 import emptyStateImage from '../../../../assets/img/empty-states/contacts.png';
-import { countries, getCitites } from '../../../../helpers/countries';
+import { countries } from '../../../../helpers/countries';
 import Modal, { ToggleModal } from '../../../../components/Modal';
 import Button from '../../../../components/Button';
 import { Icon } from '../../../../components/Icon';
@@ -29,7 +29,7 @@ class Customers extends React.Component {
 
   getCountryCities = country => {
     this.setState({
-      cities: getCitites(country.toLowerCase()),
+      cities: [],
     });
   };
 
@@ -81,7 +81,7 @@ class Customers extends React.Component {
                         countries={countries}
                         onCancel={closeModal}
                         isLoading={buttonLoading}
-                        getCountryCities={this.getCountryCities}
+                        getCountryCities={() => {}}
                         />
                     </Modal>
                     </>

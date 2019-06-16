@@ -11,7 +11,8 @@ export default function CreateContactButton({
   isAdmin,
   isLoading,
   countries,
-  getCountryCities,
+  customers,
+  apiErrors,
   ...rest
 }) {
   return (
@@ -32,8 +33,11 @@ export default function CreateContactButton({
               crops={crops}
               isAdmin={isAdmin}
               onSubmit={onSubmit}
+              apiErrors={apiErrors}
               onCancel={closeModal}
               isLoading={isLoading}
+              countries={countries}
+              customers={customers}
             />
           </Modal>
         </>

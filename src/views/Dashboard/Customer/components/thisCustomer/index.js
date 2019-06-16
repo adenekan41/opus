@@ -27,33 +27,33 @@ export default class thisCustomer extends Component {
           <TabNav
             links={[
               {
-                url: '/dashboard/customer/bulletin',
+                url: '/dashboard/customers/bulletin',
                 label: 'Profile',
                 icon: 'user',
               },
               {
-                url: '/dashboard/customer/bulletin/organisation',
+                url: '/dashboard/customers/bulletin/organisation',
                 label: 'Organisation Information',
                 icon: 'combine--box',
                 flex: '0 0 239px',
                 max: '239px',
               },
               {
-                url: '/dashboard/customer/bulletin/billing',
+                url: '/dashboard/customers/bulletin/billing',
                 label: 'Billing Information',
                 icon: 'shapes-doc',
                 flex: '0 0 204px',
                 max: '204px',
               },
               {
-                url: '/dashboard/customer/bulletin/weather-forcast',
+                url: '/dashboard/customers/bulletin/weather-forcast',
                 label: 'Weather Stations',
                 icon: 'weather',
                 flex: '0 0 204px',
                 max: '204px',
               },
               {
-                url: '/dashboard/customer/bulletin/advisory-modules',
+                url: '/dashboard/customers/bulletin/advisory-modules',
                 label: 'Advisory Modules',
                 icon: 'weather',
                 flex: '0 0 204px',
@@ -65,7 +65,7 @@ export default class thisCustomer extends Component {
             <>
               <Route
                 exact
-                path="/dashboard/customer/bulletin"
+                path="/dashboard/customers/bulletin"
                 render={props => (
                   <CustomerDetails
                     {...{ props }}
@@ -75,19 +75,19 @@ export default class thisCustomer extends Component {
                 )}
               />
               <Route
-                path="/dashboard/customer/bulletin/organisation"
+                path="/dashboard/customers/bulletin/organisation"
                 render={props => <CustomerOrganisation {...{ props }} />}
               />
               <Route
-                path="/dashboard/customer/bulletin/billing"
+                path="/dashboard/customers/bulletin/billing"
                 render={props => <CustomerBilling {...{ props }} />}
               />
               <Route
-                path="/dashboard/customer/bulletin/weather-forcast"
+                path="/dashboard/customers/bulletin/weather-forcast"
                 render={props => <CustomerForecastMap {...{ props }} />}
               />
                <Route
-                path="/dashboard/customer/bulletin/advisory-modules"
+                path="/dashboard/customers/bulletin/advisory-modules"
                 render={props => <CustomerAdvisoryModules {...{ props }} />}
               />
             </>

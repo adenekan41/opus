@@ -87,7 +87,7 @@ const DashboardRoutes = ({ token, clearAllState, ...rest }) => {
                   )}
                 />
                 <Route
-                  path="/dashboard/customer/"
+                  path="/dashboard/customers/"
                   render={() => (
                     <Customer {...rest} {...{ ...state, dispatch, actions }} />
                   )}
