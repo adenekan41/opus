@@ -4,7 +4,6 @@ import { Box } from "rebass";
 import * as yup from "yup";
 import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
-import ChangeEmailForm from "./ChangeEmailForm";
 import ChangePasswordForm from "./ChangePasswordForm";
 
 const profileValdationSchema = yup.object().shape({
@@ -23,6 +22,7 @@ const ProfileForm = ({
   id,
   onPasswordChange,
   isLoading,
+  deactivateAccount,
   passwordLoading
 }) => (
   <Formik
@@ -138,7 +138,7 @@ const ProfileForm = ({
         <div className="footer_button mt-3">
           <div className="row">
             <div className="col-md-4">
-              <Button size="large" block type="button" kind="red">
+              <Button size="large" block type="button" kind="red" onClick={deactivateAccount}>
                 Deactivate Account
               </Button>
             </div>

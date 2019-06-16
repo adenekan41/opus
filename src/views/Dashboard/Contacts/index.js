@@ -9,7 +9,7 @@ import Modal, { Confirm } from "../../../components/Modal";
 import ContactForm from "./components/ContactForm";
 import SearchInput from "../../../components/Search";
 import toaster from "../../../components/Toaster";
-import { errorCallback } from "../../../helpers/functions";
+import { errorCallback, getApiErrors } from "../../../helpers/functions";
 import { loadState } from "../../../localStorage";
 import { FullScreenSpinner } from "../../../components/Spinner";
 
@@ -66,12 +66,16 @@ class Contacts extends React.Component {
   };
 
   onContactCreate = (values, callback) => {
-    const { dispatch, actions } = this.props;
+    const { dispatch, actions, profile } = this.props;
     let { phone_number, ...rest } = values;
+    let isAdmin = profile.is_admin || profile.is_superuser;
     let payload = {
       ...rest,
       phone_numbers: [phone_number],
     };
+    if (!isAdmin) {
+      delete payload.customer;
+    }
     this.setState({
       buttonLoading: true,
     });
@@ -254,11 +258,11 @@ class Contacts extends React.Component {
                 mb="8px"
                 crops={crops}
                 isAdmin={isAdmin}
-                apiErrors={apiErrors}
                 countries={countries}
                 customers={customers}
                 isLoading={buttonLoading}
                 onSubmit={this.onContactCreate}
+                apiErrors={getApiErrors(apiErrors)}
               />
             </div>
             <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
@@ -299,11 +303,11 @@ class Contacts extends React.Component {
                 <CreateContactButton
                   crops={crops}
                   isAdmin={isAdmin}
-                  apiErrors={apiErrors}
                   customers={customers}
                   countries={countries}
                   isLoading={buttonLoading}
                   onSubmit={this.onContactCreate}
+                  apiErrors={getApiErrors(apiErrors)}
                 />
               )}
             />
@@ -320,12 +324,12 @@ class Contacts extends React.Component {
             {...contactToEdit}
             crops={crops}
             isAdmin={isAdmin}
-            apiErrors={apiErrors}
             countries={countries}
             customers={customers}
             isLoading={buttonLoading}
             onSubmit={this.onContactEdit}
             onCancel={this.closeEditModal}
+            apiErrors={getApiErrors(apiErrors)}
           />
         </Modal>
 

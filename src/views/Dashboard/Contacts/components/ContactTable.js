@@ -4,7 +4,7 @@ import Avatar from "../../../../components/Avatar";
 import TableActions from "../../../../components/Table/TableActions";
 
 const contact_columns = data => {
-  let { crops, customers, countries, onContactEdit, onContactDelete } = data;
+  let { crops, isAdmin, customers, countries, onContactEdit, onContactDelete } = data;
   return [
     {
       Header: "",
@@ -65,7 +65,7 @@ const contact_columns = data => {
       id: "phone_number",
       Cell: ({ original }) => <span>{original.phone_numbers[0]}</span>,
     },
-    {
+    isAdmin ? {
       Header: "Customer",
       Cell: ({ original }) => {
         let customer = customers.find(
@@ -75,7 +75,7 @@ const contact_columns = data => {
         return <span>{customerValue ? customerValue : "-"}</span>;
       },
       id: "customer",
-    },
+    } : {},
     {
       Header: "Language",
       Cell: ({ original }) => <span>{original.language || "-"}</span>,
@@ -99,6 +99,7 @@ const contact_columns = data => {
 
 const ContactTable = ({
   crops,
+  isAdmin,
   pageSize,
   currentPage,
   totalPages,
@@ -158,6 +159,7 @@ const ContactTable = ({
       errorText="Oops! There was an issue fetching your contacts"
       columns={contact_columns({
         crops,
+        isAdmin,
         countries,
         customers,
         onContactEdit,

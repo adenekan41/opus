@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
 import {
-  countries,
   getCountryStates,
   allCountries,
 } from "../../../../helpers/countries";
 import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
 import Dropdown from "../../../../components/Select";
+import { getStates } from "../../../../helpers/functions";
 
 const organizationValdationSchema = yup.object().shape({
   organisation_name: yup.string().required("Company name is required"),
@@ -19,12 +19,13 @@ const OrganizationForm = ({
   organisation_name,
   country,
   city,
+  countries,
   organisation_zip_code,
   organisation_plot_number,
   organisation_street,
   isLoading,
 }) => {
-  const [cities, setCities] = useState([]);
+  const [cities, setCities] = useState(getCountryStates(getStates(country, countries)) || []);
 
   return (
     <Formik
@@ -75,11 +76,14 @@ const OrganizationForm = ({
                         value={values.country}
                         onChange={country => {
                           const value = country.value;
-                          const selectedCountryId = allCountries.find(
-                            country => country.name === value
+                          const countryName = country.label;
+                          const selectedCountry = allCountries.find(
+                            country =>
+                              country.name.toLowerCase() ===
+                              countryName.toLowerCase()
                           );
                           form.setFieldValue("country", value);
-                          setCities(getCountryStates(selectedCountryId.id));
+                          setCities(getCountryStates(selectedCountry.id));
                         }}
                         errorMessage={errors.country}
                         isInvalid={errors.country && touched.country}

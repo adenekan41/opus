@@ -6,7 +6,12 @@ import ProfileForm from "./ProfileForm";
 import Button from "../../../../components/Button";
 import toaster from "../../../../components/Toaster";
 import { FileUploader } from "../../../../components/FileUpload";
-import { getBase64Url, setProfilePicture, errorCallback } from "../../../../helpers/functions";
+import {
+  getBase64Url,
+  setProfilePicture,
+  errorCallback,
+} from "../../../../helpers/functions";
+import { Confirm } from "../../../../components/Modal";
 
 const ProfileStyle = styled.div`
   .card {
@@ -29,9 +34,11 @@ const ProfileStyle = styled.div`
 class Profile extends React.Component {
   state = {
     files: [],
-    profilePicture: "",
     loading: false,
+    profilePicture: "",
     passwordLoading: false,
+    deactivateLoading: false,
+    showDeleteConfirm: false,
   };
 
   onProfileUpdate = values => {
@@ -74,6 +81,26 @@ class Profile extends React.Component {
       .catch(error => {
         this.setState({
           passwordLoading: false,
+        });
+        errorCallback(error);
+      });
+  };
+
+  deactivateAccount = () => {
+    const { dispatch, actions, history, clearAllState } = this.props;
+    this.setState({ deactivateLoading: true });
+    dispatch({ type: actions.UPDATE_PROFILE, value: { is_active: false } })
+      .then(() => {
+        this.setState({
+          deactivateLoading: false,
+          showDeleteConfirm: false,
+        });
+        clearAllState();
+        history.push("/");
+      })
+      .catch(error => {
+        this.setState({
+          deactivateLoading: false,
         });
         errorCallback(error);
       });
@@ -152,10 +179,19 @@ class Profile extends React.Component {
                 onSubmit={this.onProfileUpdate}
                 onPasswordChange={this.onPasswordUpdate}
                 passwordLoading={this.state.passwordLoading}
+                deactivateAccount={() => this.setState({ showDeleteConfirm: true })}
               />
             </Box>
           </Flex>
         </div>
+        <Confirm
+          heading="Deactivate account"
+          onConfirm={this.deactivateAccount}
+          isLoading={this.state.deactivateLoading}
+          showModal={this.state.showDeleteConfirm}
+          onCloseModal={() => this.setState({ showDeleteConfirm: false })}
+          description="Are you sure you want to deactivate your account?"
+        />
       </ProfileStyle>
     );
   }

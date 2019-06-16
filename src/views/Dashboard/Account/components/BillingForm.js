@@ -3,6 +3,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
+import TextArea from "../../../../components/TextArea";
 
 const billingValdationSchema = yup.object().shape({
   billing_vat_number: yup.string().required("VAT is required"),
@@ -44,9 +45,13 @@ const BillingForm = ({
                     value={values.billing_vat_number}
                     onChange={handleChange}
                     errorMessage={errors.billing_vat_number}
-                    isInvalid={errors.billing_vat_number && touched.billing_vat_number}
+                    isInvalid={
+                      errors.billing_vat_number && touched.billing_vat_number
+                    }
                   />
                 </div>
+              </div>
+              <div className="row">
                 <div className="col-md-12">
                   <Input
                     mb="20px"
@@ -59,8 +64,29 @@ const BillingForm = ({
                     onChange={handleChange}
                     errorMessage={errors.billing_registration_number}
                     isInvalid={
-                      errors.billing_registration_number && touched.billing_registration_number
+                      errors.billing_registration_number &&
+                      touched.billing_registration_number
                     }
+                  />
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-12">
+                  <TextArea
+                    mb="20px"
+                    type="text"
+                    name="billing_service_delivery"
+                    placeholder="Service Delivery"
+                    touched={touched.billing_service_delivery}
+                    value={values.billing_service_delivery}
+                    errorMessage={errors.billing_service_delivery}
+                    isInvalid={
+                      errors.billing_service_delivery &&
+                      touched.billing_service_delivery
+                    }
+                    onChange={handleChange}
+                    style={{ height: "300px" }}
                   />
                 </div>
               </div>

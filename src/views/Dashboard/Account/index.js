@@ -48,7 +48,7 @@ const getAccountLinks = profile => {
 
 export default class Account extends Component {
   render() {
-    const { profile, clearAllState, history, dispatch, actions } = this.props;
+    const { profile, clearAllState, history, dispatch, actions, assets } = this.props;
 
     return (
       <Box py="40px" px="40px">
@@ -60,8 +60,7 @@ export default class Account extends Component {
                 path="/dashboard/profile/"
                 render={props => (
                   <Profile
-                    {...{ props, dispatch, actions }}
-                    profile={profile}
+                    {...{ props, dispatch, actions, profile }}
                     clearAllState={() => clearAllState(history)}
                   />
                 )}
@@ -70,8 +69,7 @@ export default class Account extends Component {
                 path="/dashboard/profile/organisation"
                 render={props => (
                   <Organisation
-                    {...{ props, dispatch, actions }}
-                    profile={profile}
+                    {...{ props, dispatch, actions, assets, profile }}
                   />
                 )}
               />
@@ -80,8 +78,7 @@ export default class Account extends Component {
                 path="/dashboard/profile/billing"
                 render={props => (
                   <Billing
-                    {...{ props, dispatch, actions }}
-                    profile={profile}
+                    {...{ props, dispatch, actions, profile }}
                   />
                 )}
               />

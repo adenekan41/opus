@@ -3,6 +3,7 @@ import Modal, { ToggleModal } from "../../../../components/Modal";
 import Button from "../../../../components/Button";
 import { Icon } from "../../../../components/Icon";
 import AssetForm from "./AssetForm";
+import { getApiErrors } from "../../../../helpers/functions";
 
 export default function CreateAssetButton({
   apiErrors,
@@ -26,10 +27,10 @@ export default function CreateAssetButton({
           >
             <AssetForm
               label={label}
-              apiErrors={apiErrors}
               onCancel={closeModal}
               onSubmit={onSubmit}
               isLoading={isLoading}
+              apiErrors={getApiErrors(apiErrors)}
             />
           </Modal>
         </>
