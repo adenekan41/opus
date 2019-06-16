@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
-import SearchInput from '../../../../../components/Search';
-import WindyMap from '../../../../../components/WindyMap';
-import Card from '../../../../../components/Card'
+import React, { Component } from "react";
+import styled from "styled-components";
+import { Flex } from "rebass";
+import SearchInput from "../../../../../components/Search";
+import WindyMap from "../../../../../components/WindyMap";
+import Card from "../../../../../components/Card";
+import { Icon } from "../../../../../components/Icon";
+import Button from "../../../../../components/Button";
 const CustomerForecastContainer = styled.div`
- padding: 20px 0px;
+  padding: 20px 0px;
   position: relative;
   width: 100%;
   height: 100vh;
@@ -19,39 +22,37 @@ const CustomerForecastContainer = styled.div`
       max-width: 500px;
     }
   }
+
   .station_name {
-      min-height:100vh;
-      p{
-          padding:1.5rem;
-          border-top:1px solid #f5f6fa;
-          margin:0;
-          i.ion-ios-trash-outline{
-            float: right;
-            font-size: 20px;
-            cursor: pointer;
-          }
+    min-height: 100vh;
+    .station_name_details {
+      padding: 1.5rem;
+      border-top: 1px solid #f5f6fa;
+
+      button {
+        height: 24px;
+        padding: 0 10px;
+        background-color: #fafafa;
       }
-      .Search_Input{
-            padding:.4rem;
-            box-shadow: none !important;
-          .select-search-container{
-            box-shadow: none !important;
-          }
+
+      p {
+        margin: 0;
       }
+    }
   }
 `;
 
 export default class CustomerForecastMap extends Component {
-  state = { 
-      center: [8.7832, 34.5085], 
-      zoom: 4 ,
-      weatherStations:[
-          {
-              location:32.333333,
-              station_name: 'Adenekan Station'
-          }
-      ]
-    };
+  state = {
+    center: [8.7832, 34.5085],
+    zoom: 4,
+    weatherStations: [
+      {
+        location: 32.333333,
+        station_name: "Adenekan Station",
+      },
+    ],
+  };
 
   componentDidMount() {
     // const { dispatch, actions } = this.props;
@@ -80,11 +81,11 @@ export default class CustomerForecastMap extends Component {
     }));
     return [
       {
-        label: 'Stations',
+        label: "Stations",
         options: stations,
       },
       {
-        label: 'Locations',
+        label: "Locations",
         options: locations,
       },
     ];
@@ -118,35 +119,37 @@ export default class CustomerForecastMap extends Component {
     return (
       <CustomerForecastContainer>
         <div className="row">
-            <div className="col-md-3 pr-0">
-                <Card className="station_name">
-                    <SearchInput
-                        className="Search_Input"
-                        placeholder="Search Stations"
-                    />
-                    <div className="station_name_details">
-                        <p><i className="ion-pin mr-3"></i>Osun South 029 <i className="ion-ios-trash-outline"></i></p> 
-                    </div>
-                    <div className="station_name_details">
-                        <p><i className="ion-pin mr-3"></i>Osun South 029 <i className="ion-ios-trash-outline"></i></p> 
-                    </div>
-                </Card>
+          <div className="col-md-3 pr-0">
+            <Card className="station_name">
+              <SearchInput placeholder="Search Stations" />
+              <div className="station_name_details">
+                <Flex alignItems="center" justifyContent="space-between">
+                  <div>
+                    <i className="ion-pin mr-3" />
+                    Osun South 029
+                  </div>
+                  <Button kind="ghost">
+                    <Icon name="trash" color="#8c8c8c" />
+                  </Button>
+                </Flex>
+              </div>
+            </Card>
+          </div>
+          <div className="col-md pl-0">
+            <div className="SearchInput__wrapper">
+              <SearchInput
+                className="SearchInput"
+                onChange={station => this.setMapCenter(station.value)}
+              />
             </div>
-            <div className="col-md pl-0">
-                <div className="SearchInput__wrapper">
-                    <SearchInput
-                        className="SearchInput"
-                        onChange={station => this.setMapCenter(station.value)}
-                    />
-                    </div>
-                    <WindyMap
-                    zoom={zoom}
-                    lat={center[0]}
-                    lon={center[1]}
-                    setMap={this.setMap}
-                    markers={weatherStations}
-                    />
-                </div>
+            <WindyMap
+              zoom={zoom}
+              lat={center[0]}
+              lon={center[1]}
+              setMap={this.setMap}
+              markers={weatherStations}
+            />
+          </div>
         </div>
       </CustomerForecastContainer>
     );

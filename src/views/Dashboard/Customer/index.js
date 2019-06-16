@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import Customers from './components/Customer'
 import CustomerBulletin from './components/thisCustomer'
+import NewCustomer from "./components/NewCustomer";
 
 export default class Customer extends Component {
   render() {
@@ -15,7 +16,7 @@ export default class Customer extends Component {
         <Route
           exact
           path="/dashboard/customers/new"
-          render={props => <Customers {...props} {...this.props}/>}
+          render={props => <NewCustomer {...props} {...this.props}/>}
         />
         <Route
           path="/dashboard/customers/bulletin"

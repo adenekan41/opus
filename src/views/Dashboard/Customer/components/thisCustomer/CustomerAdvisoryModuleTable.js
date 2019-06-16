@@ -1,45 +1,35 @@
-import React from 'react';
-import Table from '../../../../../components/Table';
-import TableActions from '../../../../../components/Table/TableActions';
-
+import React from "react";
+import Table from "../../../../../components/Table";
+import Button from "../../../../../components/Button";
+import { Icon } from "../../../../../components/Icon";
 
 const advisorymodules_columns = data => {
-  let {
-    onCustomerEdit,
-    onCustomerDelete,
-    isLoading,
-    isAdmin,
-  } = data;
+  let { onDelete } = data;
   return [
     {
-      Header: '',
-      accessor: '',
-      id: 'remove',
-      Cell: ({ original: { } }) => {
+      Header: "",
+      accessor: "",
+      id: "remove",
+      Cell: ({ original }) => {
         return (
-         <i className="ion-ios-trash-outline"></i>
+          <Button
+            css={`
+              height: 24px;
+              padding: 0 10px;
+              background-color: #fafafa;
+            `}
+            kind="ghost"
+            onClick={() => onDelete(original)}
+          >
+            <Icon name="trash" color="#8c8c8c" />
+          </Button>
         );
       },
     },
     {
-      Header: 'Advisory Module',
-      accessor: 'name',
-      id: 'name',
-    },
-    {
-      Header: '',
-      accessor: '',
-      id: 'actions',
-      Cell: ({ original }) => (
-        <TableActions
-          data={original}
-          model="advisorymodules"
-          isLoading={isLoading}
-          onDelete={onCustomerDelete}
-          editModalHeading="Edit Customer Modules"
-         
-        />
-      ),
+      Header: "Advisory Module",
+      accessor: "name",
+      id: "name",
     },
   ];
 };
@@ -57,21 +47,20 @@ const CustomerAdvisoryModuleTable = ({
   onPageChange,
   onPageSizeChange,
   onFetchData,
-  onCustomerEdit,
-  onCustomerDelete,
+  onDelete,
 }) => {
   return (
     <Table
       mt="50px"
       resized={[
         {
-          id: 'remove',
-          value: 30,
+          id: "remove",
+          value: 50,
         },
-       
+
         {
-          id: 'actions',
-          value: 100,
+          id: "name",
+          value: 250,
         },
       ]}
       onClickRow={onClickRow}
@@ -88,10 +77,7 @@ const CustomerAdvisoryModuleTable = ({
       noDataText="No Modules Added Yet"
       errorText="Oops! There was an issue fetching your Modules"
       columns={advisorymodules_columns({
-        onCustomerEdit,
-        onCustomerDelete,
-        isLoading,
-        isAdmin,
+        onDelete,
       })}
     />
   );

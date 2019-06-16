@@ -11,7 +11,7 @@ const BreadcrumbItemContainer = styled.div`
     align-items: center;
     justify-content: center;
     position: relative;
-    width: 120px;
+    width: 140px;
     height: 40px;
     position: relative;
     background: ${props => (props.isActive ? '#29cb98' : '#ffffff')};
@@ -33,14 +33,14 @@ const BreadcrumbItemContainer = styled.div`
     &:hover {
       text-decoration: none;
     }
-    span {
+    /* span {
       ${props =>
         props.isActive
           ? `
         position: relative;
         left: 12px;`
           : ``}
-    }
+    } */
   }
 `;
 

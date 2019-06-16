@@ -65,7 +65,7 @@ const CustomerDetailsStyle = styled.div`
 `;
 class CustomerDetails extends React.Component {
   render() {
-    const { profile, clearAllState } = this.props;
+    const { profile } = this.props;
     let initials =
       Object.values(profile).length > 0
         ? `${profile.first_name[0]}${profile.last_name[0]}`
@@ -94,9 +94,6 @@ class CustomerDetails extends React.Component {
                       Change photo
                     </button>
                   </div>
-                  <Button onClick={clearAllState} width="100%" mt="16px">
-                    Log out
-                  </Button>
                 </div>
               </div>
             </Box>

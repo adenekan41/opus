@@ -1,11 +1,12 @@
-import React from 'react';
-import { Formik, Field } from 'formik';
-import { Box, Flex, Text } from 'rebass';
-import * as yup from 'yup';
-import Dropdown from '../../../../components/Select';
-import Input from '../../../../components/Input';
-import Button, { EmptyButton } from '../../../../components/Button';
-import { Icon } from '../../../../components/Icon';
+import React from "react";
+import { Formik, Field } from "formik";
+import { Box, Flex, Text } from "rebass";
+import * as yup from "yup";
+import Dropdown from "../../../../components/Select";
+import Input from "../../../../components/Input";
+import Button, { EmptyButton } from "../../../../components/Button";
+import { Icon } from "../../../../components/Icon";
+import { allCountries, getCountryStates } from "../../../../helpers/countries";
 
 const AddCustomerButtonStyle = `
 height: 60px;
@@ -17,23 +18,30 @@ background-color: #ffffff;
 `;
 
 const customerFormValidation = yup.object().shape({
-  first_name: yup.string().required('First name is required'),
-  last_name: yup.string().required('Last name is required'),
-  country: yup.string().required('Country is required'),
-  city: yup.string().required('City is required'),
-  crop_managed: yup.string().required('Crop managed is required'),
-  phone_number: yup.string().required('Phone number is required'),
+  first_name: yup.string().required("First name is required"),
+  last_name: yup.string().required("Last name is required"),
+  country: yup.string().required("Country is required"),
+  city: yup.string().required("City is required"),
+  crop_managed: yup.string().required("Crop managed is required"),
+  phone_number: yup.string().required("Phone number is required"),
 });
 
 class CustomerForm extends React.Component {
   state = {
     showSecondaryPhoneNumber: false,
+    cities: [],
   };
 
   addPhoneNumber = () => {
     this.setState(({ showSecondaryPhoneNumber }) => ({
       showSecondaryPhoneNumber: !showSecondaryPhoneNumber,
     }));
+  };
+
+  setCities = cities => {
+    this.setState({
+      cities,
+    });
   };
 
   render() {
@@ -48,28 +56,24 @@ class CustomerForm extends React.Component {
       country,
       phone_numbers = [],
       company,
-      onCancel,
-      isLoading,
       countries,
-      cities,
       crops,
-      getCountryCities,
+      onCancel
     } = this.props;
     return (
       <Formik
-        onSubmit={values => onSubmit(values, onCancel)}
+        onSubmit={values => onSubmit(values)}
         validationSchema={customerFormValidation}
         initialValues={{
-          id: id || '',
-          first_name: first_name || '',
-          last_name: last_name || '',
-          middle_name: middle_name || '',
-          phone_number: phone_numbers[0] || '',
-          crop_managed: crop_managed || '',
-          city: city || '',
-          country: country || '',
-          company: company || '',
-          
+          id: id || "",
+          first_name: first_name || "",
+          last_name: last_name || "",
+          middle_name: middle_name || "",
+          phone_number: phone_numbers[0] || "",
+          crop_managed: crop_managed || "",
+          city: city || "",
+          country: country || "",
+          company: company || "",
         }}
       >
         {({ values, errors, touched, handleSubmit, handleChange }) => (
@@ -134,7 +138,7 @@ class CustomerForm extends React.Component {
                         errorMessage={errors.crop_managed}
                         isInvalid={errors.crop_managed && touched.crop_managed}
                         onChange={crop =>
-                          form.setFieldValue('crop_managed', crop.value)
+                          form.setFieldValue("crop_managed", crop.value)
                         }
                       />
                     )}
@@ -156,8 +160,14 @@ class CustomerForm extends React.Component {
                         errorMessage={errors.country}
                         isInvalid={errors.country && touched.country}
                         onChange={country => {
-                          form.setFieldValue('country', country.value);
-                          getCountryCities(country.value);
+                          const countryName = country.label;
+                          const selectedCountry = allCountries.find(
+                            country =>
+                              country.name.toLowerCase() ===
+                              countryName.toLowerCase()
+                          );
+                          form.setFieldValue("country", country.value);
+                          this.setCities(getCountryStates(selectedCountry.id));
                         }}
                       />
                     )}
@@ -173,11 +183,11 @@ class CustomerForm extends React.Component {
                         name="city"
                         label="City"
                         touched={touched.city}
-                        options={cities}
+                        options={this.state.cities}
                         errorMessage={errors.city}
                         isInvalid={errors.city && touched.city}
                         onChange={city =>
-                          form.setFieldValue('city', city.value)
+                          form.setFieldValue("city", city.value)
                         }
                       />
                     )}
@@ -215,7 +225,6 @@ class CustomerForm extends React.Component {
                 </div>
               </div>
               <div className="row">
-               
                 {this.state.showSecondaryPhoneNumber ? (
                   <div className="col-md-6">
                     <Input
@@ -228,7 +237,10 @@ class CustomerForm extends React.Component {
                       value={values.secondary_phone_number}
                       onChange={handleChange}
                       errorMessage={errors.secondary_phone_number}
-                      isInvalid={errors.secondary_phone_number && touched.secondary_phone_number}
+                      isInvalid={
+                        errors.secondary_phone_number &&
+                        touched.secondary_phone_number
+                      }
                     />
                   </div>
                 ) : (
@@ -264,8 +276,8 @@ class CustomerForm extends React.Component {
                 </Button>
               </div>
               <div className="col-md-6">
-                <Button kind="orange" block isLoading={isLoading} mb="8px">
-                  Save
+                <Button kind="orange" block mb="8px">
+                  Next
                 </Button>
               </div>
             </Box>
