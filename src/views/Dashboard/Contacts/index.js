@@ -11,6 +11,7 @@ import SearchInput from "../../../components/Search";
 import toaster from "../../../components/Toaster";
 import { errorCallback } from "../../../helpers/functions";
 import { loadState } from "../../../localStorage";
+import { FullScreenSpinner } from "../../../components/Spinner";
 
 class Contacts extends React.Component {
   constructor(props) {
@@ -19,11 +20,12 @@ class Contacts extends React.Component {
       buttonLoading: false,
       showEditModal: false,
       showDeleteConfirm: false,
+      searchLoading: false,
       percent: 0,
+      search: "",
       apiErrors: {},
       contactToEdit: {},
       contactToDelete: {},
-      contacts: this.props.contacts,
     };
   }
 
@@ -38,6 +40,12 @@ class Contacts extends React.Component {
     this.setState({
       contactToDelete: values,
       showDeleteConfirm: true,
+    });
+  };
+
+  handleSearchChange = value => {
+    this.setState({
+      search: value,
     });
   };
 
@@ -177,38 +185,36 @@ class Contacts extends React.Component {
       });
   };
 
-  onContactSearch = value => {
-    if (value) {
-      const { contacts } = this.state;
-      const filteredContacts = contacts.filter(
-        contact =>
-          contact.first_name.toLowerCase().includes(value) ||
-          contact.last_name.toLowerCase().includes(value)
-      );
-      this.setState({
-        contacts: filteredContacts,
+  onContactSearch = e => {
+    e.preventDefault();
+    const { dispatch, actions } = this.props;
+    this.setState({
+      searchLoading: true,
+    });
+    dispatch({ type: actions.SEARCH_CONTACTS, value: this.state.search })
+      .then(() => {
+        this.setState({
+          search: "",
+          searchLoading: false,
+        });
+      })
+      .catch(error => {
+        this.setState({
+          searchLoading: false,
+        });
+        errorCallback(error);
       });
-      // if (filteredContacts.length === 0) {
-      //   this.setState({
-      //     contacts: this.props.contacts,
-      //   });
-      // }
-    } else {
-      this.setState({
-        contacts: this.props.contacts,
-      });
-    }
   };
 
   render() {
-    const { profile, assets, users } = this.props;
+    const { profile, assets, users, contacts } = this.props;
     let {
       percent,
-      contacts,
       apiErrors,
       buttonLoading,
       contactToEdit,
       showEditModal,
+      searchLoading,
       contactToDelete,
       showDeleteConfirm,
     } = this.state;
@@ -231,11 +237,13 @@ class Contacts extends React.Component {
         <div style={{ padding: "40px" }}>
           <div className="row">
             <div className="col-md-6 col-xs-12 col-sm-6 col-lg-6">
-              <SearchInput
-                mb="8px"
-                placeholder="Search contacts"
-                onChange={e => this.onContactSearch(e.target.value)}
-              />
+              <form onSubmit={e => this.onUserSearch(e)}>
+                <SearchInput
+                  mb="8px"
+                  placeholder="Search contacts"
+                  onChange={e => this.handleSearchChange(e.target.value)}
+                />
+              </form>
             </div>
             <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
               <CreateContactButton
@@ -259,7 +267,14 @@ class Contacts extends React.Component {
               />
             </div>
           </div>
-          {contacts.length > 0 ? (
+          {searchLoading ? (
+            <FullScreenSpinner
+              size={32}
+              thickness="4px"
+              height="calc(100vh - 140px)"
+              width="calc(100% - 344px)"
+            />
+          ) : contacts.length > 0 ? (
             <ContactTable
               isAdmin={isAdmin}
               contacts={contacts}

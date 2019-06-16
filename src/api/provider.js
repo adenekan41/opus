@@ -82,22 +82,26 @@ export class DataProvider extends React.Component {
           this.getUsers(token),
           this.getWeatherData(token),
           this.getAssets(token),
+          // this.getContacts({token}),
         ]).then(response => {
           return {
             profile: userProfile,
             users: response[0],
             weatherStations: data[1],
             assets: data[2],
+            // contacts: data[3]
           };
         });
       }
-      if(userProfile.is_customer) {
+      if (userProfile.is_customer) {
         return Promise.all([
           this.getWeatherData(token),
+          // this.getContacts({token}),
         ]).then(response => {
           return {
             profile: userProfile,
             weatherStations: response[0],
+            // contacts: response[1]
           };
         });
       }
@@ -123,6 +127,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.CREATE_CONTACT]: this.createContact,
       [ACTIONS.UPDATE_CONTACT]: this.updateContact,
       [ACTIONS.DELETE_CONTACT]: this.deleteContact,
+      [ACTIONS.SEARCH_CONTACTS]: this.seacrchContacts,
       [ACTIONS.GET_WEATHER_FORECAST_LOGS]: this.getWeatherForecastLogs,
       [ACTIONS.GET_WEATHER_DATA]: this.getWeatherData,
       [ACTIONS.UPDATE_WEATHER_STATION_DATA]: this.updateWeatherStationData,
@@ -143,7 +148,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.CREATE_ASSET]: this.createAsset,
       [ACTIONS.UPDATE_ASSET]: this.updateAsset,
       [ACTIONS.DELETE_ASSET]: this.deleteAsset,
-      [ACTIONS.SEARCH_ASSETS]: this.searchAssets
+      [ACTIONS.SEARCH_ASSETS]: this.searchAssets,
     };
     console.log({ type });
     return options[type](value);
@@ -439,6 +444,20 @@ export class DataProvider extends React.Component {
         let result = contacts.filter(user => user.id !== id);
         this.updateState({ contacts: result });
         return data;
+      });
+  };
+
+  searchContacts = search => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .searchContacts(token, search)
+      .then(data => {
+        const { results } = data;
+        this.updateState({
+          contacts: results,
+        });
+        return results;
       });
   };
 
@@ -783,7 +802,7 @@ export class DataProvider extends React.Component {
         ];
         this.updateState({
           assets: results,
-          formattedAssets
+          formattedAssets,
         });
         return formattedAssets;
       });

@@ -162,6 +162,10 @@ const deleteContact = (token, id) => {
   });
 };
 
+const searchContacts = (token, search) => {
+  return makeApiCall({ url: `/contacts/`, params: { search }, token });
+};
+
 const getWhatsappAlerts = token => {
   return makeApiCall({ baseURL: BASE_URL_TWO, url: "/whatsapp/", token });
 };
@@ -316,6 +320,7 @@ export default {
   resetPassword,
   getContacts,
   getContact,
+  searchContacts,
   createContact,
   updateContact,
   deleteContact,

@@ -1,13 +1,13 @@
-import React from 'react';
-import CustomerTable from './CustomersTable';
-import SearchInput from '../../../../components/Search';
-import EmptyState from '../../../../components/EmptyState';
-import emptyStateImage from '../../../../assets/img/empty-states/contacts.png';
-import { countries } from '../../../../helpers/countries';
-import Modal, { ToggleModal } from '../../../../components/Modal';
-import Button from '../../../../components/Button';
-import { Icon } from '../../../../components/Icon';
-import CustomerForm from './CustomerForm';
+import React from "react";
+import CustomerTable from "./CustomersTable";
+import SearchInput from "../../../../components/Search";
+import EmptyState from "../../../../components/EmptyState";
+import emptyStateImage from "../../../../assets/img/empty-states/contacts.png";
+import { countries } from "../../../../helpers/countries";
+import Modal, { ToggleModal } from "../../../../components/Modal";
+import Button from "../../../../components/Button";
+import { Icon } from "../../../../components/Icon";
+import CustomerForm from "./CustomerForm";
 
 class Customers extends React.Component {
   constructor() {
@@ -15,15 +15,17 @@ class Customers extends React.Component {
     this.state = {
       buttonLoading: false,
       cities: [],
-      customers:[{
-          first_name:'geek',
-          last_name:'tuts',
-          phone_numbers: '08081210121',
-          company:'geekTeck',
-          middle_name:'sikiru',
-          country:'Ethiopia',
-          city:'Addis Ababa,'
-      }]
+      customers: [
+        {
+          first_name: "geek",
+          last_name: "tuts",
+          phone_numbers: "08081210121",
+          company: "geekTeck",
+          middle_name: "sikiru",
+          country: "Ethiopia",
+          city: "Addis Ababa,",
+        },
+      ],
     };
   }
 
@@ -33,96 +35,74 @@ class Customers extends React.Component {
     });
   };
 
-  onCustomerCreate = (values, callback) => {
-   
+  newCustomer = () => {
+    this.props.history.push("/dashboard/customers/new");
   };
 
-  onCustomerEdit = (values, callback) => {
-   
-  };
+  onCustomerCreate = (values, callback) => {};
 
-  onCustomerDelete = (id, callback) => {
-   
-  };
+  onCustomerEdit = (values, callback) => {};
+
+  onCustomerDelete = (id, callback) => {};
 
   render() {
     const { profile, crops } = this.props;
     let { buttonLoading, cities, customers } = this.state;
-    let isAdmin = profile.username === 'admin';
+    let isAdmin = profile.username === "admin";
     let formatCrops = crops.map(crop => ({
       label: crop.name,
       value: crop.name,
     }));
     return (
-      <div style={{ padding: '40px' }}>
+      <div style={{ padding: "40px" }}>
         <div className="row">
-            <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
+          <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
+            <form>
               <SearchInput placeholder="Search customers" mb="8px" />
-            </div>
-            <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
-                <ToggleModal>
-                {(show, openModal, closeModal) => (
-                    <>
-                    <Button kind="green" block onClick={openModal}>
-                        <Icon name="add" color="#ffffff" />
-                        &nbsp;&nbsp;Add Customers
-                    </Button>
-                    <Modal
-                        size="medium"
-                        showModal={show}
-                        onCloseModal={closeModal}
-                        heading={'Add Customers'}
-                    >
-                        <CustomerForm
-                        crops={formatCrops}
-                        cities={cities}
-                        isAdmin={isAdmin}
-                        onSubmit={this.onCustomerCreate}
-                        countries={countries}
-                        onCancel={closeModal}
-                        isLoading={buttonLoading}
-                        getCountryCities={() => {}}
-                        />
-                    </Modal>
-                    </>
-                )}
-                </ToggleModal>
-            </div>
+            </form>
           </div>
-          {customers.length > 0 ? (
-            <CustomerTable
-              cities={cities}
-              isAdmin={isAdmin}
-              customers={customers}
-              crops={formatCrops}
-              countries={countries}
-              isLoading={buttonLoading}
-              onCustomerEdit={this.onCustomerEdit}
-              onCustomerDelete={this.onCustomerDelete}
-              getCountryCities={this.getCountryCities}
-            />
-          ) : (
-            <EmptyState
-              image={emptyStateImage}
-              margin="80px"
-              heading="No Customers Yet"
-              helpText="You haven’t added any customers yet,
+          <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
+            <Button kind="green" block onClick={this.newCustomer}>
+              <Icon name="add" color="#ffffff" />
+              &nbsp;&nbsp;Add Customers
+            </Button>
+          </div>
+        </div>
+        
+        {customers.length > 0 ? (
+          <CustomerTable
+            cities={cities}
+            isAdmin={isAdmin}
+            customers={customers}
+            crops={formatCrops}
+            countries={countries}
+            isLoading={buttonLoading}
+            onCustomerEdit={this.onCustomerEdit}
+            onCustomerDelete={this.onCustomerDelete}
+            getCountryCities={this.getCountryCities}
+          />
+        ) : (
+          <EmptyState
+            image={emptyStateImage}
+            margin="80px"
+            heading="No Customers Yet"
+            helpText="You haven’t added any customers yet,
               click the button below to add a new one."
-              renderButton={() => (
-                <ToggleModal>
+            renderButton={() => (
+              <ToggleModal>
                 {(show, openModal, closeModal) => (
-                    <>
+                  <>
                     <Button kind="green" block onClick={openModal}>
-                        <Icon name="add" color="#ffffff" />
-                        &nbsp;&nbsp;Add Customers
+                      <Icon name="add" color="#ffffff" />
+                      &nbsp;&nbsp;Add Customers
                     </Button>
                     <Modal
-                        size="medium"
-                        showModal={show}
-                        onCloseModal={closeModal}
-                        heading={'Add Customers'}
+                      size="medium"
+                      showModal={show}
+                      onCloseModal={closeModal}
+                      heading={"Add Customers"}
                     >
-                     <CustomerForm
+                      <CustomerForm
                         crops={formatCrops}
                         cities={cities}
                         isAdmin={isAdmin}
@@ -131,15 +111,14 @@ class Customers extends React.Component {
                         onCancel={closeModal}
                         isLoading={buttonLoading}
                         getCountryCities={this.getCountryCities}
-                        />
+                      />
                     </Modal>
-                    </>
+                  </>
                 )}
-                </ToggleModal>
-              )}
-            />
-          )}
-          
+              </ToggleModal>
+            )}
+          />
+        )}
       </div>
     );
   }
