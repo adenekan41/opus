@@ -280,13 +280,15 @@ export default class AssetManagement extends Component {
                         width="100%"
                       />
                     ) : (
-                      <AssetTable
-                        columns={assets_columns}
-                        model={selectedAsset.name}
-                        data={selectedAsset.data || []}
-                        onEdit={this.handleEditClick}
-                        onDelete={this.handleDeleteClick}
-                      />
+                      <Box mb={4}>
+                        <AssetTable
+                          columns={assets_columns}
+                          model={selectedAsset.name}
+                          data={selectedAsset.data || []}
+                          onEdit={this.handleEditClick}
+                          onDelete={this.handleDeleteClick}
+                        />
+                      </Box>
                     )}
                   </div>
                 </div>

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const SwitchStyle = styled.div`
   display: inline-flex;
-  width: 100%;
+  /* width: 100%; */
   p {
     margin-left: 1rem;
     margin-top: 5px;
@@ -15,6 +15,7 @@ export const SwitchStyle = styled.div`
     display: inline-block;
     width: 60px;
     height: 29px;
+    margin: 0;
   }
 
   /* Hide default HTML checkbox */

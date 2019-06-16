@@ -21,15 +21,14 @@ const ProfileForm = ({
   location,
   email,
   id,
-  onEmailChange,
   onPasswordChange,
   isLoading,
-  emailLoading,
   passwordLoading
 }) => (
   <Formik
     initialValues={{
       id: id || "",
+      email: email || "",
       first_name: first_name || "",
       last_name: last_name || "",
       other_name: other_name || "",
@@ -98,39 +97,23 @@ const ProfileForm = ({
               isInvalid={errors.phone_number && touched.phone_number}
             />
           </div>
-          <div className="col-md-8">
+          <div className="col-md-4">
             <Input
-              id="location"
-              name="location"
-              type="text"
-              label="Location"
-              touched={touched.location}
-              value={values.location}
+              id="email"
+              name="email"
+              type="email"
+              label="Email address"
+              touched={touched.email}
+              value={values.email}
               onChange={handleChange}
-              errorMessage={errors.location}
-              isInvalid={errors.location && touched.location}
+              errorMessage={errors.email}
+              isInvalid={errors.email && touched.email}
             />
           </div>
         </div>
 
         <br />
         <hr />
-        <br />
-        <div className="row">
-          <div className="col-md-4">
-            <Input
-              disabled
-              id="email"
-              name="email"
-              type="email"
-              label="Email"
-              value={email}
-            />
-          </div>
-          <div className="col-md-4">
-            <ChangeEmailForm id={id} email={email} onSubmit={onEmailChange} isLoading={emailLoading} />
-          </div>
-        </div>
 
         <Box mt="20px">
           <div className="row">

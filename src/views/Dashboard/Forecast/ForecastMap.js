@@ -66,6 +66,7 @@ export default class ForecastMap extends Component {
   };
 
   setMap = map => {
+    debugger;
     const { dispatch, actions } = this.props;
     dispatch({ type: actions.SET_WINDY_MAP, value: map });
   };

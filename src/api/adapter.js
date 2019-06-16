@@ -304,6 +304,22 @@ const searchAssets = (token, search) => {
   return makeApiCall({ url: `/asset/`, params: { search }, token });
 };
 
+const getWeatherStations = token => {
+  return makeApiCall({ url: `/weather-stations/`, token })
+}
+
+const createWeatherStation = (token, data) => {
+  return makeApiCall({ url: `/weather-stations/`, data, method: "POST", token })
+}
+
+const updateWeatherStation = (token, data) => {
+  return makeApiCall({ url: `/weather-stations/${data.id}`, data, method: "PUT", token })
+}
+
+const deleteWeatherStation = (token, id) => {
+  return makeApiCall({ url: `/weather-stations/${id}`, method: "DELETE", token })
+}
+
 export default {
   login,
   getUser,
@@ -340,5 +356,9 @@ export default {
   createAsset,
   updateAsset,
   deleteAsset,
-  searchAssets
+  searchAssets,
+  getWeatherStations,
+  createWeatherStation,
+  updateWeatherStation,
+  deleteWeatherStation,
 };

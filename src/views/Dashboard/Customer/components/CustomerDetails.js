@@ -8,11 +8,11 @@ const CustomerDetailsStyle = styled(Box)`
   margin: 100px auto;
 `;
 
-export default function CustomerDetails({ crops, onSubmit, countries }) {
+export default function CustomerDetails({ crops, payload, onSubmit, countries, onCancel }) {
   return (
     <CustomerDetailsStyle>
       <Heading textAlign="center" mb={4} fontWeight={500} fontSize={20}>Create Customer</Heading>
-      <CustomerForm crops={crops} onSubmit={onSubmit} countries={countries} />
+      <CustomerForm crops={crops} {...payload} onSubmit={onSubmit} countries={countries} onCancel={onCancel}  />
     </CustomerDetailsStyle>
   );
 }

@@ -3,35 +3,30 @@ import CustomerTable from "./CustomersTable";
 import SearchInput from "../../../../components/Search";
 import EmptyState from "../../../../components/EmptyState";
 import emptyStateImage from "../../../../assets/img/empty-states/contacts.png";
-import { countries } from "../../../../helpers/countries";
-import Modal, { ToggleModal } from "../../../../components/Modal";
 import Button from "../../../../components/Button";
 import { Icon } from "../../../../components/Icon";
-import CustomerForm from "./CustomerForm";
+import { errorCallback } from "../../../../helpers/functions";
+import toaster from "../../../../components/Toaster";
+import { FullScreenSpinner } from "../../../../components/Spinner";
+import { Confirm } from "../../../../components/Modal";
 
 class Customers extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       buttonLoading: false,
-      cities: [],
-      customers: [
-        {
-          first_name: "geek",
-          last_name: "tuts",
-          phone_numbers: "08081210121",
-          company: "geekTeck",
-          middle_name: "sikiru",
-          country: "Ethiopia",
-          city: "Addis Ababa,",
-        },
-      ],
+      searchLoading: false,
+      showDeleteConfirm: false,
+      customerToDelete: {},
+      search: "",
     };
   }
 
-  getCountryCities = country => {
+  handleDeleteClick = values => {
     this.setState({
-      cities: [],
+      customerToDelete: values,
+      showDeleteConfirm: true,
+      apiErrors: {},
     });
   };
 
@@ -39,26 +34,75 @@ class Customers extends React.Component {
     this.props.history.push("/dashboard/customers/new");
   };
 
-  onCustomerCreate = (values, callback) => {};
+  onCustomerEdit = values => {
+    this.props.history.push(`/dashboard/customers/${values.id}/edit`);
+  };
 
-  onCustomerEdit = (values, callback) => {};
+  onCustomerDelete = (id) => {
+    const { dispatch, actions } = this.props;
+    this.setState({
+      buttonLoading: true,
+    });
+    dispatch({ type: actions.DELETE_USER, value: id })
+      .then(() => {
+        this.setState({
+          buttonLoading: false,
+          userToDelete: {},
+          showDeleteConfirm: false
+        });
+        toaster.success("User deleted successfully");
+      })
+      .catch(error => {
+        this.setState({
+          buttonLoading: false,
+        });
+        errorCallback(error, this.setApiErrors);
+      });
+  };
 
-  onCustomerDelete = (id, callback) => {};
+  onCustomerSearch = e => {
+    e.preventDefault();
+    const { dispatch, actions } = this.props;
+    this.setState({
+      searchLoading: true,
+    });
+    dispatch({ type: actions.SEARCH_USERS, value: this.state.search })
+      .then(() => {
+        this.setState({
+          search: "",
+          searchLoading: false,
+        });
+      })
+      .catch(error => {
+        this.setState({
+          searchLoading: false,
+        });
+        errorCallback(error);
+      });
+  };
 
   render() {
-    const { profile, crops } = this.props;
-    let { buttonLoading, cities, customers } = this.state;
+    const { profile, users, assets } = this.props;
+    let { buttonLoading, searchLoading, customerToDelete, showDeleteConfirm } = this.state;
     let isAdmin = profile.username === "admin";
-    let formatCrops = crops.map(crop => ({
-      label: crop.name,
-      value: crop.name,
-    }));
+    let customers = users.filter(user => user.is_customer);
+    let formatCrops = assets
+      .filter(asset => asset.is_crop)
+      .map(crop => ({ label: crop.name, value: crop.id }));
+    let countries = assets
+      .filter(asset => asset.is_country)
+      .map(country => ({ label: country.name, value: country.id }));
+
     return (
       <div style={{ padding: "40px" }}>
         <div className="row">
           <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
-            <form>
-              <SearchInput placeholder="Search customers" mb="8px" />
+            <form onSubmit={e => this.onCustomerSearch(e)}>
+              <SearchInput
+                mb="8px"
+                placeholder="Search  first name, last name,"
+                onChange={e => this.handleSearchChange(e.target.value)}
+              />
             </form>
           </div>
           <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
@@ -68,18 +112,23 @@ class Customers extends React.Component {
             </Button>
           </div>
         </div>
-        
-        {customers.length > 0 ? (
+
+        {searchLoading ? (
+          <FullScreenSpinner
+            size={32}
+            thickness="4px"
+            height="calc(100vh - 140px)"
+            width="calc(100% - 344px)"
+          />
+        ) : customers.length > 0 ? (
           <CustomerTable
-            cities={cities}
             isAdmin={isAdmin}
             customers={customers}
             crops={formatCrops}
             countries={countries}
             isLoading={buttonLoading}
             onCustomerEdit={this.onCustomerEdit}
-            onCustomerDelete={this.onCustomerDelete}
-            getCountryCities={this.getCountryCities}
+            onCustomerDelete={this.handleDeleteClick}
           />
         ) : (
           <EmptyState
@@ -89,36 +138,24 @@ class Customers extends React.Component {
             helpText="You haven’t added any customers yet,
               click the button below to add a new one."
             renderButton={() => (
-              <ToggleModal>
-                {(show, openModal, closeModal) => (
-                  <>
-                    <Button kind="green" block onClick={openModal}>
-                      <Icon name="add" color="#ffffff" />
-                      &nbsp;&nbsp;Add Customers
-                    </Button>
-                    <Modal
-                      size="medium"
-                      showModal={show}
-                      onCloseModal={closeModal}
-                      heading={"Add Customers"}
-                    >
-                      <CustomerForm
-                        crops={formatCrops}
-                        cities={cities}
-                        isAdmin={isAdmin}
-                        onSubmit={this.onCustomerCreate}
-                        countries={countries}
-                        onCancel={closeModal}
-                        isLoading={buttonLoading}
-                        getCountryCities={this.getCountryCities}
-                      />
-                    </Modal>
-                  </>
-                )}
-              </ToggleModal>
+              <Button kind="green" block onClick={this.newCustomer}>
+                <Icon name="add" color="#ffffff" />
+                &nbsp;&nbsp;Add Customers
+              </Button>
             )}
           />
         )}
+
+        <Confirm
+          showModal={showDeleteConfirm}
+          heading="Delete customer"
+          onConfirm={() => {
+            this.onCustomerDelete(customerToDelete.id);
+          }}
+          isLoading={buttonLoading}
+          onCloseModal={() => this.setState({ showDeleteConfirm: false })}
+          description="Are you sure you want to delete this customer?"
+        />
       </div>
     );
   }

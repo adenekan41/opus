@@ -1,14 +1,16 @@
 import React from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
-import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
 import Modal, { ToggleModal } from "../../../../components/Modal";
+import Input from "../../../../components/Input";
 
 const changePasswordFormValidation = yup.object().shape({
-  old_password: yup.string().required("Old password is required"),
-  new_password: yup.string().required("New password is required"),
-  confirm_password: yup.string().required("Confirm password is required"),
+  password: yup.string().required("Password is required"),
+  confirmPassword: yup
+    .string()
+    .required("Password confirmation is required")
+    .oneOf([yup.ref("password"), null], "Passwords must match"),
 });
 
 const ChangePasswordForm = ({ isLoading, onSubmit }) => (
@@ -32,11 +34,10 @@ const ChangePasswordForm = ({ isLoading, onSubmit }) => (
         >
           <Formik
             initialValues={{
-              old_password: "",
-              new_password: "",
-              confirm_password: "",
+              password: "",
+              confirmPassword: "",
             }}
-            onSubmit={values => onSubmit(values, closeModal)}
+            onSubmit={values => onSubmit(values)}
             validationSchema={changePasswordFormValidation}
           >
             {({ values, touched, errors, handleChange, handleSubmit }) => (
@@ -45,23 +46,9 @@ const ChangePasswordForm = ({ isLoading, onSubmit }) => (
                   <div className="col-md-12">
                     <Input
                       mb="40px"
-                      id="old_password"
-                      name="old_password"
-                      type="old_password"
-                      label="Old password"
-                      touched={touched.old_password}
-                      value={values.old_password}
-                      onChange={handleChange}
-                      errorMessage={errors.old_password}
-                      isInvalid={errors.old_password && touched.old_password}
-                    />
-                  </div>
-                  <div className="col-md-12">
-                    <Input
-                      mb="40px"
                       id="new_password"
                       name="new_password"
-                      type="new_password"
+                      type="password"
                       label="New password"
                       touched={touched.new_password}
                       value={values.new_password}
@@ -70,19 +57,21 @@ const ChangePasswordForm = ({ isLoading, onSubmit }) => (
                       isInvalid={errors.new_password && touched.new_password}
                     />
                   </div>
+                </div>
+                <div className="row">
                   <div className="col-md-12">
                     <Input
                       mb="40px"
-                      id="confirm_password"
-                      name="confirm_password"
-                      type="confirm_password"
-                      label="Confirm new password"
-                      touched={touched.confirm_password}
-                      value={values.confirm_password}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type="password"
+                      label="Confirm password"
+                      touched={touched.confirmPassword}
+                      value={values.confirmPassword}
                       onChange={handleChange}
-                      errorMessage={errors.confirm_password}
+                      errorMessage={errors.confirmPassword}
                       isInvalid={
-                        errors.confirm_password && touched.confirm_password
+                        errors.confirmPassword && touched.confirmPassword
                       }
                     />
                   </div>

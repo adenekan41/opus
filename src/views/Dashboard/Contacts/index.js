@@ -31,6 +31,7 @@ class Contacts extends React.Component {
 
   handleEditClick = values => {
     this.setState({
+      apiErrors: {},
       contactToEdit: values,
       showEditModal: true,
     });
@@ -38,6 +39,7 @@ class Contacts extends React.Component {
 
   handleDeleteClick = values => {
     this.setState({
+      apiErrors: {},
       contactToDelete: values,
       showDeleteConfirm: true,
     });
@@ -65,10 +67,10 @@ class Contacts extends React.Component {
 
   onContactCreate = (values, callback) => {
     const { dispatch, actions } = this.props;
-    let { phone_number, secondary_phone_number, ...rest } = values;
+    let { phone_number, ...rest } = values;
     let payload = {
       ...rest,
-      phone_numbers: [phone_number, secondary_phone_number],
+      phone_numbers: [phone_number],
     };
     this.setState({
       buttonLoading: true,
@@ -91,10 +93,10 @@ class Contacts extends React.Component {
 
   onContactEdit = values => {
     const { dispatch, actions } = this.props;
-    let { phone_number, secondary_phone_number, ...rest } = values;
+    let { phone_number, ...rest } = values;
     let payload = {
       ...rest,
-      phone_numbers: [phone_number, secondary_phone_number],
+      phone_numbers: [phone_number],
     };
     this.setState({
       buttonLoading: true,
@@ -172,12 +174,14 @@ class Contacts extends React.Component {
 
     Axios.post(url, data, config)
       .then(() => {
-        dispatch({ type: actions.GET_CONTACTS, value: { refresh: true } }).then(
-          () => {
-            this.setState({ percent: 0 });
-            callback && callback();
-          }
-        );
+        dispatch({
+          type: actions.GET_CONTACTS,
+          value: { token: auth.token, refresh: true },
+        }).then(() => {
+          this.setState({ percent: 0 });
+          toaster.success("Contact created successfully");
+          callback && callback();
+        });
       })
       .catch(() => {
         this.setState({ percent: 0 });
@@ -237,7 +241,7 @@ class Contacts extends React.Component {
         <div style={{ padding: "40px" }}>
           <div className="row">
             <div className="col-md-6 col-xs-12 col-sm-6 col-lg-6">
-              <form onSubmit={e => this.onUserSearch(e)}>
+              <form onSubmit={e => this.onContactSearch(e)}>
                 <SearchInput
                   mb="8px"
                   placeholder="Search contacts"
@@ -276,8 +280,11 @@ class Contacts extends React.Component {
             />
           ) : contacts.length > 0 ? (
             <ContactTable
+              crops={crops}
               isAdmin={isAdmin}
               contacts={contacts}
+              customers={customers}
+              countries={countries}
               onContactEdit={this.handleEditClick}
               onContactDelete={this.handleDeleteClick}
             />

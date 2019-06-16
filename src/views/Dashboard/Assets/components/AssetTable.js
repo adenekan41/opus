@@ -18,8 +18,12 @@ export default function AssetTable({
         mt="30px"
         resized={[
           {
-            id: model,
-            value: 80,
+            id: "name",
+            value: 150,
+          },
+          {
+            id: "actions",
+            value: 900,
           },
         ]}
         onClickRow={onClickRow}

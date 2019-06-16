@@ -19,7 +19,7 @@ const advisorymodules_columns = data => {
               background-color: #fafafa;
             `}
             kind="ghost"
-            onClick={() => onDelete(original)}
+            onClick={() => onDelete(original.id)}
           >
             <Icon name="trash" color="#8c8c8c" />
           </Button>
@@ -35,19 +35,17 @@ const advisorymodules_columns = data => {
 };
 
 const CustomerAdvisoryModuleTable = ({
-  isAdmin,
-  isLoading,
   pageSize,
   currentPage,
   totalPages,
   onClickRow,
   hasError,
   onRefresh,
+  deleteModule,
   advisorymodules,
   onPageChange,
   onPageSizeChange,
   onFetchData,
-  onDelete,
 }) => {
   return (
     <Table
@@ -77,7 +75,7 @@ const CustomerAdvisoryModuleTable = ({
       noDataText="No Modules Added Yet"
       errorText="Oops! There was an issue fetching your Modules"
       columns={advisorymodules_columns({
-        onDelete,
+        onDelete: deleteModule,
       })}
     />
   );

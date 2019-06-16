@@ -38,6 +38,7 @@ export class DataProvider extends React.Component {
       compareStationCsvData: [],
       compareType: "Temperature",
       profile: {},
+      weatherStationsList: [],
       ...this.loadTokenFromStorage(),
     };
     this.state.context = {
@@ -82,26 +83,32 @@ export class DataProvider extends React.Component {
           this.getUsers(token),
           this.getWeatherData(token),
           this.getAssets(token),
-          // this.getContacts({token}),
+          this.getContacts({token}),
+          this.getWeatherStations(token)
         ]).then(response => {
           return {
             profile: userProfile,
             users: response[0],
             weatherStations: data[1],
             assets: data[2],
-            // contacts: data[3]
+            contacts: data[3],
+            weatherStationsList: data[4]
           };
         });
       }
       if (userProfile.is_customer) {
         return Promise.all([
           this.getWeatherData(token),
-          // this.getContacts({token}),
+          this.getContacts({token}),
+          this.getAssets(token),
+          this.getWeatherStations(token)
         ]).then(response => {
           return {
             profile: userProfile,
             weatherStations: response[0],
-            // contacts: response[1]
+            contacts: response[1],
+            assets: response[2],
+            weatherStationsList: data[3]
           };
         });
       }
@@ -127,7 +134,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.CREATE_CONTACT]: this.createContact,
       [ACTIONS.UPDATE_CONTACT]: this.updateContact,
       [ACTIONS.DELETE_CONTACT]: this.deleteContact,
-      [ACTIONS.SEARCH_CONTACTS]: this.seacrchContacts,
+      [ACTIONS.SEARCH_CONTACTS]: this.searchContacts,
       [ACTIONS.GET_WEATHER_FORECAST_LOGS]: this.getWeatherForecastLogs,
       [ACTIONS.GET_WEATHER_DATA]: this.getWeatherData,
       [ACTIONS.UPDATE_WEATHER_STATION_DATA]: this.updateWeatherStationData,
@@ -149,6 +156,10 @@ export class DataProvider extends React.Component {
       [ACTIONS.UPDATE_ASSET]: this.updateAsset,
       [ACTIONS.DELETE_ASSET]: this.deleteAsset,
       [ACTIONS.SEARCH_ASSETS]: this.searchAssets,
+      [ACTIONS.GET_WEATHER_STATIONS]: this.getWeatherStations,
+      [ACTIONS.CREATE_WEATHER_STATION]: this.createWeatherStation,
+      [ACTIONS.UPDATE_WEATHER_STATION]: this.updateWeatherStation,
+      [ACTIONS.DELETE_WEATHER_STATION]: this.deleteWeatherStation,
     };
     console.log({ type });
     return options[type](value);
@@ -453,11 +464,10 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .searchContacts(token, search)
       .then(data => {
-        const { results } = data;
         this.updateState({
-          contacts: results,
+          contacts: data,
         });
-        return results;
+        return data;
       });
   };
 
@@ -805,6 +815,49 @@ export class DataProvider extends React.Component {
           formattedAssets,
         });
         return formattedAssets;
+      });
+  };
+
+  getWeatherStations = () => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .getWeatherStations(token)
+      .then(data => {
+        this.updateState({
+          weatherStationsList: data,
+        });
+        return data;
+      });
+  };
+
+  createWeatherStation = payload => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .createWeatherStation(token, payload)
+      .then(data => {
+        return data;
+      });
+  };
+
+  updateWeatherStation = payload => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .updateWeatherStation(token, payload)
+      .then(data => {
+        return data;
+      });
+  };
+
+  deleteWeatherStation = id => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .deleteWeatherStation(token, id)
+      .then(data => {
+        return data;
       });
   };
 

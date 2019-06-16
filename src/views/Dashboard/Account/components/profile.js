@@ -7,71 +7,30 @@ import Button from "../../../../components/Button";
 import toaster from "../../../../components/Toaster";
 import { FileUploader } from "../../../../components/FileUpload";
 import { getBase64Url, setProfilePicture, errorCallback } from "../../../../helpers/functions";
+
 const ProfileStyle = styled.div`
   .card {
     border-radius: 3px;
     box-shadow: 0 10px 14px -4px rgba(70, 70, 70, 0.06);
     border: solid 0.5px rgba(18, 18, 18, 0.11);
     background-color: #ffffff;
-    button.btn-success {
-      background: #29cb98;
-      border-radius: 3px;
-      border: none;
-      padding: 12px;
-    }
-    button.btn-dark {
-      background: #000 !important;
-      border-radius: 3px;
-      border: none;
-      padding: 12px;
-      opacity: 1;
-    }
-  }
-  .footer_button button.btn-warning {
-    background: #ff9901;
-    color: #fff;
-  }
-  .footer_button button.btn-danger {
-    background: #f66262;
-  }
-  .footer_button button.btn-warning {
-    background: #ff9901;
-    color: #fff;
   }
 
-  .footer_button button {
-    padding: 16px;
-    border: none;
-    border-radius: 3px;
-  }
-  .change_photo input {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    background: white;
-    opacity: 0;
-    height: 50px;
-  }
-  .button_height {
-    padding: 19px 0px;
-    border-radius: 0px !important;
-    border: none;
-    font-size: 14px;
-  }
   .photo-section {
     width: 12vw;
     flex: 0 0 18vw;
   }
+
   .form-section {
     flex: 1;
   }
 `;
+
 class Profile extends React.Component {
   state = {
     files: [],
     profilePicture: "",
     loading: false,
-    emailLoading: false,
     passwordLoading: false,
   };
 
@@ -83,7 +42,7 @@ class Profile extends React.Component {
       : { ...values, profile_picture: profilePicture };
 
     this.setState({ loading: true });
-    return dispatch({
+    dispatch({
       type: actions.UPDATE_PROFILE,
       value: payload,
     })
@@ -101,29 +60,10 @@ class Profile extends React.Component {
       });
   };
 
-  onEmailUpdate = (values, closeModal) => {
-    const { dispatch, actions } = this.props;
-    this.setState({ emailLoading: true });
-    return dispatch({ type: actions.UPDATE_PROFILE, value: values })
-      .then(() => {
-        this.setState({
-          emailLoading: false,
-        });
-        closeModal();
-        toaster.success("Profile update successful");
-      })
-      .catch(error => {
-        this.setState({
-          emailLoading: false,
-        });
-        errorCallback(error);
-      });
-  };
-
   onPasswordUpdate = (values, closeModal) => {
     const { dispatch, actions } = this.props;
     this.setState({ passwordLoading: true });
-    return dispatch({ type: actions.UPDATE_PROFILE, value: values })
+    dispatch({ type: actions.UPDATE_PROFILE, value: values })
       .then(() => {
         this.setState({
           passwordLoading: false,
@@ -210,8 +150,6 @@ class Profile extends React.Component {
                 {...profile}
                 isLoading={this.state.loading}
                 onSubmit={this.onProfileUpdate}
-                onEmailChange={this.onEmailUpdate}
-                emailLoading={this.state.emailLoading}
                 onPasswordChange={this.onPasswordUpdate}
                 passwordLoading={this.state.passwordLoading}
               />

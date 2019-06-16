@@ -1,22 +1,13 @@
 import React from "react";
 import { Formik, Field } from "formik";
-import { Box, Flex, Text } from "rebass";
+import { Box } from "rebass";
 import * as yup from "yup";
 import Dropdown from "../../../../components/Select";
 import Input from "../../../../components/Input";
-import Button, { EmptyButton } from "../../../../components/Button";
-import { Icon } from "../../../../components/Icon";
+import Button from "../../../../components/Button";
 import { getCountryStates, allCountries } from "../../../../helpers/countries";
 import { ErrorAlertComponent } from "../../../../components/AlertComponent";
-
-const AddContactButtonStyle = `
-height: 60px;
-padding: 0 16px;
-opacity: 0.6;
-border-radius: 3px;
-border: solid 1px rgba(18, 18, 18, 0.11);
-background-color: #ffffff;
-`;
+import { getStates } from "../../../../helpers/functions";
 
 const contactFormValidation = yup.object().shape({
   first_name: yup.string().required("First name is required"),
@@ -28,16 +19,13 @@ const contactFormValidation = yup.object().shape({
 });
 
 class ContactForm extends React.Component {
-  state = {
-    showSecondaryPhoneNumber: false,
-    cities: [],
-  };
-
-  addPhoneNumber = () => {
-    this.setState(({ showSecondaryPhoneNumber }) => ({
-      showSecondaryPhoneNumber: !showSecondaryPhoneNumber,
-    }));
-  };
+  constructor(props) {
+    super(props);
+    const { countries, country } = this.props;
+    this.state = {
+      cities: getCountryStates(getStates(country, countries)) || [],
+    };
+  }
 
   setCities = cities => {
     this.setState({
@@ -57,7 +45,7 @@ class ContactForm extends React.Component {
       crop_managed,
       city,
       country,
-      phone_numbers = [],
+      phone_numbers,
       language,
       customer,
       onCancel,
@@ -76,7 +64,7 @@ class ContactForm extends React.Component {
           first_name: first_name || "",
           last_name: last_name || "",
           middle_name: middle_name || "",
-          phone_number: phone_numbers[0] || "",
+          phone_number: (phone_numbers && phone_numbers[0]) || "",
           crop_managed: crop_managed || "",
           city: city || "",
           country: country || "",
@@ -266,42 +254,6 @@ class ContactForm extends React.Component {
                         />
                       )}
                     />
-                  </div>
-                )}
-                {this.state.showSecondaryPhoneNumber ? (
-                  <div className="col-md-6">
-                    <Input
-                      mb="20px"
-                      id="secondary_phone_number"
-                      name="secondary_phone_number"
-                      type="tel"
-                      label="Secondary Phone number"
-                      touched={touched.secondary_phone_number}
-                      value={values.secondary_phone_number}
-                      onChange={handleChange}
-                      errorMessage={errors.secondary_phone_number}
-                      isInvalid={
-                        errors.secondary_phone_number &&
-                        touched.secondary_phone_number
-                      }
-                    />
-                  </div>
-                ) : (
-                  <div className="col-md-6">
-                    <EmptyButton
-                      block
-                      css={AddContactButtonStyle}
-                      onClick={this.addPhoneNumber}
-                    >
-                      <Flex
-                        justifyContent="space-between"
-                        alignItems="center"
-                        width="100%"
-                      >
-                        <Text color="#8c8c8c">Add phone number</Text>
-                        <Icon name="add" color="#459b5e" />
-                      </Flex>
-                    </EmptyButton>
                   </div>
                 )}
               </div>

@@ -1,18 +1,15 @@
-import React from 'react';
-import Table from '../../../../components/Table';
-import Avatar from '../../../../components/Avatar';
-import TableActions from '../../../../components/Table/TableActions';
+import React from "react";
+import Table from "../../../../components/Table";
+import Avatar from "../../../../components/Avatar";
+import TableActions from "../../../../components/Table/TableActions";
 
 const contact_columns = data => {
-  let {
-    onContactEdit,
-    onContactDelete,
-  } = data;
+  let { crops, customers, countries, onContactEdit, onContactDelete } = data;
   return [
     {
-      Header: '',
-      accessor: '',
-      id: 'contact_initals',
+      Header: "",
+      accessor: "",
+      id: "contact_initals",
       Cell: ({ original: { first_name, last_name } }) => {
         return (
           <Avatar
@@ -27,73 +24,67 @@ const contact_columns = data => {
       },
     },
     {
-      Header: 'First Name',
-      Cell: ({ original }) => (
-        <span>
-          {original.first_name || "-"}
-        </span>
-      ),
-      id: 'first_name',
+      Header: "First Name",
+      Cell: ({ original }) => <span>{original.first_name || "-"}</span>,
+      id: "first_name",
     },
     {
-      Header: 'Middle Name',
-      Cell: ({ original }) => (
-        <span>
-          {original.middle_name || "-"}
-        </span>
-      ),
-      id: 'middle_name',
+      Header: "Middle Name",
+      Cell: ({ original }) => <span>{original.middle_name || "-"}</span>,
+      id: "middle_name",
     },
     {
-      Header: 'Last Name',
-      Cell: ({ original }) => (
-        <span>
-          {original.last_name || "-"}
-        </span>
-      ),
-      id: 'last_name',
+      Header: "Last Name",
+      Cell: ({ original }) => <span>{original.last_name || "-"}</span>,
+      id: "last_name",
     },
     {
-      Header: 'Location',
-      id: 'location',
-      Cell: ({ original }) => (
-        <span>
-          {original.city}, {original.country}
-        </span>
-      ),
+      Header: "Location",
+      id: "location",
+      Cell: ({ original }) => {
+        let country = countries.find(
+          country => country.value === original.country
+        );
+        return (
+          <span>
+            {original.city}, {country && country.label}
+          </span>
+        );
+      },
     },
     {
-      Header: 'Crop',
-      accessor: 'crop_managed',
-      id: 'crop_managed',
+      Header: "Crop",
+      Cell: ({ original }) => {
+        let crop = crops.find(crop => crop.value === original.crop_managed);
+        return <span>{crop ? crop.label : "-"}</span>;
+      },
+      id: "crop_managed",
     },
     {
-      Header: 'Phone',
-      id: 'phone_number',
+      Header: "Phone",
+      id: "phone_number",
       Cell: ({ original }) => <span>{original.phone_numbers[0]}</span>,
     },
     {
-      Header: 'Customer',
-      Cell: ({ original }) => (
-        <span>
-          {original.customer || "-"}
-        </span>
-      ),
-      id: 'customer',
+      Header: "Customer",
+      Cell: ({ original }) => {
+        let customer = customers.find(
+          customer => customer.value === original.customer
+        );
+        let customerValue = customer && customer.label.split(" ")[0];
+        return <span>{customerValue ? customerValue : "-"}</span>;
+      },
+      id: "customer",
     },
     {
-      Header: 'Language',
-      Cell: ({ original }) => (
-        <span>
-          {original.language || "-"}
-        </span>
-      ),
-      id: 'language',
+      Header: "Language",
+      Cell: ({ original }) => <span>{original.language || "-"}</span>,
+      id: "language",
     },
     {
-      Header: '',
-      accessor: '',
-      id: 'actions',
+      Header: "",
+      accessor: "",
+      id: "actions",
       Cell: ({ original }) => (
         <TableActions
           model="contact"
@@ -107,6 +98,7 @@ const contact_columns = data => {
 };
 
 const ContactTable = ({
+  crops,
   pageSize,
   currentPage,
   totalPages,
@@ -115,6 +107,8 @@ const ContactTable = ({
   onRefresh,
   contacts,
   onPageChange,
+  countries,
+  customers,
   onPageSizeChange,
   onFetchData,
   onContactEdit,
@@ -125,27 +119,27 @@ const ContactTable = ({
       mt="50px"
       resized={[
         {
-          id: 'contact_initals',
+          id: "contact_initals",
           value: 80,
         },
         {
-          id: 'middle_name',
+          id: "middle_name",
           value: 120,
         },
         {
-          id: 'location',
+          id: "location",
           value: 150,
         },
         {
-          id: 'language',
+          id: "language",
           value: 100,
         },
         {
-          id: 'phone_number',
+          id: "phone_number",
           value: 150,
         },
         {
-          id: 'actions',
+          id: "actions",
           value: 80,
         },
       ]}
@@ -163,6 +157,9 @@ const ContactTable = ({
       noDataText="No Contacts Added Yet"
       errorText="Oops! There was an issue fetching your contacts"
       columns={contact_columns({
+        crops,
+        countries,
+        customers,
         onContactEdit,
         onContactDelete,
       })}

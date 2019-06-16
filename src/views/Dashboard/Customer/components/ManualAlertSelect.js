@@ -4,8 +4,8 @@ import Card from "../../../../components/Card";
 import Button from "../../../../components/Button";
 import Switch from "../../../../components/Switch";
 
-export default function WeatherForecastSelect({ goBack, payload, onSubmit }) {
-  let [weatherForecast, setWeatherForecast] = useState(payload.weatherForecast || false);
+export default function ManualAlertSelect({ goBack, payload, onSubmit }) {
+  let [manualAlert, setManualAlert] = useState(payload.manualAlert || false);
 
   return (
     <div>
@@ -17,20 +17,20 @@ export default function WeatherForecastSelect({ goBack, payload, onSubmit }) {
           flexDirection="column"
         >
           <Heading mb={2} fontWeight={500} fontSize={24}>
-            Turn on Weather Forecast Messaging
+            Turn on Manual Alerts
           </Heading>
           <Text color="#8c8c8c">
-            Allow customer to receive weather forecast messages
+            Allow customer to receive manual alerts
           </Text>
           <Flex alignItems="center" mt={4}>
             <Text color="#b4b4b4" mr={2}>
               No
             </Text>
             <Switch
-              value={weatherForecast}
-              checked={weatherForecast}
+              value={manualAlert}
+              checked={manualAlert}
               onChange={() => {
-                setWeatherForecast(!weatherForecast);
+                setManualAlert(!manualAlert);
               }}
             />
             <Text ml={2}>Yes</Text>
@@ -51,9 +51,9 @@ export default function WeatherForecastSelect({ goBack, payload, onSubmit }) {
           kind="orange"
           width="300px"
           mb="8px"
-          onClick={() => onSubmit(weatherForecast)}
+          onClick={() => onSubmit(manualAlert)}
         >
-          Done
+          Next
         </Button>
       </Flex>
     </div>

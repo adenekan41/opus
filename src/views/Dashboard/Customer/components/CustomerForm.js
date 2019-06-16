@@ -1,21 +1,12 @@
 import React from "react";
 import { Formik, Field } from "formik";
-import { Box, Flex, Text } from "rebass";
+import { Box } from "rebass";
 import * as yup from "yup";
 import Dropdown from "../../../../components/Select";
 import Input from "../../../../components/Input";
-import Button, { EmptyButton } from "../../../../components/Button";
-import { Icon } from "../../../../components/Icon";
+import Button from "../../../../components/Button";
 import { allCountries, getCountryStates } from "../../../../helpers/countries";
-
-const AddCustomerButtonStyle = `
-height: 60px;
-padding: 0 16px;
-opacity: 0.6;
-border-radius: 3px;
-border: solid 1px rgba(18, 18, 18, 0.11);
-background-color: #ffffff;
-`;
+import { getStates } from "../../../../helpers/functions";
 
 const customerFormValidation = yup.object().shape({
   first_name: yup.string().required("First name is required"),
@@ -24,19 +15,17 @@ const customerFormValidation = yup.object().shape({
   city: yup.string().required("City is required"),
   crop_managed: yup.string().required("Crop managed is required"),
   phone_number: yup.string().required("Phone number is required"),
+  organisation_name: yup.string().required("Company is required"),
 });
 
 class CustomerForm extends React.Component {
-  state = {
-    showSecondaryPhoneNumber: false,
-    cities: [],
-  };
-
-  addPhoneNumber = () => {
-    this.setState(({ showSecondaryPhoneNumber }) => ({
-      showSecondaryPhoneNumber: !showSecondaryPhoneNumber,
-    }));
-  };
+  constructor(props) {
+    super(props);
+    const { countries, country } = this.props;
+    this.state = {
+      cities: getCountryStates(getStates(country, countries)) || [],
+    };
+  }
 
   setCities = cities => {
     this.setState({
@@ -53,12 +42,13 @@ class CustomerForm extends React.Component {
       middle_name,
       crop_managed,
       city,
+      email,
       country,
-      phone_numbers = [],
-      company,
+      phone_number,
+      organisation_name,
       countries,
       crops,
-      onCancel
+      onCancel,
     } = this.props;
     return (
       <Formik
@@ -69,11 +59,12 @@ class CustomerForm extends React.Component {
           first_name: first_name || "",
           last_name: last_name || "",
           middle_name: middle_name || "",
-          phone_number: phone_numbers[0] || "",
+          phone_number: phone_number || "",
           crop_managed: crop_managed || "",
           city: city || "",
           country: country || "",
-          company: company || "",
+          email: email || "",
+          organisation_name: organisation_name || "",
         }}
       >
         {({ values, errors, touched, handleSubmit, handleChange }) => (
@@ -198,17 +189,35 @@ class CustomerForm extends React.Component {
                 <div className="col-md-6">
                   <Input
                     mb="20px"
-                    id="company"
-                    name="company"
+                    id="organisation_name"
+                    name="organisation_name"
                     type="text"
                     label="Company"
-                    touched={touched.company}
-                    value={values.company}
+                    touched={touched.organisation_name}
+                    value={values.organisation_name}
                     onChange={handleChange}
-                    errorMessage={errors.company}
-                    isInvalid={errors.company && touched.company}
+                    errorMessage={errors.organisation_name}
+                    isInvalid={
+                      errors.organisation_name && touched.organisation_name
+                    }
                   />
                 </div>
+                <div className="col-md-6">
+                  <Input
+                    mb="20px"
+                    id="email"
+                    name="email"
+                    type="text"
+                    label="Email Address"
+                    touched={touched.email}
+                    value={values.email}
+                    onChange={handleChange}
+                    errorMessage={errors.email}
+                    isInvalid={errors.email && touched.email}
+                  />
+                </div>
+              </div>
+              <div className="row">
                 <div className="col-md-6">
                   <Input
                     mb="20px"
@@ -223,44 +232,6 @@ class CustomerForm extends React.Component {
                     isInvalid={errors.phone_number && touched.phone_number}
                   />
                 </div>
-              </div>
-              <div className="row">
-                {this.state.showSecondaryPhoneNumber ? (
-                  <div className="col-md-6">
-                    <Input
-                      mb="20px"
-                      id="secondary_phone_number"
-                      name="secondary_phone_number"
-                      type="tel"
-                      label="Secondary Phone number"
-                      touched={touched.secondary_phone_number}
-                      value={values.secondary_phone_number}
-                      onChange={handleChange}
-                      errorMessage={errors.secondary_phone_number}
-                      isInvalid={
-                        errors.secondary_phone_number &&
-                        touched.secondary_phone_number
-                      }
-                    />
-                  </div>
-                ) : (
-                  <div className="col-md-6">
-                    <EmptyButton
-                      block
-                      css={AddCustomerButtonStyle}
-                      onClick={this.addPhoneNumber}
-                    >
-                      <Flex
-                        justifyContent="space-between"
-                        alignItems="center"
-                        width="100%"
-                      >
-                        <Text color="#8c8c8c">Add phone number</Text>
-                        <Icon name="add" color="#459b5e" />
-                      </Flex>
-                    </EmptyButton>
-                  </div>
-                )}
               </div>
             </Box>
             <Box className="row" mt="24px">
