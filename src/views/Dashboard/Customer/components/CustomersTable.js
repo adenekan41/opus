@@ -1,25 +1,15 @@
-import React from 'react';
-import Table from '../../../../components/Table';
-import Avatar from '../../../../components/Avatar';
-import TableActions from '../../../../components/Table/TableActions';
-import CustomerForm from './CustomerForm';
+import React from "react";
+import Table from "../../../../components/Table";
+import Avatar from "../../../../components/Avatar";
+import TableActions from "../../../../components/Table/TableActions";
 
 const customers_columns = data => {
-  let {
-    onCustomerEdit,
-    onCustomerDelete,
-    isLoading,
-    crops,
-    countries,
-    cities,
-    isAdmin,
-    getCountryCities,
-  } = data;
+  let { onDelete, countries, onEdit } = data;
   return [
     {
-      Header: '',
-      accessor: '',
-      id: 'customer_initals',
+      Header: "",
+      accessor: "",
+      id: "customer_initals",
       Cell: ({ original: { first_name, last_name } }) => {
         return (
           <Avatar
@@ -34,64 +24,60 @@ const customers_columns = data => {
       },
     },
     {
-      Header: 'First Name',
-      accessor: 'first_name',
-      id: 'first_name',
+      Header: "First Name",
+      accessor: "first_name",
+      id: "first_name",
     },
     {
-      Header: 'Middle Name',
-      accessor: 'middle_name',
-      id: 'middle_name',
+      Header: "Middle Name",
+      id: "other_name",
+      Cell: ({ original }) => <span>{original.other_name ? original.other_name : "-"}</span>,
     },
     {
-      Header: 'Last Name',
-      accessor: 'last_name',
-      id: 'last_name',
+      Header: "Last Name",
+      accessor: "last_name",
+      id: "last_name",
     },
     {
-      Header: 'Location',
-      id: 'location',
+      Header: "Location",
+      id: "location",
+      Cell: ({ original }) => {
+        let country = countries.find(
+          country => country.value === original.country
+        );
+        return (
+          <span>
+            {original.city}, {country && country.label}
+          </span>
+        );
+      },
+    },
+
+    {
+      Header: "Phone",
+      id: "phone_number",
+      Cell: ({ original }) => <span>{original.phone_number}</span>,
+    },
+    {
+      Header: "Company",
+      accessor: "organisation_name",
+      id: "organisation_name",
       Cell: ({ original }) => (
         <span>
-          {original.city}, {original.country}
+          {original.organisation_name ? original.organisation_name : "-"}
         </span>
       ),
     },
-   
     {
-      Header: 'Phone',
-      id: 'phone_number',
-      Cell: ({ original }) => <span>{original.phone_numbers}</span>,
-    },
-    {
-      Header: 'Company',
-      accessor: 'company',
-      id: 'company',
-    },
-    {
-      Header: '',
-      accessor: '',
-      id: 'actions',
+      Header: "",
+      accessor: "",
+      id: "actions",
       Cell: ({ original }) => (
         <TableActions
-          data={original}
           model="customer"
-          isLoading={isLoading}
-          onDelete={onCustomerDelete}
-          editModalHeading="Edit Customer"
-          renderEditForm={({ closeModal }) => (
-            <CustomerForm
-              {...original}
-              crops={crops}
-              cities={cities}
-              onSubmit={onCustomerEdit}
-              isAdmin={isAdmin}
-              countries={countries}
-              onCancel={closeModal}
-              isLoading={isLoading}
-              getCountryCities={getCountryCities}
-            />
-          )}
+          placement="bottom"
+          onEdit={() => onEdit(original)}
+          onDelete={() => onDelete(original)}
         />
       ),
     },
@@ -108,11 +94,7 @@ const customers_columns = data => {
 };
 
 const CustomerTable = ({
-  crops,
   countries,
-  cities,
-  isAdmin,
-  isLoading,
   pageSize,
   currentPage,
   totalPages,
@@ -125,34 +107,33 @@ const CustomerTable = ({
   onFetchData,
   onCustomerEdit,
   onCustomerDelete,
-  getCountryCities,
 }) => {
   return (
     <Table
       mt="50px"
       resized={[
         {
-          id: 'contact_initals',
+          id: "contact_initals",
           value: 30,
         },
         {
-          id: 'middle_name',
+          id: "middle_name",
           value: 130,
         },
         {
-          id: 'location',
+          id: "location",
           value: 200,
         },
         {
-          id: 'company',
+          id: "company",
           value: 120,
         },
         {
-          id: 'phone_number',
+          id: "phone_number",
           value: 250,
         },
         {
-          id: 'actions',
+          id: "actions",
           value: 100,
         },
       ]}
@@ -170,14 +151,9 @@ const CustomerTable = ({
       noDataText="No Customers Added Yet"
       errorText="Oops! There was an issue fetching your customers"
       columns={customers_columns({
-        onCustomerEdit,
-        onCustomerDelete,
-        getCountryCities,
-        isLoading,
-        crops,
+        onDelete: onCustomerDelete,
+        onEdit: onCustomerEdit,
         countries,
-        cities,
-        isAdmin,
       })}
     />
   );

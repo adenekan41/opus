@@ -1,24 +1,24 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import DashboardLayout from '.';
-import Contacts from '../../../views/Dashboard/Contacts';
-import Alerts from '../../../views/Dashboard/Alerts';
-import Teams from '../../../views/Dashboard/Team';
-import Account from '../../../views/Dashboard/Account';
-import Forecast from '../../../views/Dashboard/Forecast';
-import Assets from '../../../views/Dashboard/AssetsManagement';
-import { DataProvider } from '../../../api/provider';
-import { DataContext } from '../../../api/context';
-import { FullScreenSpinner } from '../../../components/Spinner';
-import Home from '../../../views/Dashboard/Home';
+import React from "react";
+import { Switch, Route } from "react-router-dom";
+import DashboardLayout from ".";
+import Contacts from "../../../views/Dashboard/Contacts";
+import Alerts from "../../../views/Dashboard/Alerts";
+import Users from "../../../views/Dashboard/Team";
+import Account from "../../../views/Dashboard/Account";
+import Forecast from "../../../views/Dashboard/Forecast";
+import { DataProvider } from "../../../api/provider";
+import { DataContext } from "../../../api/context";
+import { FullScreenSpinner } from "../../../components/Spinner";
+import Home from "../../../views/Dashboard/Home";
+import Compare from "../../../views/Dashboard/Compare";
+import AssetManagement from "../../../views/Dashboard/Assets";
 import Customer from '../../../views/Dashboard/Customer'
-import Compare from '../../../views/Dashboard/Compare';
 
-const DashboardRoutes = ({ token, ...rest }) => {
+const DashboardRoutes = ({ token, clearAllState, ...rest }) => {
   return (
     <DataProvider token={token} history={rest.history}>
       <DataContext.Consumer>
-        {({ state, dispatch, actions }) =>
+        {({ state, dispatch, actions, clearAllState: clearProviderState }) =>
           state.fetching ? (
             <FullScreenSpinner />
           ) : (
@@ -28,13 +28,16 @@ const DashboardRoutes = ({ token, ...rest }) => {
               {...{ ...state, dispatch }}
             >
               <Switch>
-                <Route path="/dashboard/stats" render={() => (
-                  <Home  {...rest} {...{ ...state, dispatch, actions }}/>
-                )}/>
+                <Route
+                  path="/dashboard/stats"
+                  render={() => (
+                    <Home {...rest} {...{ ...state, dispatch, actions }} />
+                  )}
+                />
                 <Route
                   path="/dashboard/weather-data"
                   render={() => (
-                    <Forecast {...rest} {...{ ...state, dispatch, actions, }} />
+                    <Forecast {...rest} {...{ ...state, dispatch, actions }} />
                   )}
                 />
                 <Route
@@ -50,13 +53,22 @@ const DashboardRoutes = ({ token, ...rest }) => {
                   )}
                 />
                 <Route
-                  path="/dashboard/team"
-                  render={() => <Teams {...rest} {...{ ...state, dispatch, actions }} />}
+                  path="/dashboard/users"
+                  render={() => (
+                    <Users {...rest} {...{ ...state, dispatch, actions }} />
+                  )}
                 />
                 <Route
                   path="/dashboard/profile/"
                   render={() => (
-                    <Account {...rest} {...{ ...state, dispatch, actions }} />
+                    <Account
+                      {...rest}
+                      {...{ ...state, dispatch, actions }}
+                      clearAllState={history => {
+                        clearProviderState();
+                        clearAllState(history);
+                      }}
+                    />
                   )}
                 />
                 <Route
@@ -68,11 +80,14 @@ const DashboardRoutes = ({ token, ...rest }) => {
                 <Route
                   path="/dashboard/assets/"
                   render={() => (
-                    <Assets {...rest} {...{ ...state, dispatch, actions }} />
+                    <AssetManagement
+                      {...rest}
+                      {...{ ...state, dispatch, actions }}
+                    />
                   )}
-                /> 
+                />
                 <Route
-                  path="/dashboard/customer/"
+                  path="/dashboard/customers/"
                   render={() => (
                     <Customer {...rest} {...{ ...state, dispatch, actions }} />
                   )}

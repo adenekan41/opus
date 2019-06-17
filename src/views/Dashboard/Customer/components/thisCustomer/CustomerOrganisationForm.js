@@ -1,32 +1,45 @@
-import React from 'react';
-import { Formik, Field } from 'formik';
-import * as yup from 'yup';
-import Input from '../../../../../components/Input';
-import Button from '../../../../../components/Button';
-import Dropdown from '../../../../../components/Select';
+import React, { useState } from "react";
+import { Formik, Field } from "formik";
+import * as yup from "yup";
+import Input from "../../../../../components/Input";
+import Button from "../../../../../components/Button";
+import Dropdown from "../../../../../components/Select";
+import {
+  allCountries,
+  getCountryStates,
+} from "../../../../../helpers/countries";
+import { getStates } from "../../../../../helpers/functions";
 
 const CustomerOrganizationValdationSchema = yup.object().shape({
-  company_name: yup.string().required('Company name is required'),
+  organisation_name: yup.string().required("Company name is required"),
 });
 
 const CustomerOrganizationForm = ({
   onSubmit,
-  company_name,
+  organisation_name,
   country,
   city,
-  zip_code,
-  plot_number,
-  street,
+  id,
+  isLoading,
+  organisation_zip_code,
+  organisation_plot_number,
+  organisation_street,
+  countries,
 }) => {
+  const [cities, setCities] = useState(
+    getCountryStates(getStates(country, countries)) || []
+  );
+
   return (
     <Formik
       initialValues={{
-        company_name: company_name || '',
-        country: country || '',
-        city: city || '',
-        zip_code: zip_code || '',
-        plot_number: plot_number || '',
-        street: street || '',
+        id: id || "",
+        organisation_name: organisation_name || "",
+        country: country || "",
+        city: city || "",
+        organisation_zip_code: organisation_zip_code || "",
+        organisation_plot_number: organisation_plot_number || "",
+        organisation_street: organisation_street || "",
       }}
       onSubmit={values => onSubmit(values)}
       validationSchema={CustomerOrganizationValdationSchema}
@@ -39,15 +52,17 @@ const CustomerOrganizationForm = ({
                 <div className="col-md-12">
                   <Input
                     mb="20px"
-                    id="company_name"
-                    name="company_name"
+                    id="organisation_name"
+                    name="organisation_name"
                     type="text"
                     label="Company name"
-                    touched={touched.company_name}
-                    value={values.company_name}
+                    touched={touched.organisation_name}
+                    value={values.organisation_name}
                     onChange={handleChange}
-                    errorMessage={errors.company_name}
-                    isInvalid={errors.company_name && touched.company_name}
+                    errorMessage={errors.organisation_name}
+                    isInvalid={
+                      errors.organisation_name && touched.organisation_name
+                    }
                   />
                 </div>
                 <div className="col-md-6">
@@ -60,10 +75,20 @@ const CustomerOrganizationForm = ({
                         id="country"
                         name="country"
                         label="Country"
-                        options={[{ value: 'Nigeria', label: 'Nigeria' }]}
+                        options={countries}
                         touched={touched.country}
                         value={values.country}
-                        onChange={country => form.setFieldValue('country', country)}
+                        onChange={country => {
+                          const value = country.value;
+                          const countryName = country.label;
+                          const selectedCountry = allCountries.find(
+                            country =>
+                              country.name.toLowerCase() ===
+                              countryName.toLowerCase()
+                          );
+                          form.setFieldValue("country", value);
+                          setCities(getCountryStates(selectedCountry.id));
+                        }}
                         errorMessage={errors.country}
                         isInvalid={errors.country && touched.country}
                       />
@@ -80,10 +105,10 @@ const CustomerOrganizationForm = ({
                         id="city"
                         name="city"
                         label="City"
-                        options={[{ value: 'Lagos', label: 'Lagos' }]}
+                        options={cities}
                         touched={touched.city}
                         value={values.city}
-                        onChange={city => form.setFieldValue('city', city)}
+                        onChange={city => form.setFieldValue("city", city.value)}
                         errorMessage={errors.city}
                         isInvalid={errors.city && touched.city}
                       />
@@ -93,43 +118,51 @@ const CustomerOrganizationForm = ({
                 <div className="col-md-6">
                   <Input
                     mb="20px"
-                    id="zip_code"
-                    name="zip_code"
+                    id="organisation_zip_code"
+                    name="organisation_zip_code"
                     type="text"
                     label="Zip code"
-                    touched={touched.zip_code}
-                    value={values.zip_code}
+                    touched={touched.organisation_zip_code}
+                    value={values.organisation_zip_code}
                     onChange={handleChange}
-                    errorMessage={errors.zip_code}
-                    isInvalid={errors.zip_code && touched.zip_code}
+                    errorMessage={errors.organisation_zip_code}
+                    isInvalid={
+                      errors.organisation_zip_code &&
+                      touched.organisation_zip_code
+                    }
                   />
                 </div>
                 <div className="col-md-6">
                   <Input
                     mb="20px"
-                    id="plot_number"
-                    name="plot_number"
+                    id="organisation_plot_number"
+                    name="organisation_plot_number"
                     type="text"
                     label="Plot number"
-                    touched={touched.plot_number}
-                    value={values.plot_number}
+                    touched={touched.organisation_plot_number}
+                    value={values.organisation_plot_number}
                     onChange={handleChange}
-                    errorMessage={errors.plot_number}
-                    isInvalid={errors.plot_number && touched.plot_number}
+                    errorMessage={errors.organisation_plot_number}
+                    isInvalid={
+                      errors.organisation_plot_number &&
+                      touched.organisation_plot_number
+                    }
                   />
                 </div>
                 <div className="col-md-12">
                   <Input
                     mb="20px"
-                    id="street"
-                    name="street"
+                    id="organisation_street"
+                    name="organisation_street"
                     type="text"
                     label="Street"
-                    touched={touched.street}
-                    value={values.street}
+                    touched={touched.organisation_street}
+                    value={values.organisation_street}
                     onChange={handleChange}
-                    errorMessage={errors.street}
-                    isInvalid={errors.street && touched.street}
+                    errorMessage={errors.organisation_street}
+                    isInvalid={
+                      errors.organisation_street && touched.organisation_street
+                    }
                   />
                 </div>
               </div>
@@ -138,7 +171,13 @@ const CustomerOrganizationForm = ({
               <div className="footer_button mt-3">
                 <div className="row">
                   <div className="col-md-12">
-                    <Button size="large" block kind="orange" type="submit">
+                    <Button
+                      size="large"
+                      block
+                      kind="orange"
+                      type="submit"
+                      isLoading={isLoading}
+                    >
                       Save Changes
                     </Button>
                   </div>

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Table from '../../../../components/Table';
 import Avatar from '../../../../components/Avatar';
 import TableActions from '../../../../components/Table/TableActions';
-import TeamForm from './TeamForm';
+import UserForm from './UserForm';
 
 const Dot = styled.span`
   display: inline-flex;
@@ -105,7 +105,7 @@ const admin_team_columns = (onTeamEdit, onTeamDelete) => [
         onDelete={onTeamDelete}
         editModalHeading="Edit User"
         renderEditForm={({ closeModal }) => (
-          <TeamForm
+          <UserForm
             {...original}
             isAdd={false}
             onSubmit={onTeamEdit}

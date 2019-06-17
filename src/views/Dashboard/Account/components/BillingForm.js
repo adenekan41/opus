@@ -1,22 +1,30 @@
-import React from 'react';
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import Input from '../../../../components/Input';
-import Button from '../../../../components/Button';
+import React from "react";
+import { Formik } from "formik";
+import * as yup from "yup";
+import Input from "../../../../components/Input";
+import Button from "../../../../components/Button";
+import TextArea from "../../../../components/TextArea";
 
 const billingValdationSchema = yup.object().shape({
-  vat: yup.string().required('VAT is required'),
-  company_reg_number: yup
+  billing_vat_number: yup.string().required("VAT is required"),
+  billing_registration_number: yup
     .string()
-    .required('Company Registraion Number is required'),
+    .required("Company Registraion Number is required"),
 });
 
-const BillingForm = ({ onSubmit, vat, company_reg_number }) => {
+const BillingForm = ({
+  onSubmit,
+  isLoading,
+  billing_registration_number,
+  billing_service_delivery,
+  billing_vat_number,
+}) => {
   return (
     <Formik
       initialValues={{
-        vat: vat || '',
-        company_reg_number: company_reg_number || '',
+        billing_registration_number: billing_registration_number || "",
+        billing_service_delivery: billing_service_delivery || "",
+        billing_vat_number: billing_vat_number || "",
       }}
       validationSchema={billingValdationSchema}
       onSubmit={values => onSubmit(values)}
@@ -29,31 +37,56 @@ const BillingForm = ({ onSubmit, vat, company_reg_number }) => {
                 <div className="col-md-12">
                   <Input
                     mb="20px"
-                    id="vat"
-                    name="vat"
+                    id="billing_vat_number"
+                    name="billing_vat_number"
                     type="text"
-                    label="VAT"
-                    touched={touched.vat}
-                    value={values.vat}
+                    label="VAT Number"
+                    touched={touched.billing_vat_number}
+                    value={values.billing_vat_number}
                     onChange={handleChange}
-                    errorMessage={errors.vat}
-                    isInvalid={errors.vat && touched.vat}
+                    errorMessage={errors.billing_vat_number}
+                    isInvalid={
+                      errors.billing_vat_number && touched.billing_vat_number
+                    }
                   />
                 </div>
+              </div>
+              <div className="row">
                 <div className="col-md-12">
                   <Input
                     mb="20px"
-                    id="company_reg_number"
-                    name="company_reg_number"
+                    id="billing_registration_number"
+                    name="billing_registration_number"
                     type="text"
                     label="Company registration number"
-                    touched={touched.company_reg_number}
-                    value={values.company_reg_number}
+                    touched={touched.billing_registration_number}
+                    value={values.billing_registration_number}
                     onChange={handleChange}
-                    errorMessage={errors.company_reg_number}
+                    errorMessage={errors.billing_registration_number}
                     isInvalid={
-                      errors.company_reg_number && touched.company_reg_number
+                      errors.billing_registration_number &&
+                      touched.billing_registration_number
                     }
+                  />
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-12">
+                  <TextArea
+                    mb="20px"
+                    type="text"
+                    name="billing_service_delivery"
+                    placeholder="Service Delivery"
+                    touched={touched.billing_service_delivery}
+                    value={values.billing_service_delivery}
+                    errorMessage={errors.billing_service_delivery}
+                    isInvalid={
+                      errors.billing_service_delivery &&
+                      touched.billing_service_delivery
+                    }
+                    onChange={handleChange}
+                    style={{ height: "300px" }}
                   />
                 </div>
               </div>
@@ -62,7 +95,13 @@ const BillingForm = ({ onSubmit, vat, company_reg_number }) => {
               <div className="footer_button mt-3">
                 <div className="row">
                   <div className="col-md-12">
-                    <Button size="large" block kind="orange" type="submit">
+                    <Button
+                      size="large"
+                      block
+                      kind="orange"
+                      type="submit"
+                      isLoading={isLoading}
+                    >
                       Save Changes
                     </Button>
                   </div>

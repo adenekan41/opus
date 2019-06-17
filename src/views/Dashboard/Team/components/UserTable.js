@@ -1,22 +1,20 @@
 import React from 'react';
-import moment from 'moment';
 import Table from '../../../../components/Table';
 import Avatar from '../../../../components/Avatar';
-import Button from '../../../../components/Button';
 import TableActions from '../../../../components/Table/TableActions';
-import TeamForm from './TeamForm';
+import { setProfilePicture } from "../../../../helpers/functions";
 
-const team_columns = (onTeamEdit, onTeamDelete) => [
+const user_columns = (onUserEdit, onUserDelete) => [
   {
     Header: '',
     accessor: '',
     id: 'contact_initals',
-    Cell: ({ original: { first_name, last_name } }) => {
+    Cell: ({ original: { first_name, last_name, profile_picture } }) => {
       return (
         <Avatar
           isRound
           size="38px"
-          photo_url=""
+          photo_url={setProfilePicture(profile_picture)}
           color="#ff9901"
           bgColor="rgba(255,153,1,.15)"
           initial={first_name && last_name ? `${first_name[0]}${last_name[0]}` : `U`}
@@ -26,38 +24,49 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
   },
   {
     Header: 'First Name',
-    accessor: 'first_name',
+    Cell: ({ original }) => (
+      <span>
+        {original.first_name || "-"}
+      </span>
+    ),
     id: 'first_name',
+  },
+  {
+    Header: 'Middle Name',
+    Cell: ({ original }) => (
+      <span>
+        {original.other_name || "-"}
+      </span>
+    ),
+    id: 'middle_name',
   },
 
   {
     Header: 'Last Name',
-    accessor: 'last_name',
+    Cell: ({ original }) => (
+      <span>
+        {original.last_name || "-"}
+      </span>
+    ),
     id: 'last_name',
   },
   {
     Header: 'Email',
-    accessor: 'email',
+    Cell: ({ original }) => (
+      <span>
+        {original.email || "-"}
+      </span>
+    ),
     id: 'email',
   },
   {
-    Header: 'Date Added',
-    Cell: ({ original: { created_at } }) => (
-      <span>{moment(created_at).format('DD MMMM, YYYY')}</span>
+    Header: 'Phone',
+    Cell: ({ original }) => (
+      <span>
+        {original.phone_number || "-"}
+      </span>
     ),
-    id: 'date',
-  },
-  {
-    Header: 'Status',
-    accessor: 'status',
-    id: 'status',
-      Cell: ({ original: {status} }) => (
-      <Button
-        background={status === 'pending' ? '#ffc502' : '#29cb98'}
-        height="25px"
-       
-      >{status}</Button>
-    ),
+    id: 'phone_number',
   },
   
   {
@@ -68,24 +77,15 @@ const team_columns = (onTeamEdit, onTeamDelete) => [
     Cell: ({ original }) => (
       <TableActions
         model="user"
-        data={original}
-        onEdit={onTeamEdit}
-        onDelete={onTeamDelete}
-        editModalHeading="Edit User"
-        renderEditForm={({ data, onEdit, closeModal }) => (
-          <TeamForm
-            {...data}
-            isAdd={false}
-            onsubmit={onEdit}
-            onCancel={closeModal}
-          />
-        )}
+        placement="bottom"
+        onEdit={() => onUserEdit(original)}
+        onDelete={() => onUserDelete(original)}
       />
     ),
   },
 ];
 
-const TeamTable = ({
+const UserTable = ({
   isLoading,
   pageSize,
   currentPage,
@@ -97,8 +97,8 @@ const TeamTable = ({
   onPageChange,
   onPageSizeChange,
   onFetchData,
-  onTeamEdit,
-  onTeamDelete,
+  onUserEdit,
+  onUserDelete,
 }) => {
   return (
     <Table
@@ -127,14 +127,14 @@ const TeamTable = ({
       data={teams}
       noDataText="No Team Added Yet"
       errorText="Oops! There was an issue fetching your users"
-      columns={team_columns(onTeamEdit, onTeamDelete)}
+      columns={user_columns(onUserEdit, onUserDelete)}
     />
   );
 };
 
-export default TeamTable;
+export default UserTable;
 
-TeamTable.defaultProps = {
+UserTable.defaultProps = {
   teams: [
     {
       firstName: 'Faith',

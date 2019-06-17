@@ -53,8 +53,8 @@ Spinner.propTypes = {
 export function FullScreenSpinner(props) {
   return (
     <Flex
-      style={{ position: 'absolute', height: '100vh' }}
-      width="100%"
+      style={{ position: 'absolute', height: props.height || 'calc(100vh - 80px)' }}
+      width={props.width || "100%"}
       flexDirection="column"
       alignItems="center"
       justifyContent="center"

@@ -8,14 +8,14 @@ export const RecoverLayout = styled.div`
 
 }
 .Recover__opus-insight h1{
-  font-size: 35px;
+  font-size: 32px;
   color: #ff9901;
   margin-bottom: 0;
-  
+  padding-bottom: 12px;
   font-weight: 500;
 }
 .Recover__opus-insight p{
-  font-size: 17px
+  font-size: 16px
 }
 
 

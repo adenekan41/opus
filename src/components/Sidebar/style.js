@@ -52,6 +52,7 @@ export const SidebarContainer = styled.div`
 
     &__Main {
       flex: 1;
+      overflow: scroll;
 
       .MenuGroup {
         &__Heading {

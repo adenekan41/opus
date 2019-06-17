@@ -1,53 +1,69 @@
-import React from 'react';
-import CustomerAdvisoryModuleTable from './CustomerAdvisoryModuleTable';
-import SearchInput from '../../../../../components/SearchInput';
-
+import React from "react";
+import CustomerAdvisoryModuleTable from "./CustomerAdvisoryModuleTable";
+import SelectSearch from "../../../../../components/SelectSearchInput";
 
 class CustomerAdvisoryModules extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       buttonLoading: false,
       cities: [],
-      advisorymodules:[{
-          name:'Blossom shower simulation',
-      }]
+      customerModules: this.props.customerModules || [
+        {
+          name: "Blossom shower simulation",
+        },
+      ],
     };
   }
 
-  onCustomerCreate = (values, callback) => {
-   
+  formatSearchOptions = () => {
+    const { advisory_modules = [] } = this.props;
+    return advisory_modules.map(advisory_module => ({
+      label: advisory_module.name,
+      value: advisory_module.name,
+    }));
   };
 
-  onCustomerEdit = (values, callback) => {
-   
+  addCustomerModule = value => {
+    let { advisory_modules = [] } = this.props;
+    let selectedModule = advisory_modules.find(
+      advisory_module => advisory_module.station_name === value
+    );
+    let { id, name } = selectedModule;
+    this.setState(({ customerModules }) => ({
+      customerModules: [{ id, name }, ...customerModules],
+    }));
   };
 
-  onCustomerDelete = (id, callback) => {
-   
+  deleteCustomerModule = value => {
+    this.setState(({ customerModules }) =>
+      customerModules.filter(({ id }) => id !== value)
+    );
   };
 
   render() {
-    // const { profile } = this.props;
-    let { buttonLoading, advisorymodules } = this.state;
-    // let isAdmin = profile.username === 'admin';
+    let { buttonLoading, customerModules } = this.state;
+
     return (
-      <div style={{ padding: '40px' }}>
+      <div style={{ padding: "40px" }}>
         <div className="row">
-            <div className="col-md-12 col-xs-12 col-sm-12 col-lg-12">
-              <SearchInput placeholder="Search for an Advisory Module" mb="8px" />
-            </div>
-            
-          </div>
-         
-            <CustomerAdvisoryModuleTable
-              advisorymodules={advisorymodules}
-              isLoading={buttonLoading}
-              onCustomerEdit={this.onCustomerEdit}
-              onCustomerDelete={this.onCustomerDelete}
+          <div className="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <SelectSearch
+              mb="8px"
+              options={this.formatSearchOptions()}
+              placeholder="Search for an Advisory Module"
+              onChange={advisory_module =>
+                this.addCustomerModule(advisory_module.value)
+              }
             />
-         
-          
+          </div>
+        </div>
+
+        <CustomerAdvisoryModuleTable
+          advisorymodules={customerModules}
+          isLoading={buttonLoading}
+          deleteModule={this.deleteCustomerModule}
+        />
       </div>
     );
   }

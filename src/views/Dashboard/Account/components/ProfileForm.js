@@ -1,34 +1,38 @@
-import React from 'react';
-import { Formik } from 'formik';
-import { Box } from 'rebass';
-import * as yup from 'yup';
-import Input from '../../../../components/Input';
-import Button from '../../../../components/Button';
-import ChangeEmailForm from './ChangeEmailForm';
-import ChangePasswordForm from './ChangePasswordForm';
+import React from "react";
+import { Formik } from "formik";
+import { Box } from "rebass";
+import * as yup from "yup";
+import Input from "../../../../components/Input";
+import Button from "../../../../components/Button";
+import ChangePasswordForm from "./ChangePasswordForm";
 
 const profileValdationSchema = yup.object().shape({
-  first_name: yup.string().required('First name is required'),
-  last_name: yup.string().required('Last name is required'),
+  first_name: yup.string().required("First name is required"),
+  last_name: yup.string().required("Last name is required"),
 });
 
 const ProfileForm = ({
   onSubmit,
   first_name,
   last_name,
-  middle_name,
+  other_name,
   phone_number,
   location,
   email,
-  onEmailChange,
+  id,
   onPasswordChange,
+  isLoading,
+  deactivateAccount,
+  passwordLoading
 }) => (
   <Formik
     initialValues={{
-      first_name,
-      last_name,
-      middle_name,
-      phone_number,
+      id: id || "",
+      email: email || "",
+      first_name: first_name || "",
+      last_name: last_name || "",
+      other_name: other_name || "",
+      phone_number: phone_number || "",
       location,
     }}
     onSubmit={values => onSubmit(values)}
@@ -54,15 +58,15 @@ const ProfileForm = ({
           <div className="col">
             <Input
               mb="20px"
-              id="middle_name"
-              name="middle_name"
+              id="other_name"
+              name="other_name"
               type="text"
               label="Middle name"
-              touched={touched.middle_name}
-              value={values.middle_name}
+              touched={touched.other_name}
+              value={values.other_name}
               onChange={handleChange}
-              errorMessage={errors.middle_name}
-              isInvalid={errors.middle_name && touched.middle_name}
+              errorMessage={errors.other_name}
+              isInvalid={errors.other_name && touched.other_name}
             />
           </div>
           <div className="col">
@@ -93,54 +97,38 @@ const ProfileForm = ({
               isInvalid={errors.phone_number && touched.phone_number}
             />
           </div>
-          <div className="col-md-8">
+          <div className="col-md-4">
             <Input
-              id="location"
-              name="location"
-              type="text"
-              label="Location"
-              touched={touched.location}
-              value={values.location}
+              id="email"
+              name="email"
+              type="email"
+              label="Email address"
+              touched={touched.email}
+              value={values.email}
               onChange={handleChange}
-              errorMessage={errors.location}
-              isInvalid={errors.location && touched.location}
+              errorMessage={errors.email}
+              isInvalid={errors.email && touched.email}
             />
           </div>
         </div>
 
         <br />
         <hr />
-        <br />
-        <div className="row">
-          <div className="col-md-4">
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              label="Email"
-              disabled
-              value={email}
-            />
-          </div>
-          <div className="col-md-4">
-            <ChangeEmailForm onSubmit={onEmailChange}/>
-          </div>
-        </div>
 
         <Box mt="20px">
           <div className="row">
             <div className="col-md-4">
               <Input
+                disabled
                 id="password"
                 name="password"
                 type="password"
                 label="Password"
-                disabled
                 value="........"
               />
             </div>
             <div className="col-md-4">
-            <ChangePasswordForm onSubmit={onPasswordChange}/>
+              <ChangePasswordForm onSubmit={onPasswordChange} isLoading={passwordLoading} />
             </div>
           </div>
         </Box>
@@ -150,12 +138,12 @@ const ProfileForm = ({
         <div className="footer_button mt-3">
           <div className="row">
             <div className="col-md-4">
-              <Button size="large" block type="button" kind="red">
+              <Button size="large" block type="button" kind="red" onClick={deactivateAccount}>
                 Deactivate Account
               </Button>
             </div>
             <div className="col-md-8">
-              <Button size="large" block kind="orange">
+              <Button size="large" block kind="orange" isLoading={isLoading}>
                 Save Changes
               </Button>
             </div>

@@ -25,6 +25,8 @@ export class DataProvider extends React.Component {
       users: [],
       crops: [],
       alerts: [],
+      assets: [],
+      formattedAssets: [],
       contacts: [],
       fetching: false,
       weatherStation: {},
@@ -35,11 +37,8 @@ export class DataProvider extends React.Component {
       observationTimes: [],
       compareStationCsvData: [],
       compareType: "Temperature",
-      profile: {
-        username: "admin",
-        first_name: "Micha",
-        last_name: "Van Winkelhof",
-      },
+      profile: {},
+      weatherStationsList: [],
       ...this.loadTokenFromStorage(),
     };
     this.state.context = {
@@ -77,25 +76,42 @@ export class DataProvider extends React.Component {
 
   initialize = tokens => {
     let { token } = tokens;
-    return Promise.all([
-      // this.getProfile(opus1_token),
-      // this.getWhatsappAlerts(token),
-      // this.getCrops(opus1_token),
-      // this.getContacts(token),
-      // this.getUsers(opus1_token),
-      this.getWeatherData(token),
-      // this.getWeatherStationCurrentData('sefwi01'),
-      // this.getWeatherStationCurrentData('sefwi02'),
-      // this.getWeatherStationCurrentData('sefwi03'),
-    ]).then(data => {
-      return {
-        // profile: data[0],
-        // alerts: data[1],
-        // crops: data[2],
-        // contacts: data[3],
-        // users: data[4],
-        weatherStations: data[0],
-      };
+    return this.getProfile(token).then(data => {
+      const userProfile = data;
+      if (userProfile.is_admin || userProfile.is_superuser) {
+        return Promise.all([
+          this.getUsers(token),
+          this.getWeatherData(token),
+          this.getAssets(token),
+          this.getContacts({token}),
+          this.getWeatherStations(token)
+        ]).then(response => {
+          return {
+            profile: userProfile,
+            users: response[0],
+            weatherStations: data[1],
+            assets: data[2],
+            contacts: data[3],
+            weatherStationsList: data[4]
+          };
+        });
+      }
+      if (userProfile.is_customer) {
+        return Promise.all([
+          this.getWeatherData(token),
+          this.getContacts({token}),
+          this.getAssets(token),
+          this.getWeatherStations(token)
+        ]).then(response => {
+          return {
+            profile: userProfile,
+            weatherStations: response[0],
+            contacts: response[1],
+            assets: response[2],
+            weatherStationsList: data[3]
+          };
+        });
+      }
     });
   };
 
@@ -110,6 +126,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.UPDATE_USER]: this.updateUser,
       [ACTIONS.PATCH_USER]: this.patchUser,
       [ACTIONS.DELETE_USER]: this.deleteUser,
+      [ACTIONS.SEARCH_USERS]: this.searchUsers,
       [ACTIONS.GET_WHATSAPP_ALERTS]: this.getWhatsappAlerts,
       [ACTIONS.SEND_WHATSAPP_ALERT]: this.sendWhatsappAlert,
       [ACTIONS.GET_CONTACTS]: this.getContacts,
@@ -117,6 +134,7 @@ export class DataProvider extends React.Component {
       [ACTIONS.CREATE_CONTACT]: this.createContact,
       [ACTIONS.UPDATE_CONTACT]: this.updateContact,
       [ACTIONS.DELETE_CONTACT]: this.deleteContact,
+      [ACTIONS.SEARCH_CONTACTS]: this.searchContacts,
       [ACTIONS.GET_WEATHER_FORECAST_LOGS]: this.getWeatherForecastLogs,
       [ACTIONS.GET_WEATHER_DATA]: this.getWeatherData,
       [ACTIONS.UPDATE_WEATHER_STATION_DATA]: this.updateWeatherStationData,
@@ -131,7 +149,17 @@ export class DataProvider extends React.Component {
       [ACTIONS.FILTER_COMPARE_LOGS_BY_TYPE]: this.filterCompareLogByType,
       [ACTIONS.EXPORT_COMPARE_DATA_CSV]: this.exportCompareData,
       [ACTIONS.SET_WINDY_MAP]: this.setWindyMap,
-      [ACTIONS.CLEAR_COMPARE_LOGS]: this.clearComparelogs
+      [ACTIONS.CLEAR_COMPARE_LOGS]: this.clearComparelogs,
+      [ACTIONS.UPDATE_PROFILE]: this.updateProfile,
+      [ACTIONS.GET_ASSETS]: this.getAssets,
+      [ACTIONS.CREATE_ASSET]: this.createAsset,
+      [ACTIONS.UPDATE_ASSET]: this.updateAsset,
+      [ACTIONS.DELETE_ASSET]: this.deleteAsset,
+      [ACTIONS.SEARCH_ASSETS]: this.searchAssets,
+      [ACTIONS.GET_WEATHER_STATIONS]: this.getWeatherStations,
+      [ACTIONS.CREATE_WEATHER_STATION]: this.createWeatherStation,
+      [ACTIONS.UPDATE_WEATHER_STATION]: this.updateWeatherStation,
+      [ACTIONS.DELETE_WEATHER_STATION]: this.deleteWeatherStation,
     };
     console.log({ type });
     return options[type](value);
@@ -154,9 +182,24 @@ export class DataProvider extends React.Component {
 
   clearAllState = () => {
     this.setState({
+      user: {},
+      map: null,
       users: [],
+      crops: [],
+      alerts: [],
+      assets: [],
+      formattedAssets: [],
+      contacts: [],
       fetching: false,
-      profile: this.props.profile || {},
+      weatherStation: {},
+      weatherStations: [],
+      type: "Temperature",
+      weatherStationLogs: [],
+      compareStationLogs: [],
+      observationTimes: [],
+      compareStationCsvData: [],
+      compareType: "Temperature",
+      profile: {},
     });
     clearState();
   };
@@ -167,12 +210,24 @@ export class DataProvider extends React.Component {
     if (Object.values(profile).length > 0) {
       return new Promise(resolve => resolve(profile));
     }
+
     return this.getAdapter()
       .getProfile(token)
       .then(data => {
         this.updateState({
           profile: data,
         });
+        return data;
+      });
+  };
+
+  updateProfile = payload => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .updateProfile(token, payload)
+      .then(data => {
+        this.updateState({ profile: data });
         return data;
       });
   };
@@ -186,18 +241,19 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .getUsers(token)
       .then(data => {
+        const { results } = data;
         this.updateState({
-          users: data,
+          users: results,
         });
-        return data;
+        return results;
       });
   };
 
   getUser = id => {
-    let { opus1_token } = this.state;
+    let { token } = this.state;
 
     return this.getAdapter()
-      .getUser(opus1_token, id)
+      .getUser(token, id)
       .then(data => {
         this.updateState({
           user: data,
@@ -207,10 +263,10 @@ export class DataProvider extends React.Component {
   };
 
   createUser = payload => {
-    let { opus1_token, users } = this.state;
+    let { token, users } = this.state;
 
     return this.getAdapter()
-      .createUser(opus1_token, payload)
+      .createUser(token, payload)
       .then(data => {
         this.updateState({ users: [data, ...users] });
         return data;
@@ -218,10 +274,10 @@ export class DataProvider extends React.Component {
   };
 
   adminCreateUser = payload => {
-    let { opus1_token, users } = this.state;
+    let { token, users } = this.state;
 
     return this.getAdapter()
-      .adminCreateUser(opus1_token, payload)
+      .adminCreateUser(token, payload)
       .then(data => {
         this.updateState({ users: [data, ...users] });
         return data;
@@ -229,10 +285,10 @@ export class DataProvider extends React.Component {
   };
 
   updateUser = payload => {
-    let { opus1_token, users } = this.state;
+    let { token, users } = this.state;
 
     return this.getAdapter()
-      .updateUser(opus1_token, payload)
+      .updateUser(token, payload)
       .then(data => {
         let result = users.map(user => {
           if (user.id === payload.id) {
@@ -246,10 +302,10 @@ export class DataProvider extends React.Component {
   };
 
   patchUser = payload => {
-    let { opus1_token, users } = this.state;
+    let { token, users } = this.state;
 
     return this.getAdapter()
-      .patchUser(opus1_token, payload)
+      .patchUser(token, payload)
       .then(data => {
         let result = users.map(user => {
           if (user.id === payload.id) {
@@ -263,14 +319,28 @@ export class DataProvider extends React.Component {
   };
 
   deleteUser = id => {
-    let { opus1_token, users } = this.state;
+    let { token, users } = this.state;
 
     return this.getAdapter()
-      .deleteUser(opus1_token, id)
+      .deleteUser(token, id)
       .then(data => {
         let result = users.filter(user => user.id !== id);
         this.updateState({ users: result });
         return data;
+      });
+  };
+
+  searchUsers = search => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .searchUsers(token, search)
+      .then(data => {
+        const { results } = data;
+        this.updateState({
+          users: results,
+        });
+        return results;
       });
   };
 
@@ -310,8 +380,19 @@ export class DataProvider extends React.Component {
       });
   };
 
-  getContacts = token => {
+  getContacts = ({ token, refresh = false }) => {
     let { contacts = [] } = this.state;
+
+    if (refresh) {
+      return this.getAdapter()
+        .getContacts(token)
+        .then(data => {
+          this.updateState({
+            contacts: data,
+          });
+          return data;
+        });
+    }
 
     if (contacts.length > 0) {
       return new Promise(resolve => resolve(contacts));
@@ -373,6 +454,19 @@ export class DataProvider extends React.Component {
       .then(data => {
         let result = contacts.filter(user => user.id !== id);
         this.updateState({ contacts: result });
+        return data;
+      });
+  };
+
+  searchContacts = search => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .searchContacts(token, search)
+      .then(data => {
+        this.updateState({
+          contacts: data,
+        });
         return data;
       });
   };
@@ -551,7 +645,7 @@ export class DataProvider extends React.Component {
       let observationTimes =
         weatherStationLogs &&
         weatherStationLogs[0] &&
-        weatherStationLogs[0].data && 
+        weatherStationLogs[0].data &&
         weatherStationLogs[0].data.map(value =>
           moment(value.observation_time).format("DD/MM")
         );
@@ -619,7 +713,152 @@ export class DataProvider extends React.Component {
   };
 
   clearComparelogs = () => {
-    this.updateState({ compareStationLogs: [], compareStationCsvData: [], compareType: "Temperature" });
+    this.updateState({
+      compareStationLogs: [],
+      compareStationCsvData: [],
+      compareType: "Temperature",
+    });
+  };
+
+  getAssets = () => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .getAssets(token)
+      .then(data => {
+        const { results } = data;
+        const crops = results.filter(asset => asset.is_crop);
+        const countries = results.filter(asset => asset.is_country);
+        const formattedAssets = [
+          { name: "Crop", data: crops },
+          { name: "Country", data: countries },
+        ];
+        this.updateState({ assets: results, formattedAssets });
+        return formattedAssets;
+      });
+  };
+
+  createAsset = payload => {
+    let { token, assets } = this.state;
+
+    return this.getAdapter()
+      .createAsset(token, payload)
+      .then(data => {
+        let newAssets = [data, ...assets];
+        const crops = newAssets.filter(asset => asset.is_crop);
+        const countries = newAssets.filter(asset => asset.is_country);
+        const formattedAssets = [
+          { name: "Crop", data: crops },
+          { name: "Country", data: countries },
+        ];
+        this.updateState({ assets: newAssets, formattedAssets });
+        return data;
+      });
+  };
+
+  updateAsset = payload => {
+    let { token, assets } = this.state;
+
+    return this.getAdapter()
+      .updateAsset(token, payload)
+      .then(data => {
+        let newAssets = assets.map(asset => {
+          if (asset.id === payload.id) {
+            return data;
+          }
+          return asset;
+        });
+        const crops = newAssets.filter(asset => asset.is_crop);
+        const countries = newAssets.filter(asset => asset.is_country);
+        const formattedAssets = [
+          { name: "Crop", data: crops },
+          { name: "Country", data: countries },
+        ];
+        this.updateState({ assets: newAssets, formattedAssets });
+        return data;
+      });
+  };
+
+  deleteAsset = id => {
+    let { token, assets } = this.state;
+
+    return this.getAdapter()
+      .deleteAsset(token, id)
+      .then(data => {
+        const newAssets = assets.filter(asset => asset.id !== id);
+        const crops = newAssets.filter(asset => asset.is_crop);
+        const countries = newAssets.filter(asset => asset.is_country);
+        const formattedAssets = [
+          { name: "Crop", data: crops },
+          { name: "Country", data: countries },
+        ];
+        this.updateState({ assets: newAssets, formattedAssets });
+        return data;
+      });
+  };
+
+  searchAssets = search => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .searchAssets(token, search)
+      .then(data => {
+        const { results } = data;
+        const crops = results.filter(asset => asset.is_crop);
+        const countries = results.filter(asset => asset.is_country);
+        const formattedAssets = [
+          { name: "Crop", data: crops },
+          { name: "Country", data: countries },
+        ];
+        this.updateState({
+          assets: results,
+          formattedAssets,
+        });
+        return formattedAssets;
+      });
+  };
+
+  getWeatherStations = () => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .getWeatherStations(token)
+      .then(data => {
+        this.updateState({
+          weatherStationsList: data,
+        });
+        return data;
+      });
+  };
+
+  createWeatherStation = payload => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .createWeatherStation(token, payload)
+      .then(data => {
+        return data;
+      });
+  };
+
+  updateWeatherStation = payload => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .updateWeatherStation(token, payload)
+      .then(data => {
+        return data;
+      });
+  };
+
+  deleteWeatherStation = id => {
+    let { token } = this.state;
+
+    return this.getAdapter()
+      .deleteWeatherStation(token, id)
+      .then(data => {
+        return data;
+      });
   };
 
   render() {
