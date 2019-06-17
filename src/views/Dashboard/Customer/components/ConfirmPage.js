@@ -4,6 +4,7 @@ import { Heading, Flex, Box, Text } from "rebass";
 import Card from "../../../../components/Card";
 import Button from "../../../../components/Button";
 import { ErrorAlertComponent } from "../../../../components/AlertComponent";
+import { Icon } from "../../../../components/Icon";
 
 const ConfirmPageStyle = styled.div`
   .confirm-section {
@@ -55,7 +56,7 @@ export default function ConfirmPage({
 }) {
   const crop = crops.find(crop => crop.value === payload.crop_managed);
   const country = countries.find(country => country.value === payload.country);
-  
+
   return (
     <ConfirmPageStyle>
       <Box my={3}>
@@ -107,10 +108,7 @@ export default function ConfirmPage({
                 <Text color="#8c8c8c" fontSize={14} fontWeight={500} mb={2}>
                   Country
                 </Text>
-                <Text>
-                  {country && country.label
-                  }
-                </Text>
+                <Text>{country && country.label}</Text>
               </Box>
               <Box className="customer-details-data" mb={2}>
                 <Text color="#8c8c8c" fontSize={14} fontWeight={500} mb={2}>
@@ -141,8 +139,8 @@ export default function ConfirmPage({
               payload.weather_stations.length > 0 ? (
                 payload.weather_stations.map(station => (
                   <Flex alignItems="center" mb={3}>
-                    <i className="ion-pin mr-3" />
-                    <Text>{station.station_name}</Text>
+                    <Icon name="station" color="#000" />
+                    <Text ml={2}>{station.station_name}</Text>
                   </Flex>
                 ))
               ) : (
@@ -186,18 +184,6 @@ export default function ConfirmPage({
                 className={`pill ${payload.manualAlert ? "success" : "error"}`}
               >
                 {payload.manualAlert ? "Yes" : "No"}
-              </Box>
-            </Box>
-            <Box className="confirm-section__automatic-alerts">
-              <Heading color="#8c8c8c" fontWeight={500} fontSize={20} mb={3}>
-                Automatic Alerts
-              </Heading>
-              <Box
-                className={`pill ${
-                  payload.automaticAlert ? "success" : "error"
-                }`}
-              >
-                {payload.automaticAlert ? "Yes" : "No"}
               </Box>
             </Box>
           </Box>

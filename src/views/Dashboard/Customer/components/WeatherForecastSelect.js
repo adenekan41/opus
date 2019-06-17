@@ -53,7 +53,7 @@ export default function WeatherForecastSelect({ goBack, payload, onSubmit }) {
           mb="8px"
           onClick={() => onSubmit(weatherForecast)}
         >
-          Done
+          Confirm
         </Button>
       </Flex>
     </div>
