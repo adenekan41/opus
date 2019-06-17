@@ -95,6 +95,15 @@ const customers_columns = data => {
         />
       ),
     },
+    {
+        Header: 'Location',
+        id: 'location',
+        Cell: ({ original }) => (
+          <span>
+            {original.city}, {original.country}
+          </span>
+        ),
+      },
   ];
 };
 
