@@ -1,66 +1,87 @@
-import React, { Component } from 'react';
-import Header from '../../../components/Navbar';
-import { RecoverLayout } from './style';
-import RecoverPasswordForm from './form';
-import { Toast } from '../../../components/Toast';
+import React, { Component } from "react";
+import { Box } from "rebass";
+import Header from "../../../components/Navbar";
+import { RecoverLayout } from "./style";
+import RecoverPasswordForm from "./form";
+import { errorCallback, getAllUrlParams } from "../../../helpers/functions";
+import Button from "../../../components/Button";
 
 class Recover extends Component {
   state = {
     loading: false,
-    error: false,
-    errorMessage: '',
+    section: "form",
   };
+
   resetPassword = payload => {
-    this.setState({ loading: true, error: false });
-    this.props
-      .onResetPassword(payload, () => this.setState({ error: true }))
-      .then(data => {
+    const { onResetPassword, location } = this.props;
+    const params = getAllUrlParams(location.search);
+    const id = params && params.uuid;
+
+    this.setState({ loading: true });
+
+    onResetPassword({ password: payload.password, id })
+      .then(() => {
         this.setState({
           loading: false,
+          section: "success",
         });
-        // if(data) {
-        //   this.props.history.push('/dashboard/weather-data/map');
-        // }
+      })
+      .catch(error => {
+        this.setState({ loading: false });
+        errorCallback(error);
       });
   };
 
+  goToLogin = () => {
+    this.props.history.push("/");
+  };
+
   render() {
-    const { error, errorMessage, loading } = this.state;
+    const { loading, section } = this.state;
+
     return (
       <>
         <RecoverLayout>
           <Header />
           <div className="RecoverBody Recover__opus-insight">
             <div className="container">
-              <h1 className="text-center">Recover password</h1>
-              <p className="text-center">
-                Type in the email address associated with your account to get a
-                recovery link.
-              </p>
-              <div className="row">
-                <div className="col" />
-                <div className="col-md-5">
-                  <RecoverPasswordForm
-                    isLoading={loading}
-                    onSubmit={this.resetPassword}
-                  />
-                </div>
-                <div className="col" />
-              </div>
+              {section === "form" && (
+                <>
+                  <h1 className="text-center">Welcome!</h1>
+                  <p className="text-center">
+                    Create a password to begin using your account.
+                  </p>
+                  <div className="row">
+                    <div className="col" />
+                    <Box className="col-md-5" mt={5}>
+                      <RecoverPasswordForm
+                        isLoading={loading}
+                        onSubmit={this.resetPassword}
+                      />
+                    </Box>
+                    <div className="col" />
+                  </div>
+                </>
+              )}
+
+              {section === "success" && (
+                <>
+                  <h1 className="text-center">Password Saved</h1>
+                  <p className="text-center">Please login.</p>
+                  <div className="row">
+                    <div className="col" />
+                    <div className="col-md-5">
+                      <Button size="large" block onClick={this.goToLogin}>
+                        Login
+                      </Button>
+                    </div>
+                    <div className="col" />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </RecoverLayout>
-
-        {error && (
-          <Toast
-            showToast={error}
-            title="Error"
-            status="error"
-            onClose={() => this.setState({ error: false })}
-          >
-            {errorMessage || 'Unable to log in with provided credentials.'}
-          </Toast>
-        )}
       </>
     );
   }

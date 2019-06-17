@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import { sharedProps } from '../Avatar';
+import { Icon } from "../Icon";
 
 const generateSize = (size, fontSize) => {
   if (size === 'small')
@@ -199,5 +200,76 @@ export const EmptyButton = styled.button`
     outline: 0;
   }
 `;
+
+const StyledCloseButton = styled(EmptyButton)`
+  border-radius: ${props => (props.isRound ? "100%" : "4px")};
+  width: ${props => props.size};
+  height: ${props => props.size};
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus {
+    box-shadow: ${props => props.theme.colors.cyan.faint} 0px 0px 0px 3px
+  }
+
+  .Chakra-Alert & {
+    &:hover {
+      background-color: transparent;
+    }
+  }
+`;
+
+
+export const EmptyIconButton = ({
+  icon,
+  onClick,
+  iconColor,
+  className,
+  size,
+  iconSize,
+  isRound,
+  ...rest
+}) => (
+  <StyledCloseButton
+    className={`EmptyIconButton ${className}`.trim()}
+    type="button"
+    {...{ onClick, size, isRound, ...rest }}
+  >
+    <Icon color={iconColor} size={iconSize} name={icon} />
+  </StyledCloseButton>
+);
+
+EmptyIconButton.defaultProps = {
+  size: "40px",
+  className: "",
+  iconSize: "24px"
+};
+
+const StyledEmptyIconButton = styled(EmptyIconButton)`
+  opacity: 0.4;
+  &:hover {
+    opacity: 1;
+  }
+`;
+
+
+export const CloseButton = ({
+  onClick,
+  iconColor,
+  className,
+  size,
+  iconSize,
+  isRound,
+  ...rest
+}) => (
+  <StyledEmptyIconButton
+    icon="close"
+    className={`CloseButton ${className}`.trim()}
+    type="button"
+    {...{ onClick, size, isRound, iconSize, iconColor, ...rest }}
+  />
+);
 
 export default Button;

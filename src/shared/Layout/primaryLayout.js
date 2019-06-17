@@ -21,7 +21,7 @@ const PrimaryLayout = ({
         render={props => <Login {...props} onLogin={onLogin} />}
       />
       <Route
-        path="/recover"
+        path="/new-password"
         render={props => (
           <Recover {...props} onResetPassword={onResetPassword} />
         )}

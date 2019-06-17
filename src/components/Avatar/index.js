@@ -1,6 +1,5 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
-import clientPhoto from './Micha-van-Winkelhof.jpeg'
+import React from "react";
+import styled, { css } from "styled-components";
 
 export const sharedProps = css`
   margin: ${props => props.m};
@@ -75,27 +74,28 @@ const StyledAvatar = styled.div`
   flex-shrink: 0;
   justify-content: center;
   text-transform: uppercase;
-  font-weight: bold;
+  font-weight: 500;
   background-color: ${props => props.bgColor};
   background-position: center;
-  background-image: url(${props => props.photo_url});
+  ${props =>
+    props.photo_url ? `background-image: url(${props.photo_url})` : ``};
   background-repeat: no-repeat;
   background-size: 110%;
-  border-radius: ${props => (props.isRound ? '50%' : '4px')};
+  border-radius: ${props => (props.isRound ? "50%" : "4px")};
   color: ${props => props.color || `white`};
-  font-size: ${props => props.fontSize || '14px'};
+  font-size: ${props => props.fontSize || "14px"};
 
   ${sharedProps}
 `;
 
 const Avatar = ({
-  initial = 'A',
+  initial = "A",
   photo_url,
   isRound,
-  bgColor = '#495566',
+  bgColor = "#495566",
   className,
   color,
-  size = '32px',
+  size = "32px",
   ...rest
 }) => {
   return (
@@ -115,8 +115,8 @@ const Avatar = ({
   );
 };
 
-Avatar.defaultProps = {
-  photo_url: clientPhoto,
-};
+// Avatar.defaultProps = {
+//   photo_url: clientPhoto,
+// };
 
 export default Avatar;

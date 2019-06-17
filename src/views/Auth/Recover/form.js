@@ -1,19 +1,20 @@
-import React from 'react';
-import { Formik } from 'formik';
-import * as yup from 'yup';
-import Input from '../../../components/Input';
-import Button from '../../../components/Button';
+import React from "react";
+import { Formik } from "formik";
+import * as yup from "yup";
+import Input from "../../../components/Input";
+import Button from "../../../components/Button";
 
 const recoverPasswordValdationSchema = yup.object().shape({
-  email: yup
+  password: yup.string().required("Password is required"),
+  confirmPassword: yup
     .string()
-    .email('Email is invalid')
-    .required('Email is required'),
+    .required("Password confirmation is required")
+    .oneOf([yup.ref("password"), null], "Passwords must match"),
 });
 
 const RecoverPasswordForm = ({ isLoading, onSubmit }) => (
   <Formik
-    initialValues={{ email: '' }}
+    initialValues={{ password: "", confirmPassword: "" }}
     onSubmit={values => onSubmit(values)}
     validationSchema={recoverPasswordValdationSchema}
   >
@@ -21,19 +22,33 @@ const RecoverPasswordForm = ({ isLoading, onSubmit }) => (
       <form onSubmit={handleSubmit}>
         <Input
           hasStrip
-          id="email"
-          icon="user"
-          name="email"
-          type="email"
-          label="Email"
-          touched={touched.email}
-          value={values.email}
+          id="password"
+          icon="lock"
+          name="password"
+          type="password"
+          label="Password"
+          touched={touched.password}
+          value={values.password}
           onChange={handleChange}
-          errorMessage={errors.email}
-          isInvalid={errors.email && touched.email}
+          errorMessage={errors.password}
+          isInvalid={errors.password && touched.password}
         />
-        <Button type="submit" size="large" width="100%" isLoading={isLoading}>
-          Recover password
+        <Input
+          hasStrip
+          icon="lock"
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          label="Confirm Password"
+          iconSize="14px"
+          touched={touched.confirmPassword}
+          value={values.confirmPassword}
+          onChange={handleChange}
+          errorMessage={errors.confirmPassword}
+          isInvalid={errors.confirmPassword && touched.confirmPassword}
+        />
+        <Button type="submit" size="large" block isLoading={isLoading}>
+          Create Password
         </Button>
       </form>
     )}

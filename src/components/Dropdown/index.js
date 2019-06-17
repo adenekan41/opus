@@ -165,7 +165,7 @@ export class Droplist extends Component {
               in={showDropdown}
               timeout={50}
               unmountOnExit
-            >
+            > 
               <Popper
                 className="Tooltip"
                 placement={placement}

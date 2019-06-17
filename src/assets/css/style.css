@@ -2,11 +2,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  -webkit-transition: all 0.07s ease;
-  -moz-transition: all 0.07s ease;
-  -ms-transition: all 0.07s ease;
-  -o-transition: all 0.07s ease;
-  transition: all 0.07s ease;
   font-family: "Avenir Opus", sans-serif;
 }
 
@@ -37,11 +32,6 @@
 body {
   /*padding-right: 0px !important;*/
   padding: 0px;
-  -webkit-transition: all 0.07s ease;
-  -moz-transition: all 0.07s ease;
-  -ms-transition: all 0.07s ease;
-  -o-transition: all 0.07s ease;
-  transition: all 0.07s ease;
   background-color: #fff !important;
   font-family: "Avenir Opus", sans-serif;
 }

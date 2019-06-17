@@ -1,13 +1,13 @@
-import React from 'react';
-import styled from 'styled-components';
-import ReactTable from 'react-table';
-import withFixedColumns from 'react-table-hoc-fixed-columns';
-import 'react-table/react-table.css';
-import 'react-table-hoc-fixed-columns/lib/styles.css';
-import { Icon } from '../Icon';
-import Button from '../Button';
-import { Spinner } from '../Spinner';
-import { sharedProps } from '../Avatar';
+import React from "react";
+import styled from "styled-components";
+import ReactTable from "react-table";
+import withFixedColumns from "react-table-hoc-fixed-columns";
+import "react-table/react-table.css";
+import "react-table-hoc-fixed-columns/lib/styles.css";
+import { Icon } from "../Icon";
+import Button from "../Button";
+import { Spinner } from "../Spinner";
+import { sharedProps } from "../Avatar";
 
 const StyledTable = styled.div`
   height: calc(100vh - 128px);
@@ -29,9 +29,11 @@ const StyledTable = styled.div`
     position: relative;
   }
 
-  .rt-td, .rt-th {
+  .rt-td,
+  .rt-th {
     text-align: center !important;
     justify-content: center !important;
+    background: transparent !important;
   }
 
   .Table__Row {
@@ -75,55 +77,55 @@ const Table = ({
       <div className="Table__Wrapper">
         <ReactTableFixedColumns
           style={{
-            backgroundColor: 'white',
-            border: 'none',
+            backgroundColor: "white",
+            border: "none",
             borderRadius: 4,
           }}
           getTbodyProps={(state, rowInfo, column, instance) => {
             return {
               style: {
-                border: 'none',
+                border: "none",
               },
             };
           }}
           getTheadProps={(state, rowInfo, column, instance) => {
             return {
               style: {
-                boxShadow: 'none',
-                borderBottom: '1px solid rgb(234, 239, 240)',
-                textTransform: 'uppercase',
+                boxShadow: "none",
+                borderBottom: "1px solid rgb(234, 239, 240)",
+                textTransform: "uppercase",
               },
-              className: 'Table__Head',
+              className: "Table__Head",
             };
           }}
           getPaginationProps={() => {
             return {
               style: {
-                boxShadow: 'none',
-                borderTop: '1px solid rgb(234, 239, 240)',
+                boxShadow: "none",
+                borderTop: "1px solid rgb(234, 239, 240)",
               },
             };
           }}
           getTdProps={() => {
             return {
               style: {
-                padding: '12px 24px',
-                border: 'none',
-                display: 'flex',
-                alignItems: 'center',
+                padding: "12px 24px",
+                border: "none",
+                display: "flex",
+                alignItems: "center",
               },
             };
           }}
           getTheadThProps={(state, rowInfo, column, instance) => {
             return {
               style: {
-                fontWeight: 'normal',
-                padding: '16px 24px',
-                color: 'rgba(36, 36, 36, .5)',
+                fontWeight: "normal",
+                padding: "16px 24px",
+                color: "rgba(36, 36, 36, .5)",
                 fontSize: 12,
-                width: 'auto',
-                border: 'none',
-                textAlign: 'left',
+                width: "auto",
+                border: "none",
+                textAlign: "left",
               },
             };
           }}
@@ -131,12 +133,12 @@ const Table = ({
             return {
               style: {
                 fontSize: 14,
-                color: '#242424',
-                userSelect: 'none',
+                color: "#242424",
+                userSelect: "none",
                 ...tableRowStyle,
               },
               onClick: onClickRow,
-              className: 'Table__Row',
+              className: "Table__Row",
             };
           }}
           className="Table"
@@ -188,7 +190,7 @@ const StyledLoading = styled.div`
 const LoadingOverlay = ({ children }) => (
   <StyledLoading>
     <Spinner size={32} />
-    <p style={{ marginTop: '12px', color: '#495566' }}>{children}</p>
+    <p style={{ marginTop: "12px", color: "#495566" }}>{children}</p>
   </StyledLoading>
 );
 
@@ -199,7 +201,7 @@ const StyledError = styled(StyledLoading)`
 const ErrorOverlay = ({ onRefresh, children }) => (
   <StyledError>
     <Icon size={48} color="ff5a5f" name="cancel" />
-    <p style={{ marginTop: '24px', color: '#e85257', textAlign: 'center' }}>
+    <p style={{ marginTop: "24px", color: "#e85257", textAlign: "center" }}>
       {children}
     </p>
     <Button size="small" marginTop="16px" onClick={onRefresh}>

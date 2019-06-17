@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import SelectSearch from '../../../components/SearchInput';
+import SelectSearch from '../../../components/SelectSearchInput';
 import WindyMap from '../../../components/WindyMap';
 
 const ForecastContainer = styled.div`

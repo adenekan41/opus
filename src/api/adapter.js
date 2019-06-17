@@ -1,18 +1,13 @@
 import axios from "axios";
 import { formatDate } from "../helpers/functions";
 
-const BASE_URL_ONE =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_BASE_URL_ONE_DEVELOPMENT
-    : process.env.REACT_APP_BASE_URL_ONE_DEVELOPMENT;
-
 const BASE_URL_TWO =
   process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_BASE_URL
+    ? process.env.REACT_APP_BASE_URL_PRODUCTION
     : process.env.REACT_APP_BASE_URL;
 
 export const makeApiCall = async ({
-  baseURL = BASE_URL_ONE,
+  baseURL = BASE_URL_TWO,
   url,
   method = "get",
   params,
@@ -66,30 +61,38 @@ const newPassword = payload => {
   });
 };
 
+const getProfile = token => {
+  return makeApiCall({ url: `/profile/`, token });
+};
+
+const updateProfile = (token, payload) => {
+  return makeApiCall({ url: `/profile/`, token, method: "PUT", data: payload });
+};
+
 const getUsers = token => {
-  return makeApiCall({ url: `/users/`, token });
+  return makeApiCall({ url: `/user/`, token });
 };
 
 const getUser = (token, id) => {
-  return makeApiCall({ url: `/users/${id}`, token });
+  return makeApiCall({ url: `/user/${id}`, token });
 };
 
 const createUser = (token, payload) => {
-  return makeApiCall({ url: `/users/`, method: "POST", token, data: payload });
+  return makeApiCall({ url: `/user/`, method: "POST", token, data: payload });
 };
 
 const adminCreateUser = (token, payload) => {
   return makeApiCall({
-    url: `/users/admins/create/`,
+    url: `/user`,
     method: "POST",
     token,
-    data: payload,
+    data: { ...payload, is_admin: true },
   });
 };
 
 const patchUser = (token, payload) => {
   return makeApiCall({
-    url: `/users/${payload.id}/`,
+    url: `/user/${payload.id}/`,
     method: "PATCH",
     token,
     data: payload,
@@ -98,7 +101,7 @@ const patchUser = (token, payload) => {
 
 const updateUser = (token, payload) => {
   return makeApiCall({
-    url: `/users/${payload.id}/`,
+    url: `/user/${payload.id}/`,
     method: "PUT",
     token,
     data: payload,
@@ -106,7 +109,20 @@ const updateUser = (token, payload) => {
 };
 
 const deleteUser = (token, id) => {
-  return makeApiCall({ url: `/users/${id}`, method: "DELETE", token });
+  return makeApiCall({ url: `/user/${id}`, method: "DELETE", token });
+};
+
+const searchUsers = (token, search) => {
+  return makeApiCall({ url: `/user/`, params: { search }, token });
+};
+
+const setNewUserPassword = payload => {
+  return makeApiCall({
+    url: `/password/set`,
+    data: payload,
+    method: "POST",
+    headers: {},
+  });
 };
 
 const getContacts = token => {
@@ -146,8 +162,8 @@ const deleteContact = (token, id) => {
   });
 };
 
-const getProfile = token => {
-  return makeApiCall({ url: `/users/me/`, token });
+const searchContacts = (token, search) => {
+  return makeApiCall({ url: `/contacts/`, params: { search }, token });
 };
 
 const getWhatsappAlerts = token => {
@@ -208,14 +224,13 @@ const getWeatherStationData = (token, station_name, start_date, end_date) => {
   });
 };
 
-const getAllWeatherStationData = (token, station_name = '') => {
+const getAllWeatherStationData = (token, station_name = "") => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
     url: `/weatherlink/${station_name}/`,
     token,
   });
 };
-
 
 const exportWeatherData = (token, station_name, start_date, end_date) => {
   return makeApiCall({
@@ -252,20 +267,76 @@ const exportCompareData = (
   });
 };
 
+const getAssets = (token) => {
+  return makeApiCall({
+    url: `/asset/`,
+    token,
+  })
+}
+
+const createAsset = (token, data) => {
+  return makeApiCall({
+    url: `/asset/`,
+    token,
+    data,
+    method: "POST"
+  })
+}
+
+const updateAsset = (token, data) => {
+  return makeApiCall({
+    url: `/asset/${data.id}/`,
+    token,
+    data,
+    method: "PUT"
+  })
+}
+
+const deleteAsset = (token, id) => {
+  return makeApiCall({
+    url: `/asset/${id}`,
+    token,
+    method: "DELETE"
+  })
+}
+
+const searchAssets = (token, search) => {
+  return makeApiCall({ url: `/asset/`, params: { search }, token });
+};
+
+const getWeatherStations = token => {
+  return makeApiCall({ url: `/weather-stations/`, token })
+}
+
+const createWeatherStation = (token, data) => {
+  return makeApiCall({ url: `/weather-stations/`, data, method: "POST", token })
+}
+
+const updateWeatherStation = (token, data) => {
+  return makeApiCall({ url: `/weather-stations/${data.id}`, data, method: "PUT", token })
+}
+
+const deleteWeatherStation = (token, id) => {
+  return makeApiCall({ url: `/weather-stations/${id}`, method: "DELETE", token })
+}
+
 export default {
   login,
   getUser,
   getCrops,
   getUsers,
   getProfile,
+  updateProfile,
   patchUser,
   updateUser,
   createUser,
   deleteUser,
+  searchUsers,
   newPassword,
   resetPassword,
   getContacts,
   getContact,
+  searchContacts,
   createContact,
   updateContact,
   deleteContact,
@@ -273,6 +344,7 @@ export default {
   getWhatsappAlerts,
   sendWhatsappAlert,
   getWeatherForecast,
+  setNewUserPassword,
   getWeatherForecastLogs,
   getWeatherData,
   getWeatherStationData,
@@ -280,4 +352,13 @@ export default {
   exportCompareData,
   getAllWeatherStationData,
   getWeatherStationCurrentData,
+  getAssets,
+  createAsset,
+  updateAsset,
+  deleteAsset,
+  searchAssets,
+  getWeatherStations,
+  createWeatherStation,
+  updateWeatherStation,
+  deleteWeatherStation,
 };

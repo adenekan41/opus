@@ -159,7 +159,7 @@ class Compare extends React.Component {
           </Breadcrumbs>
         </Box>
         <Box className="row">
-          <Box className="col-md-3">
+          <Box className="col-md-3" mb={2}>
             <CheckboxSelect
               label="Weather Station"
               selected={selectedStations}
@@ -168,7 +168,7 @@ class Compare extends React.Component {
               onChange={value => this.checkboxSelectOptionClicked(value)}
             />
           </Box>
-          <Box className="col-md-3">
+          <Box className="col-md-3" mb={2}>
             <Dropdown
               options={WEATHER_OPTIONS}
               onChange={weatherType =>
@@ -189,7 +189,7 @@ class Compare extends React.Component {
               value={this.state.compareType}
             />
           </Box>
-          <Box className="col-md-4">
+          <Box className="col-md-4" mb={2}>
             <DatePicker
               isOutsideRange={() => false}
               startDate={startDate}
@@ -207,7 +207,7 @@ class Compare extends React.Component {
               }}
             />
           </Box>
-          <Box className="col-md-2">
+          <Box className="col-md-2" mb={2}>
             <Button
               kind="green"
               size="large"

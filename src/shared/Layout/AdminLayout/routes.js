@@ -42,6 +42,7 @@ const DashboardRoutes = ({token, ...rest}) => {
                   <Account {...rest} {...{ ...state, dispatch, actions }} />
                 )}
               />
+             
             </Switch>
           </DashboardLayout>
         )}

@@ -1,4 +1,6 @@
 import moment from "moment";
+import toaster from "../components/Toaster";
+import { allCountries } from "./countries";
 
 export const convertStringToNumber = string => (string ? Number(string) : 0);
 export const fahrenheitToCelcius = value => {
@@ -31,15 +33,6 @@ export const generateCSVFile = data => {
   createCSV(csvContent);
 };
 
-function getRandomColor() {
-  var letters = "0123456789ABCDEF";
-  var color = "#";
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
-
 const colors = ["#f42534", "#33475c", "#3589c3", "#29cb98"];
 
 function getStationLabelColor(data) {
@@ -59,7 +52,7 @@ function generateChartOptions(list) {
       label: station,
       backgroundColor: "transparent",
       borderColor: getStationLabelColor(list)[station],
-      data: data.map(item => item ? item : 0),
+      data: data.map(item => (item ? item : 0)),
       borderWidth: 1,
     };
   });
@@ -221,8 +214,8 @@ export const getDatesForFilter = ({ startDate, endDate }) => {
 };
 
 export const getValue = (value, unit = "") => {
-  if(value === "--") {
-    return "--"
+  if (value === "--") {
+    return "--";
   }
   if (value) {
     return `${value} ${unit}`;
@@ -235,3 +228,112 @@ export const valueInDecimal = value => {
     return parseFloat(value).toFixed(1);
   }
 };
+
+export const getBase64Url = (file, callback) => {
+  var reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    file = reader.result;
+    callback(file);
+  };
+};
+
+export const setProfilePicture = data => {
+  if (data === "null") {
+    return "";
+  }
+  if (!data) {
+    return "";
+  }
+  return data;
+};
+
+export const getApiErrors = errors => {
+  const result = [];
+  errors &&
+    Object.keys(errors).length > 0 &&
+    Object.keys(errors).forEach(key => {
+      result.push(...errors[key]);
+    });
+  return result;
+};
+
+export const errorCallback = (error, setApiResponse) => {
+  const errorPayload = error && error.response && error.response.data;
+  if (errorPayload && errorPayload.detail) {
+    toaster.error(errorPayload && errorPayload.detail);
+  } else {
+    setApiResponse && setApiResponse(errorPayload);
+    toaster.error("Wrong parameters");
+  }
+};
+
+export const getStates = (country, countries) => {
+  const selectedCountry = countries.find(c => c.value === country);
+  const data =
+    selectedCountry && selectedCountry.label ? selectedCountry.label : "";
+  const result = allCountries.find(
+    c => c.name.toLowerCase() === data.toLowerCase()
+  );
+  return result ? result.id : "";
+};
+
+export function getAllUrlParams(url) {
+  // get query string from url (optional) or window
+  var queryString = url ? url.split("?")[1] : window.location.search.slice(1);
+
+  // we'll store the parameters here
+  var obj = {};
+
+  // if query string exists
+  if (queryString) {
+    // stuff after # is not part of query string, so get rid of it
+    queryString = queryString.split("#")[0];
+
+    // split our query string into its component parts
+    var arr = queryString.split("&");
+
+    for (var i = 0; i < arr.length; i++) {
+      // separate the keys and the values
+      var a = arr[i].split("=");
+
+      // in case params look like: list[]=thing1&list[]=thing2
+      var paramNum = undefined;
+      var paramName = a[0].replace(/\[\d*\]/, function(v) {
+        paramNum = v.slice(1, -1);
+        return "";
+      });
+
+      // set parameter value (use 'true' if empty)
+      var paramValue = typeof a[1] === "undefined" ? true : a[1];
+
+      // (optional) keep case consistent
+      paramName = paramName.toLowerCase();
+      paramValue = paramValue.toLowerCase();
+
+      // if parameter name already exists
+      if (obj[paramName]) {
+        // convert value to array (if still string)
+        if (typeof obj[paramName] === "string") {
+          obj[paramName] = [obj[paramName]];
+        }
+        // if no array index number specified...
+        if (typeof paramNum === "undefined") {
+          // put the value on the end of the array
+          obj[paramName].push(paramValue);
+        }
+        // if array index number specified...
+        else {
+          // put the value at that index number
+          obj[paramName][paramNum] = paramValue;
+        }
+      }
+      // if param name doesn't exist yet, set it
+      else {
+        obj[paramName] = paramValue;
+      }
+    }
+  }
+
+  return obj;
+}
