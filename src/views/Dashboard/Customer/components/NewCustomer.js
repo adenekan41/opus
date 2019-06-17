@@ -5,12 +5,11 @@ import Breadcrumbs, { BreadcrumbItem } from "../../../../components/Breadcrumb";
 import CustomerDetails from "./CustomerDetails";
 import WeatherForecastSelect from "./WeatherForecastSelect";
 import ConfirmPage from "./ConfirmPage";
-import { errorCallback } from "../../../../helpers/functions";
+import { errorCallback, getApiErrors } from "../../../../helpers/functions";
 import toaster from "../../../../components/Toaster";
 // import CreateCustomerAdvisoryModules from "./CreateCustomerAdvisoryModules";
 import CreateCustomerWeatherStations from "./CreateCustomerWeatherStations";
 import ManualAlertSelect from "./ManualAlertSelect";
-import AutomaticAlertSelect from "./AutomaticAlertSelect";
 
 const NewCustomerStyle = styled(Box)`
   .navigation {
@@ -98,12 +97,10 @@ export default function NewCustomer({
       .then(() => {
         setLoading(false);
         setPayload({});
-        debugger;
         toaster.success("Customer created successfully");
         history.push("/dashboard/customers");
       })
       .catch(error => {
-        debugger;
         setLoading(false);
         errorCallback(error, updateApiErrors);
       });
@@ -124,12 +121,9 @@ export default function NewCustomer({
             Manual Alerts
           </BreadcrumbItem>
           <BreadcrumbItem isActive={current === 3}>
-            Automatic Alerts
-          </BreadcrumbItem>
-          <BreadcrumbItem isActive={current === 4}>
             Weather Forecast
           </BreadcrumbItem>
-          <BreadcrumbItem isActive={current === 5}>Confirmation</BreadcrumbItem>
+          <BreadcrumbItem isActive={current === 4}>Confirmation</BreadcrumbItem>
         </Breadcrumbs>
       </Box>
 
@@ -172,15 +166,6 @@ export default function NewCustomer({
           />
         )}
         {current === 3 && (
-          <AutomaticAlertSelect
-            goBack={prev}
-            payload={payload}
-            onSubmit={values =>
-              updateCustomerPayload({ automaticAlert: values })
-            }
-          />
-        )}
-        {current === 4 && (
           <WeatherForecastSelect
             goBack={prev}
             payload={payload}
@@ -189,14 +174,14 @@ export default function NewCustomer({
             }
           />
         )}
-        {current === 5 && (
+        {current === 4 && (
           <ConfirmPage
             crops={crops}
             goBack={prev}
             payload={payload}
             loading={loading}
             countries={countries}
-            apiErrors={apiErrors}
+            apiErrors={getApiErrors(apiErrors)}
             onSubmit={submitCustomerPayload}
           />
         )}
