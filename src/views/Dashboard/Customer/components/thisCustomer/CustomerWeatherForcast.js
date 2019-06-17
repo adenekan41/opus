@@ -110,10 +110,10 @@ export default class CustomerForecastMap extends Component {
                 customerWeatherStations.map((weatherStation, i) => (
                   <div className="station_name_details" key={i}>
                     <Flex alignItems="center" justifyContent="space-between">
-                      <div>
-                        <i className="ion-pin mr-3" />
-                        {weatherStation.station_name}
-                      </div>
+                      <Flex alignItems="center">
+                        <Icon name="station" color="#000" />
+                        <Text ml={2}>{weatherStation.station_name}</Text>
+                      </Flex>
                       <Button
                         kind="ghost"
                         onClick={() => this.removeCustomerWeatherStation(i)}
