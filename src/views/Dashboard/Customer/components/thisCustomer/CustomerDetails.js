@@ -61,7 +61,6 @@ class CustomerDetails extends React.Component {
 
   onEmailUpdate = (values, closeModal) => {
     const { dispatch, actions } = this.props;
-    debugger;
 
     this.setState({ emailLoading: true });
 
