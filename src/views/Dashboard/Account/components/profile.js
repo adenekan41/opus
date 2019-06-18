@@ -159,13 +159,13 @@ class Profile extends React.Component {
                   <div className="change_photo">
                     <FileUploader accept="image/*" onUpload={this.onPhotoDrop}>
                       {() => (
-                        <Button width="220px" kind="green">
+                        <Button block kind="green">
                           Change photo
                         </Button>
                       )}
                     </FileUploader>
                   </div>
-                  <Button onClick={clearAllState} width="100%" mt="16px">
+                  <Button onClick={clearAllState} block mt="16px">
                     Log out
                   </Button>
                 </div>

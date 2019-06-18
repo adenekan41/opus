@@ -278,6 +278,14 @@ export const getStates = (country, countries) => {
   return result ? result.id : "";
 };
 
+export const getUserWeatherStations = (userWeatherStations, weatherStations) => {
+  let weatherLinkStations = weatherStations;
+  let userWeatherStationNames = userWeatherStations.map(s => s.station_name);
+  return weatherLinkStations.filter(station =>
+    userWeatherStationNames.includes(station.station_name)
+  );
+}
+
 export function getAllUrlParams(url) {
   // get query string from url (optional) or window
   var queryString = url ? url.split("?")[1] : window.location.search.slice(1);

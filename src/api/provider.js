@@ -10,6 +10,7 @@ import {
   formatDate,
   getDatesForFilter,
   compareTypeData,
+  getUserWeatherStations,
 } from "../helpers/functions";
 
 export class DataProvider extends React.Component {
@@ -81,10 +82,10 @@ export class DataProvider extends React.Component {
       if (userProfile.is_admin || userProfile.is_superuser) {
         return Promise.all([
           this.getUsers(token),
-          this.getWeatherData(token),
+          this.getWeatherData(token, userProfile),
           this.getAssets(token),
-          this.getContacts({token}),
-          this.getWeatherStations(token)
+          this.getContacts({ token }),
+          this.getWeatherStations(token),
         ]).then(response => {
           return {
             profile: userProfile,
@@ -92,23 +93,23 @@ export class DataProvider extends React.Component {
             weatherStations: data[1],
             assets: data[2],
             contacts: data[3],
-            weatherStationsList: data[4]
+            weatherStationsList: data[4],
           };
         });
       }
       if (userProfile.is_customer) {
         return Promise.all([
-          this.getWeatherData(token),
-          this.getContacts({token}),
+          this.getWeatherData(token, userProfile),
+          this.getContacts({ token }),
           this.getAssets(token),
-          this.getWeatherStations(token)
+          this.getWeatherStations(token),
         ]).then(response => {
           return {
             profile: userProfile,
-            weatherStations: response[0],
+            weatherStations: data[0],
             contacts: response[1],
             assets: response[2],
-            weatherStationsList: data[3]
+            weatherStationsList: data[3],
           };
         });
       }
@@ -494,19 +495,40 @@ export class DataProvider extends React.Component {
       });
   };
 
-  getWeatherData = token => {
+  getWeatherData = (token, profile) => {
     let { weatherStations } = this.state;
 
-    if (weatherStations.length > 0) {
-      return Promise(resolve => resolve({ weatherStations }));
+    if (profile.is_admin || profile.is_superuser) {
+      if (weatherStations.length > 0) {
+        return Promise(resolve => resolve({ weatherStations }));
+      }
+
+      return this.getAdapter()
+        .getWeatherData(token)
+        .then(data => {
+          this.updateState({ weatherStations: data });
+          return data;
+        });
     }
 
-    return this.getAdapter()
-      .getWeatherData(token)
-      .then(data => {
-        this.updateState({ weatherStations: data });
-        return data;
-      });
+    if (profile.is_customer) {
+      if (weatherStations.length > 0) {
+        return Promise(resolve => resolve({ weatherStations }));
+      }
+
+      return this.getAdapter()
+        .getWeatherData(token)
+        .then(data => {
+          let weatherLinkStations = data;
+          let userWeatherStations = profile.weather_stations;
+          let weatherStations = getUserWeatherStations(
+            userWeatherStations,
+            weatherLinkStations
+          );
+          this.updateState({ weatherStations });
+          return weatherStations;
+        });
+    }
   };
 
   updateWeatherStationData = station_name => {
