@@ -255,7 +255,8 @@ export default class AssetManagement extends Component {
                   <div className="col-md-8 col-xs-12 col-sm-8 col-lg-8">
                     <form onSubmit={e => this.onAssetSearch(e)}>
                       <SearchInput
-                        placeholder={`Search ${selectedAsset.name}`}
+                        placeholder={`Type ${selectedAsset.name &&
+                          selectedAsset.name.toLowerCase()} name and press enter`}
                         mb="8px"
                         onChange={e => this.handleSearchChange(e.target.value)}
                       />
@@ -280,7 +281,7 @@ export default class AssetManagement extends Component {
                         width="100%"
                       />
                     ) : (
-                      <Box mb={4}>
+                      <Box mb={4} className="asset-table-container">
                         <AssetTable
                           columns={assets_columns}
                           model={selectedAsset.name}

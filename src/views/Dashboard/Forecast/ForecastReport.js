@@ -136,7 +136,6 @@ export default class ForecastReport extends Component {
           </Box>
           <Box className="col-md-4">
             <DatePicker
-              isOutsideRange={() => false}
               startDate={this.state.startDate}
               endDate={this.state.endDate}
               onChange={({ startDate, endDate }) => {

@@ -10,7 +10,7 @@ import { Spinner } from "../Spinner";
 import { sharedProps } from "../Avatar";
 
 const StyledTable = styled.div`
-  height: calc(100vh - 128px);
+  height: ${props => (props.height ? props.height : "calc(100vh - 128px)")};
   overflow: auto;
   background: #f5f6fa;
   ${sharedProps};
@@ -33,7 +33,6 @@ const StyledTable = styled.div`
   .rt-th {
     text-align: center !important;
     justify-content: center !important;
-    background: transparent !important;
   }
 
   .Table__Row {
@@ -44,9 +43,13 @@ const StyledTable = styled.div`
   }
 
   .Table__Head {
-    background: transparent !important;
+    background: #f5f6fa !important;
     border-bottom: none !important;
     ${props => props.tableHeadCSS};
+
+    .rt-th {
+      background: #f5f6fa !important;
+    }
   }
   ${sharedProps};
 `;
