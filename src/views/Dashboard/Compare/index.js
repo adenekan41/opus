@@ -191,7 +191,6 @@ class Compare extends React.Component {
           </Box>
           <Box className="col-md-4" mb={2}>
             <DatePicker
-              isOutsideRange={() => false}
               startDate={startDate}
               endDate={endDate}
               onChange={({ startDate, endDate }) => {

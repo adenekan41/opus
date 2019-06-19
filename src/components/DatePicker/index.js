@@ -2,7 +2,7 @@ import React from 'react';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import styled from 'styled-components';
-import { DateRangePicker } from 'react-dates';
+import { DateRangePicker, isInclusivelyBeforeDay } from 'react-dates';
 import { Flex, Text } from 'rebass';
 import moment from 'moment';
 
@@ -138,7 +138,9 @@ class DatePicker extends React.Component {
 
 DatePicker.defaultProps = {
   label: 'Date range',
+  minimumNights: 0,
   onChange: values => console.log(values),
+  isOutsideRange: day => !isInclusivelyBeforeDay(day, moment())
 };
 
 export default DatePicker;

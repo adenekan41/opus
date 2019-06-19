@@ -18,9 +18,11 @@ const ForecastTableColumns = [
     Header: "Time",
     id: "time",
     accessor: "time",
-    Cell: ({ original: { time } }) => (
-      <span>{moment(time).format("DD/MM/YY - HH:mm")}</span>
-    ),
+    Cell: ({ original: { time } }) => {
+      return (
+        <span>{moment(time).format("DD/MM/YY - HH:mm")}</span>
+      )
+    },
     fixed: "left",
     style: {
       color: "#ffffff",
@@ -358,7 +360,6 @@ export default class ForecastTable extends Component {
         <Flex flexWrap="wrap">
           <Box width="350px" mr="20px">
             <DatePicker
-              isOutsideRange={() => false}
               startDate={this.state.startDate}
               endDate={this.state.endDate}
               onChange={({ startDate, endDate }) => {
