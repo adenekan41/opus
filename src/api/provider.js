@@ -11,7 +11,9 @@ import {
   getDatesForFilter,
   compareTypeData,
   getUserWeatherStations,
+  displayDateFilterErrors,
 } from "../helpers/functions";
+import toaster from "../components/Toaster";
 
 export class DataProvider extends React.Component {
   static defaultProps = {
@@ -631,27 +633,31 @@ export class DataProvider extends React.Component {
     } = getDatesForFilter({ startDate, endDate });
     let data = compareStationLogs;
 
-    if (
-      todayInSeconds === startDateInSeconds &&
-      todayInSeconds === endDateInSeconds
-    ) {
-      data = compareStationLogs;
-    } else {
-      let result = [];
-      compareStationLogs.forEach(({ station, data }) => {
-        let filteredStationLog = data.filter(stationItem => {
-          let { observation_time } = stationItem;
-          let time = convertStringToNumber(formatDate(observation_time, "X"));
-          if (time >= startDateInSeconds && time <= endDateInSeconds) {
-            return stationItem;
-          }
+    if (startDateInSeconds && endDateInSeconds) {
+      if (
+        todayInSeconds === startDateInSeconds &&
+        todayInSeconds === endDateInSeconds
+      ) {
+        data = compareStationLogs;
+      } else {
+        let result = [];
+        compareStationLogs.forEach(({ station, data }) => {
+          let filteredStationLog = data.filter(stationItem => {
+            let { observation_time } = stationItem;
+            let time = convertStringToNumber(formatDate(observation_time, "X"));
+            if (time >= startDateInSeconds && time <= endDateInSeconds) {
+              return stationItem;
+            }
+          });
+          result.push({ station, data: filteredStationLog });
         });
-        result.push({ station, data: filteredStationLog });
-      });
-      data = result;
-    }
+        data = result;
+      }
 
-    return data;
+      return data;
+    } else {
+      displayDateFilterErrors({ startDateInSeconds, endDateInSeconds });
+    }
   };
 
   filterCompareLogByType = value => {
@@ -672,16 +678,18 @@ export class DataProvider extends React.Component {
           moment(value.observation_time).format("DD/MM")
         );
       compareTypeData[type].forEach(item => {
-        result = weatherStationLogs.map(({ station, data }) => ({
+        result = weatherStationLogs ? weatherStationLogs.map(({ station, data }) => ({
           station,
           data: data.map(value => value[item]),
-        }));
+        })) : [];
       });
       if (observationTimes && observationTimes.length > 0) {
         this.updateState({ observationTimes });
         return { result, observationTimes: observationTimes || [] };
       }
       return { result, observationTimes: this.state.observationTimes || [] };
+    } else {
+      toaster.error("Please select weather type to compare");
     }
   };
 

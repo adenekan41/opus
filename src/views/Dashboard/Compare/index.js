@@ -9,8 +9,8 @@ import Button from "../../../components/Button";
 import Card from "../../../components/Card";
 import CheckboxSelect from "../../../components/CheckboxSelect";
 import { Icon } from "../../../components/Icon";
-import { WEATHER_OPTIONS } from "../../../helpers/constants";
-import { createCSV } from "../../../helpers/functions";
+import { WEATHER_OPTIONS, labelStringRegister } from "../../../helpers/constants";
+import { createCSV, displayDateFilterErrors, getCompareReportType, arrayDataIsNull, arrayDataIsEmpty } from "../../../helpers/functions";
 import { Spinner } from "../../../components/Spinner";
 import { Toast } from "../../../components/Toast";
 
@@ -31,10 +31,10 @@ class Compare extends React.Component {
   componentDidMount() {
     const { dispatch, actions } = this.props;
     dispatch({
-      type: actions.CLEAR_COMPARE_LOGS
-    })
+      type: actions.CLEAR_COMPARE_LOGS,
+    });
   }
-  
+
   getWeatherTypeData = (type, dates) => {
     const { dispatch, actions } = this.props;
     let data = dispatch({
@@ -47,7 +47,6 @@ class Compare extends React.Component {
       observationTimes,
     });
   };
-
 
   exportDataToCsv = () => {
     const { dispatch, actions } = this.props;
@@ -78,25 +77,27 @@ class Compare extends React.Component {
   };
 
   utilityCallback = ({ actionType, station, startDate, endDate }) => {
-    let { dispatch } = this.props;
-    dispatch({
-      type: actionType,
-      value: station,
-    }).then(() => {
-      this.setState({ loading: false });
-      this.getWeatherTypeData(this.state.compareType, {
-        startDate,
-        endDate,
+    if (startDate && endDate) {
+      let { dispatch } = this.props;
+      this.setState({ loading: true });
+      dispatch({
+        type: actionType,
+        value: station,
+      }).then(() => {
+        this.setState({ loading: false });
+        this.getWeatherTypeData(this.state.compareType, {
+          startDate,
+          endDate,
+        });
       });
-    });
+    } else {
+      displayDateFilterErrors({ startDate, endDate });
+    }
   };
-
 
   checkboxSelectOptionClicked = station => {
     let { selectedStations, startDate, endDate } = this.state;
     let { actions } = this.props;
-
-    this.setState({ loading: true });
 
     if (selectedStations.includes(station)) {
       this.setState(
@@ -147,6 +148,8 @@ class Compare extends React.Component {
       label: station.station_name,
       value: station.station_name,
     }));
+    let labelString = labelStringRegister[this.state.compareType];
+    let graphData = getCompareReportType(this.state.compareType, data);
 
     return (
       <Box py="40px" px="40px">
@@ -180,7 +183,7 @@ class Compare extends React.Component {
                     this.getWeatherTypeData(weatherType.value, {
                       startDate,
                       endDate,
-                      station: selectedStations[0]
+                      station: selectedStations[0],
                     });
                   }
                 )
@@ -201,7 +204,7 @@ class Compare extends React.Component {
                 this.getWeatherTypeData(this.state.compareType, {
                   startDate,
                   endDate,
-                  station: selectedStations[0]
+                  station: selectedStations[0],
                 });
               }}
             />
@@ -232,7 +235,7 @@ class Compare extends React.Component {
             <Flex alignItems="center" justifyContent="center" py="30vh">
               <Spinner />
             </Flex>
-          ) : data.length > 0 ? (
+          ) : data.length > 0 && !arrayDataIsEmpty(data) ? (
             <Card padding="16px">
               <Flex
                 alignItems="center"
@@ -252,14 +255,15 @@ class Compare extends React.Component {
               <CompareChart
                 {...{
                   type: this.state.compareType,
-                  data,
+                  data: graphData.filter(i => i.data),
+                  labelString,
                   observationTimes,
                 }}
               />
             </Card>
           ) : (
             <Flex alignItems="center" justifyContent="center" py="30vh">
-              <Heading>No data for weather station</Heading>
+              <Heading>No data</Heading>
             </Flex>
           )}
         </Box>
