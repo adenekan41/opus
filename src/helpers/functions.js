@@ -315,6 +315,15 @@ export const arrayDataIsEmpty = data => {
   return data.map(i => i.data).every(arrayDataIsNull);
 };
 
+export const getObservationTimes = (startDate, endDate ) => {
+  let diff = endDate.diff(startDate, "hours");
+  let observationTimes = [];
+  for(let i=0; i<diff; i++ ) {
+    observationTimes.push(moment(startDate).add(i, "hours"));
+  }
+  return observationTimes.map(item => item.format("DD/MM HH:mm"));
+}
+
 export function getAllUrlParams(url) {
   // get query string from url (optional) or window
   var queryString = url ? url.split("?")[1] : window.location.search.slice(1);

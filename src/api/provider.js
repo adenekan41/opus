@@ -600,13 +600,26 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .getCompareWeatherStationData(token, payload)
       .then(data => {
-        let observationTimes = data.map(item => moment(item.observation_time).format("DD/MM HH:mm"));
         payload.station_names.forEach(station => {
           let stationData = data.filter(item => item.station_name === station);
           stations.push({ station, data: stationData });
         });
         this.updateState({ compareStationLogs: stations });
-        return {stations, observationTimes};
+        let observationTimes =
+          stations &&
+          stations[0] &&
+          stations[0].data &&
+          stations[0].data.map(value =>
+            moment(value.observation_time).format("DD/MM")
+          );
+        if (observationTimes && observationTimes.length > 0) {
+          this.updateState({ observationTimes });
+          return { stations, observationTimes: observationTimes || [] };
+        }
+        return {
+          stations,
+          observationTimes: this.state.observationTimes || [],
+        };
       });
   };
 
