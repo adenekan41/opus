@@ -9,10 +9,19 @@ import Button from "../../../components/Button";
 import Card from "../../../components/Card";
 import CheckboxSelect from "../../../components/CheckboxSelect";
 import { Icon } from "../../../components/Icon";
-import { WEATHER_OPTIONS, labelStringRegister } from "../../../helpers/constants";
-import { createCSV, displayDateFilterErrors, getCompareReportType, arrayDataIsNull, arrayDataIsEmpty } from "../../../helpers/functions";
+import {
+  WEATHER_OPTIONS,
+  labelStringRegister,
+} from "../../../helpers/constants";
+import {
+  createCSV,
+  displayDateFilterErrors,
+  getCompareReportType,
+  arrayDataIsEmpty,
+  compareTypeData,
+} from "../../../helpers/functions";
 import { Spinner } from "../../../components/Spinner";
-import { Toast } from "../../../components/Toast";
+import toaster from "../../../components/Toaster";
 
 class Compare extends React.Component {
   state = {
@@ -24,8 +33,6 @@ class Compare extends React.Component {
     endDate: moment(new Date()),
     startDate: moment(new Date()).subtract(1, "days"),
     selectedStations: [],
-    error: false,
-    errorMessage: "",
   };
 
   componentDidMount() {
@@ -35,32 +42,19 @@ class Compare extends React.Component {
     });
   }
 
-  getWeatherTypeData = (type, dates) => {
-    const { dispatch, actions } = this.props;
-    let data = dispatch({
-      type: actions.FILTER_COMPARE_LOGS_BY_TYPE,
-      value: { type, dates },
-    });
-    let { result, observationTimes } = data;
-    this.setState({
-      data: result,
-      observationTimes,
-    });
-  };
-
   exportDataToCsv = () => {
     const { dispatch, actions } = this.props;
     const { selectedStations, startDate, endDate, compareType } = this.state;
 
-    this.setState({ buttonLoading: true, error: false, errorMessage: "" });
+    this.setState({ buttonLoading: true });
 
     dispatch({
       type: actions.EXPORT_COMPARE_DATA_CSV,
       value: {
         station_names: selectedStations,
         weather_type: compareType,
-        start_date: startDate,
-        end_date: endDate,
+        start_date: moment(startDate).format("M/D/YYYY"),
+        end_date: moment(endDate).format("M/D/YYYY"),
       },
     })
       .then(data => {
@@ -69,25 +63,33 @@ class Compare extends React.Component {
       })
       .catch(() => {
         this.setState({
-          error: true,
           buttonLoading: false,
-          errorMessage: "Unable to export data. Please try again.",
         });
+        toaster.error("Unable to export data. Please try again.");
       });
   };
 
-  utilityCallback = ({ actionType, station, startDate, endDate }) => {
+  compareWeatherStations = () => {
+    let { selectedStations, startDate, endDate, compareType } = this.state;
+    let { actions } = this.props;
+
     if (startDate && endDate) {
       let { dispatch } = this.props;
       this.setState({ loading: true });
       dispatch({
-        type: actionType,
-        value: station,
-      }).then(() => {
+        type: actions.GET_COMPARE_STATION_DATA,
+        value: {
+          station_names: selectedStations,
+          start_date: moment(startDate).format("M/D/YYYY"),
+          end_date: moment(endDate).format("M/D/YYYY"),
+          weather_type: compareType,
+        },
+      }).then(({ stations, observationTimes }) => {
         this.setState({ loading: false });
-        this.getWeatherTypeData(this.state.compareType, {
-          startDate,
-          endDate,
+        let compareData = this.filterCompareLogByType(compareType, stations);
+        this.setState({
+          data: compareData,
+          observationTimes,
         });
       });
     } else {
@@ -95,39 +97,35 @@ class Compare extends React.Component {
     }
   };
 
+  filterCompareLogByType = (type, data) => {
+    if (type) {
+      let result = [];
+      compareTypeData[type].forEach(item => {
+        result = data
+          ? data.map(({ station, data }) => ({
+              station,
+              data: data.map(value => value[item]),
+            }))
+          : [];
+      });
+      return result;
+    } else {
+      toaster.error("Please select weather type to compare");
+    }
+  };
+
   checkboxSelectOptionClicked = station => {
-    let { selectedStations, startDate, endDate } = this.state;
-    let { actions } = this.props;
+    let { selectedStations } = this.state;
 
     if (selectedStations.includes(station)) {
-      this.setState(
-        ({ selectedStations, data }) => ({
-          selectedStations: selectedStations.filter(item => item !== station),
-          data: data.filter(item => item.station !== station),
-        }),
-        () => {
-          this.utilityCallback({
-            station,
-            endDate,
-            startDate,
-            actionType: actions.REMOVE_COMPARE_STATION_DATA,
-          });
-        }
-      );
+      this.setState(({ selectedStations, data }) => ({
+        selectedStations: selectedStations.filter(item => item !== station),
+        data: data.filter(item => item.station !== station),
+      }));
     } else {
-      this.setState(
-        ({ selectedStations }) => ({
-          selectedStations: [station, ...selectedStations],
-        }),
-        () => {
-          this.utilityCallback({
-            station,
-            endDate,
-            startDate,
-            actionType: actions.GET_COMPARE_STATION_DATA,
-          });
-        }
-      );
+      this.setState(({ selectedStations }) => ({
+        selectedStations: [station, ...selectedStations],
+      }));
     }
   };
 
@@ -135,11 +133,9 @@ class Compare extends React.Component {
     const { weatherStations } = this.props;
     let {
       data,
-      error,
       endDate,
       loading,
       startDate,
-      errorMessage,
       buttonLoading,
       observationTimes,
       selectedStations,
@@ -162,7 +158,7 @@ class Compare extends React.Component {
           </Breadcrumbs>
         </Box>
         <Box className="row">
-          <Box className="col-md-3" mb={2}>
+          <Box className="col-md-2" mb={2}>
             <CheckboxSelect
               label="Weather Station"
               selected={selectedStations}
@@ -171,22 +167,13 @@ class Compare extends React.Component {
               onChange={value => this.checkboxSelectOptionClicked(value)}
             />
           </Box>
-          <Box className="col-md-3" mb={2}>
+          <Box className="col-md-2" mb={2}>
             <Dropdown
               options={WEATHER_OPTIONS}
               onChange={weatherType =>
-                this.setState(
-                  {
-                    compareType: weatherType.value,
-                  },
-                  () => {
-                    this.getWeatherTypeData(weatherType.value, {
-                      startDate,
-                      endDate,
-                      station: selectedStations[0],
-                    });
-                  }
-                )
+                this.setState({
+                  compareType: weatherType.value,
+                })
               }
               label="Select graph"
               value={this.state.compareType}
@@ -201,13 +188,23 @@ class Compare extends React.Component {
                   startDate,
                   endDate,
                 });
-                this.getWeatherTypeData(this.state.compareType, {
-                  startDate,
-                  endDate,
-                  station: selectedStations[0],
-                });
               }}
             />
+          </Box>
+          <Box className="col-md-2" mb={2}>
+            <Button
+              block
+              kind="green"
+              size="large"
+              css={`
+                display: flex;
+                align-items: center;
+              `}
+              disabled={selectedStations.length < 2 || loading}
+              onClick={this.compareWeatherStations}
+            >
+              Compare
+            </Button>
           </Box>
           <Box className="col-md-2" mb={2}>
             <Button
@@ -218,6 +215,7 @@ class Compare extends React.Component {
                 display: flex;
                 align-items: center;
               `}
+              disabled={arrayDataIsEmpty(data) || loading}
               isLoading={buttonLoading}
               onClick={this.exportDataToCsv}
             >
@@ -226,16 +224,20 @@ class Compare extends React.Component {
             </Button>
           </Box>
         </Box>
+
         <Box mt="30px">
-          {selectedStations.length === 0 ? (
+          {selectedStations.length <= 1 ? (
             <Flex alignItems="center" justifyContent="center" py="30vh">
-              <Heading>Select weather stations to compare</Heading>
+              <Heading>
+                Select at least two weather stations and click the compare
+                button
+              </Heading>
             </Flex>
           ) : loading ? (
             <Flex alignItems="center" justifyContent="center" py="30vh">
               <Spinner />
             </Flex>
-          ) : data.length > 0 && !arrayDataIsEmpty(data) ? (
+          ) : !arrayDataIsEmpty(data) ? (
             <Card padding="16px">
               <Flex
                 alignItems="center"
@@ -267,19 +269,6 @@ class Compare extends React.Component {
             </Flex>
           )}
         </Box>
-
-        {error && (
-          <Toast
-            showToast={error}
-            title="Error"
-            status="error"
-            showCloseButton
-            autoClose={false}
-            onClose={() => this.setState({ error: false })}
-          >
-            {errorMessage}
-          </Toast>
-        )}
       </Box>
     );
   }

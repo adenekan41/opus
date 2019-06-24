@@ -201,13 +201,13 @@ export const weatherTypeData = {
 };
 
 export const compareTypeData = {
-  Temperature: ["temp_c"],
-  "Current rain": ["rain_rate_mm_h"],
-  "Total rain": ["rain_month", "rain_year"],
-  "Wind speed": ["wind_speed_m_s"],
-  Humidity: ["hum_%"],
+  Temperature: ["Temp°C"],
+  "Current rain": ["rain_rate"],
+  "Total rain": ["rain_month"],
+  "Wind speed": ["wind_peed"],
+  Humidity: ["current_humidity"],
   "Wind direction": ["wind_degrees"],
-  Barometer: ["barometer_hpa"],
+  Barometer: ["barometer_pressure"],
 };
 
 export const formatDate = (date, format) => {

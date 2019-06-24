@@ -5,13 +5,10 @@ import { ACTIONS } from "./actions";
 import { DataContext } from "./context";
 import { clearState, saveState, loadState } from "../localStorage";
 import {
-  convertStringToNumber,
   weatherTypeData,
   formatDate,
-  getDatesForFilter,
   compareTypeData,
   getUserWeatherStations,
-  displayDateFilterErrors,
 } from "../helpers/functions";
 import toaster from "../components/Toaster";
 
@@ -559,33 +556,6 @@ export class DataProvider extends React.Component {
     }
   };
 
-  getCompareStationData = station_name => {
-    let { token, compareStationLogs } = this.state;
-
-    return this.getAdapter()
-      .getAllWeatherStationData(token, station_name)
-      .then(data => {
-        this.updateState({
-          compareStationLogs: [
-            { station: station_name, data },
-            ...compareStationLogs,
-          ],
-        });
-        return [{ station: station_name, data }, ...compareStationLogs];
-      });
-  };
-
-  removeCompareStationData = station => {
-    let { compareStationLogs } = this.state;
-    let newData = compareStationLogs.filter(item => item.station !== station);
-    this.updateState({
-      compareStationLogs: newData,
-      compareStationCsvData: newData,
-    });
-
-    return new Promise(resolve => resolve({ compareStationLogs: newData }));
-  };
-
   filterWeatherLogByDate = values => {
     let { startDate, endDate, station_name } = values;
     let start_date = moment(startDate).format("M/D/YYYY");
@@ -623,71 +593,49 @@ export class DataProvider extends React.Component {
     }
   };
 
-  filterCompareLogByDate = dates => {
-    let { compareStationLogs } = this.state;
-    let { startDate, endDate } = dates;
-    let {
-      todayInSeconds,
-      startDateInSeconds,
-      endDateInSeconds,
-    } = getDatesForFilter({ startDate, endDate });
-    let data = compareStationLogs;
+  getCompareStationData = payload => {
+    let { token } = this.state;
+    let stations = [];
 
-    if (startDateInSeconds && endDateInSeconds) {
-      if (
-        todayInSeconds === startDateInSeconds &&
-        todayInSeconds === endDateInSeconds
-      ) {
-        data = compareStationLogs;
-      } else {
-        let result = [];
-        compareStationLogs.forEach(({ station, data }) => {
-          let filteredStationLog = data.filter(stationItem => {
-            let { observation_time } = stationItem;
-            let time = convertStringToNumber(formatDate(observation_time, "X"));
-            if (time >= startDateInSeconds && time <= endDateInSeconds) {
-              return stationItem;
-            }
-          });
-          result.push({ station, data: filteredStationLog });
+    return this.getAdapter()
+      .getCompareWeatherStationData(token, payload)
+      .then(data => {
+        let observationTimes = data.map(item => moment(item.observation_time).format("DD/MM HH:mm"));
+        payload.station_names.forEach(station => {
+          let stationData = data.filter(item => item.station_name === station);
+          stations.push({ station, data: stationData });
         });
-        data = result;
-      }
-
-      return data;
-    } else {
-      displayDateFilterErrors({ startDateInSeconds, endDateInSeconds });
-    }
+        this.updateState({ compareStationLogs: stations });
+        return {stations, observationTimes};
+      });
   };
 
-  filterCompareLogByType = value => {
-    let { type, dates } = value;
+  removeCompareStationData = station => {
+    let { compareStationLogs } = this.state;
+    let newData = compareStationLogs.filter(item => item.station !== station);
+    this.updateState({
+      compareStationLogs: newData,
+    });
 
+    return new Promise(resolve => resolve({ compareStationLogs: newData }));
+  };
+
+  filterCompareLogByType = type => {
+    let { compareStationLogs } = this.state;
     if (type) {
       let result = [];
-      let weatherStationLogs = this.filterCompareLogByDate(dates);
       this.updateState({
-        compareStationCsvData: weatherStationLogs,
         compareType: type,
       });
-      let observationTimes =
-        weatherStationLogs &&
-        weatherStationLogs[0] &&
-        weatherStationLogs[0].data &&
-        weatherStationLogs[0].data.map(value =>
-          moment(value.observation_time).format("DD/MM")
-        );
       compareTypeData[type].forEach(item => {
-        result = weatherStationLogs ? weatherStationLogs.map(({ station, data }) => ({
-          station,
-          data: data.map(value => value[item]),
-        })) : [];
+        result = compareStationLogs
+          ? compareStationLogs.map(({ station, data }) => ({
+              station,
+              data: data.map(value => value[item]),
+            }))
+          : [];
       });
-      if (observationTimes && observationTimes.length > 0) {
-        this.updateState({ observationTimes });
-        return { result, observationTimes: observationTimes || [] };
-      }
-      return { result, observationTimes: this.state.observationTimes || [] };
+      return result;
     } else {
       toaster.error("Please select weather type to compare");
     }
