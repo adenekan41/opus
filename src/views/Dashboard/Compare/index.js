@@ -19,6 +19,7 @@ import {
   getCompareReportType,
   arrayDataIsEmpty,
   compareTypeData,
+  getObservationTimes,
 } from "../../../helpers/functions";
 import { Spinner } from "../../../components/Spinner";
 import toaster from "../../../components/Toaster";
@@ -76,6 +77,7 @@ class Compare extends React.Component {
     if (startDate && endDate) {
       let { dispatch } = this.props;
       this.setState({ loading: true });
+      let observationTimes = getObservationTimes(startDate, endDate)
       dispatch({
         type: actions.GET_COMPARE_STATION_DATA,
         value: {
@@ -84,7 +86,7 @@ class Compare extends React.Component {
           end_date: moment(endDate).format("M/D/YYYY"),
           weather_type: compareType,
         },
-      }).then(({ stations, observationTimes }) => {
+      }).then(({ stations }) => {
         this.setState({ loading: false });
         let compareData = this.filterCompareLogByType(compareType, stations);
         this.setState({
@@ -226,7 +228,7 @@ class Compare extends React.Component {
         </Box>
 
         <Box mt="30px">
-          {selectedStations.length <= 1 ? (
+          {selectedStations.length < 2 ? (
             <Flex alignItems="center" justifyContent="center" py="30vh">
               <Heading>
                 Select at least two weather stations and click the compare
