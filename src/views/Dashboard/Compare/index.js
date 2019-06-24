@@ -87,6 +87,7 @@ class Compare extends React.Component {
       }).then(({ stations, observationTimes }) => {
         this.setState({ loading: false });
         let compareData = this.filterCompareLogByType(compareType, stations);
+        console.log({ compareData, observationTimes })
         this.setState({
           data: compareData,
           observationTimes,
