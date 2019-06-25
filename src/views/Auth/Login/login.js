@@ -1,35 +1,37 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { LoginLayout } from './style';
-import LoginForm from './form';
-import Header from '../../../components/Navbar';
-import { Toast } from '../../../components/Toast';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { LoginLayout } from "./style";
+import LoginForm from "./form";
+import Header from "../../../components/Navbar";
+import toaster from "../../../components/Toaster";
 
 class Login extends Component {
   state = {
     loading: false,
-    error: false,
-    errorMessage: '',
   };
   login = payload => {
     // let requestPayload = {
     //   email: window.btoa(payload.email),
     //   password: window.btoa(payload.password),
     // };
-    this.setState({ loading: true, error: false });
+    this.setState({ loading: true });
     this.props
-      .onLogin(payload, () => this.setState({ error: true }))
+      .onLogin(payload, () =>
+        toaster.error("Unable to log in with provided credentials.")
+      )
       .then(data => {
         this.setState({
           loading: false,
         });
         if (data) {
-          this.props.history.push('/dashboard/weather-data/map');
+          this.props.history.push("/dashboard/weather-data/map");
         }
+      })
+      .catch(() => {
+        toaster.error("Unable to log in with provided credentials.");
       });
   };
   render() {
-    const { error, errorMessage } = this.state;
     return (
       <>
         <LoginLayout>
@@ -48,19 +50,6 @@ class Login extends Component {
             </div>
           </div>
         </LoginLayout>
-
-        {error && (
-          <Toast
-            showToast={error}
-            title="Error"
-            status="error"
-            showCloseButton
-            autoClose={false}
-            onClose={() => this.setState({ error: false })}
-          >
-            {errorMessage || 'Unable to log in with provided credentials.'}
-          </Toast>
-        )}
       </>
     );
   }
