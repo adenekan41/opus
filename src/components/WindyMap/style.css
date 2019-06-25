@@ -57,3 +57,7 @@
   opacity: 1!important;
   pointer-events: all!important;
 }
+
+#windy .play-pause.off:before {
+  left: 0.07em!important;
+}

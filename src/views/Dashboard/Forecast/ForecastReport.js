@@ -10,17 +10,14 @@ import { Icon } from "../../../components/Icon";
 import ReportChart from "./charts/ReportChart";
 import { createCSV, displayDateFilterErrors } from "../../../helpers/functions";
 import { WEATHER_OPTIONS } from "../../../helpers/constants";
-import { Toast } from "../../../components/Toast";
 import { Spinner } from "../../../components/Spinner";
 import toaster from "../../../components/Toaster";
 
 export default class ForecastReport extends Component {
   state = {
     data: [],
-    error: false,
     loading: false,
     buttonLoading: false,
-    errorMessage: "",
     observationTimes: [],
     startDate: moment(new Date()).subtract(1, "days"),
     endDate: moment(new Date()),
@@ -65,7 +62,7 @@ export default class ForecastReport extends Component {
           this.setState({
             loading: false,
           });
-          toaster.error("An error occured. Please try again")
+          toaster.error("An error occured. Please try again");
         });
     } else {
       displayDateFilterErrors(dates);
@@ -76,7 +73,7 @@ export default class ForecastReport extends Component {
     const { dispatch, actions, weatherStation } = this.props;
     const { startDate, endDate } = this.state;
 
-    this.setState({ buttonLoading: true, error: false, errorMessage: "" });
+    this.setState({ buttonLoading: true });
 
     dispatch({
       type: actions.EXPORT_WEATHER_DATA,
@@ -93,9 +90,8 @@ export default class ForecastReport extends Component {
       .catch(() => {
         this.setState({
           buttonLoading: false,
-          error: true,
-          errorMessage: "Unable to export data. Please try again.",
         });
+        toaster.error("Unable to export data. Please try again.");
       });
   };
 
@@ -103,10 +99,8 @@ export default class ForecastReport extends Component {
     const { weatherStation, type } = this.props;
     let {
       data,
-      error,
       startDate,
       endDate,
-      errorMessage,
       observationTimes,
     } = this.state;
     return (
@@ -206,18 +200,6 @@ export default class ForecastReport extends Component {
             </Card>
           )}
         </Box>
-        {error && (
-          <Toast
-            showToast={error}
-            title="Error"
-            status="error"
-            showCloseButton
-            autoClose={false}
-            onClose={() => this.setState({ error: false })}
-          >
-            {errorMessage}
-          </Toast>
-        )}
       </Box>
     );
   }

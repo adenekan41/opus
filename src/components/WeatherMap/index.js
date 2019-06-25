@@ -123,7 +123,7 @@ const MapMarker = ({
         width={'100%'}
         onClick={() => goToBulletin(station_name)}
       >
-        view bulletin
+        View Bulletin
       </Button>
     </Popup>
   </Marker>

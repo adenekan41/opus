@@ -101,7 +101,7 @@ const SelectSearch = ({ options, placeholder, className, onChange, isGrouped, ..
 
 SelectSearch.defaultProps = {
   options: [{ label: 'Kola', value: 'Kola' }, { label: 'John', value: 'John' }],
-  placeholder: 'Search for WeatherStation',
+  placeholder: 'Search for Weather Station',
 };
 
 export default SelectSearch;

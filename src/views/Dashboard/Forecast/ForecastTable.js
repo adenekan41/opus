@@ -203,7 +203,7 @@ const ForecastTableColumns = [
     Cell: ({ original: { heating_degree_days } }) => (
       <span>{getValue(heating_degree_days)}</span>
     ),
-    width: 120,
+    width: 200,
   },
   {
     Header: "Cooling Degree Days",
@@ -211,7 +211,7 @@ const ForecastTableColumns = [
     Cell: ({ original: { cooling_degree_days } }) => (
       <span>{getValue(cooling_degree_days)}</span>
     ),
-    width: 120,
+    width: 200,
   },
 ];
 
