@@ -6,8 +6,13 @@ import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
 import { ErrorAlertComponent } from "../../../../components/AlertComponent";
 
-const cropFormValidation = yup.object().shape({
-  name: yup.string().required("Crop name is required"),
+const assetFormValidation = yup.object().shape({
+  name: yup.string().required("Asset name is required"),
+});
+
+const weatherStationAssetFormValidation = yup.object().shape({
+  name: yup.string().required("Weather station name is required"),
+  device_token: yup.string().required("Device token is required"),
 });
 
 export default function AssetForm({
@@ -17,13 +22,27 @@ export default function AssetForm({
   isLoading,
   name,
   id,
+  device_token,
   onCancel,
 }) {
+  let isWeatherStation = label.toLowerCase() === "weather station";
   return (
     <Formik
-      validationSchema={cropFormValidation}
+      validationSchema={
+        isWeatherStation
+          ? weatherStationAssetFormValidation
+          : assetFormValidation
+      }
       onSubmit={values => onSubmit(values, onCancel)}
-      initialValues={{ name: name || "", id: id || "" }}
+      initialValues={
+        isWeatherStation
+          ? {
+              name: name || "",
+              id: id || "",
+              device_token: device_token || "",
+            }
+          : { name: name || "", id: id || "" }
+      }
     >
       {({ values, errors, touched, handleSubmit, handleChange }) => (
         <form onSubmit={handleSubmit}>
@@ -40,6 +59,19 @@ export default function AssetForm({
             errorMessage={errors.name}
             isInvalid={errors.name && touched.name}
           />
+          {isWeatherStation && device_token === undefined && (
+            <Input
+              mt="24px"
+              id="device_token"
+              name="device_token"
+              label="Device token"
+              value={values.device_token}
+              touched={touched.device_token}
+              onChange={handleChange}
+              errorMessage={errors.device_token}
+              isInvalid={errors.device_token && touched.device_token}
+            />
+          )}
 
           <Box className="row" mt="24px">
             <div className="col-md-6">
