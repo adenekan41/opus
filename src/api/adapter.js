@@ -323,11 +323,11 @@ const createWeatherStation = (token, data) => {
 }
 
 const updateWeatherStation = (token, data) => {
-  return makeApiCall({ url: `/weather-stations/${data.id}`, data, method: "PUT", token })
+  return makeApiCall({ url: `/weather-stations/${data.id}/`, data, method: "PUT", token })
 }
 
 const deleteWeatherStation = (token, id) => {
-  return makeApiCall({ url: `/weather-stations/${id}`, method: "DELETE", token })
+  return makeApiCall({ url: `/weather-stations/${id}/`, method: "DELETE", token })
 }
 
 export default {

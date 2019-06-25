@@ -838,10 +838,16 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .createWeatherStation(token, payload)
       .then(data => {
-        let weatherStationAssets = { name: "Weather Station", data };
-        let newFormattedAssets = formattedAssets
-          .filter(item => item.name.toLowerCase() !== "weather station")
-          .push(weatherStationAssets);
+        let newFormattedAssets = formattedAssets.map(item => {
+          if (item.name === "weather station") {
+            item.data = data.map(station => ({
+              id: station.id,
+              name: station.station_name,
+              device_token: station.device_token,
+            }));
+          }
+          return item;
+        });
         this.updateState({ formattedAssets: newFormattedAssets });
         return newFormattedAssets;
       });
@@ -862,17 +868,26 @@ export class DataProvider extends React.Component {
         let updatedWeatherStationAssets = weatherStaionAssets.data.map(
           station => {
             if (station.id === data.id) {
-              return data;
+              const { station_name, ...rest } = data;
+              return {
+                ...rest,
+                id: data.id,
+                name: station_name,
+                device_token: data.device_token,
+              };
             }
             return station;
           }
         );
 
         //update list of assets with new weather station assets
-        let newFormattedAssets = formattedAssets
-          .filter(item => item.name.toLowerCase() !== "weather station")
-          .push(updatedWeatherStationAssets);
-
+        let newFormattedAssets = formattedAssets.map(item => {
+          if (item.name.toLowerCase() === "weather station") {
+            item.data = updatedWeatherStationAssets;
+          }
+          return item;
+        });
+        
         this.updateState({ formattedAssets: newFormattedAssets });
         return newFormattedAssets;
       });
@@ -895,9 +910,12 @@ export class DataProvider extends React.Component {
         );
 
         //update list of assets with new weather station assets
-        let newFormattedAssets = formattedAssets
-          .filter(item => item.name.toLowerCase() !== "weather station")
-          .push(updatedWeatherStationAssets);
+        let newFormattedAssets = formattedAssets.map(item => {
+          if (item.name.toLowerCase() === "weather station") {
+            item.data = updatedWeatherStationAssets;
+          }
+          return item;
+        });
 
         this.updateState({ formattedAssets: newFormattedAssets });
         return newFormattedAssets;
