@@ -212,6 +212,80 @@ export default class AssetManagement extends Component {
       });
   };
 
+  onWeatherStationCreate = (values, closeModal) => {
+    const { dispatch, actions } = this.props;
+    const { name, ...rest} = values;
+    const payload = {...rest, station_name: name};
+
+    this.setState({
+      loading: true,
+    });
+
+    dispatch({ type: actions.CREATE_WEATHER_STATION, value: payload })
+      .then(() => {
+        this.setState({
+          loading: false,
+        });
+        closeModal();
+        toaster.success("Asset created successfully");
+      })
+      .catch(error => {
+        this.setState({
+          loading: false,
+        });
+        errorCallback(error, this.setApiErrors);
+      });
+  };
+
+  onWeatherStationEdit = (values, closeModal) => {
+    const { dispatch, actions } = this.props;
+    const { name, ...rest} = values;
+    const payload = {...rest, station_name: name};
+
+    this.setState({
+      loading: true,
+    });
+
+    dispatch({
+      type: actions.UPDATE_WEATHER_STATION,
+      value: payload,
+    })
+      .then(() => {
+        this.setState({ loading: false });
+        closeModal();
+        toaster.success("Asset updated successfully");
+      })
+      .catch(error => {
+        this.setState({
+          loading: false,
+        });
+        errorCallback(error, this.setApiErrors);
+      });
+  };
+
+  onWeatherStationDelete = (id, closeConfirm) => {
+    const { dispatch, actions } = this.props;
+
+    this.setState({
+      loading: true,
+    });
+
+    dispatch({ type: actions.DELETE_WEATHER_STATION, value: id })
+      .then(() => {
+        this.setState({
+          loading: false,
+        });
+        closeConfirm();
+        toaster.success("Asset deleted successfully");
+      })
+      .catch(error => {
+        this.setState({
+          loading: false,
+        });
+        errorCallback(error, this.setApiErrors);
+      });
+  };
+
   render() {
     const {
       selectedAsset,
@@ -224,6 +298,8 @@ export default class AssetManagement extends Component {
       searchLoading,
     } = this.state;
     const { formattedAssets } = this.props;
+    const isWeatherStation =
+      selectedAsset && selectedAsset.name && selectedAsset.name.toLowerCase() === "weather station";
 
     return (
       <Box py="40px" px="40px">
@@ -255,7 +331,8 @@ export default class AssetManagement extends Component {
                   <div className="col-md-8 col-xs-12 col-sm-8 col-lg-8">
                     <form onSubmit={e => this.onAssetSearch(e)}>
                       <SearchInput
-                        placeholder={`Search ${selectedAsset.name}`}
+                        placeholder={`Type ${selectedAsset.name &&
+                          selectedAsset.name.toLowerCase()} name and press enter`}
                         mb="8px"
                         onChange={e => this.handleSearchChange(e.target.value)}
                       />
@@ -265,7 +342,11 @@ export default class AssetManagement extends Component {
                     <CreateAssetButton
                       isLoading={loading}
                       label={selectedAsset.name}
-                      onSubmit={this.onAssetCreate}
+                      onSubmit={
+                        isWeatherStation
+                          ? this.onWeatherStationCreate
+                          : this.onAssetCreate
+                      }
                       apiErrors={getApiErrors(apiErrors)}
                     />
                   </div>
@@ -280,7 +361,7 @@ export default class AssetManagement extends Component {
                         width="100%"
                       />
                     ) : (
-                      <Box mb={4}>
+                      <Box mb={4} className="asset-table-container">
                         <AssetTable
                           columns={assets_columns}
                           model={selectedAsset.name}
@@ -307,7 +388,9 @@ export default class AssetManagement extends Component {
             {...assetToEdit}
             isLoading={loading}
             label={selectedAsset.name}
-            onSubmit={this.onAssetEdit}
+            onSubmit={
+              isWeatherStation ? this.onWeatherStationEdit : this.onAssetEdit
+            }
             onCancel={this.closeEditModal}
             apiErrors={getApiErrors(apiErrors)}
           />
@@ -318,7 +401,12 @@ export default class AssetManagement extends Component {
           heading={`Delete ${selectedAsset.name &&
             selectedAsset.name.toLowerCase()}`}
           onConfirm={() => {
-            this.onAssetDelete(assetToDelete.id, this.closeDeleteConfirm);
+            isWeatherStation
+              ? this.onWeatherStationDelete(
+                  assetToDelete.id,
+                  this.closeDeleteConfirm
+                )
+              : this.onAssetDelete(assetToDelete.id, this.closeDeleteConfirm);
           }}
           isLoading={loading}
           onCloseModal={this.closeDeleteConfirm}

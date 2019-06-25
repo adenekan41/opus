@@ -248,7 +248,7 @@ class Contacts extends React.Component {
               <form onSubmit={e => this.onContactSearch(e)}>
                 <SearchInput
                   mb="8px"
-                  placeholder="Search contacts"
+                  placeholder="Type first name, last name or email and press enter"
                   onChange={e => this.handleSearchChange(e.target.value)}
                 />
               </form>

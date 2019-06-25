@@ -5,12 +5,12 @@ import { ACTIONS } from "./actions";
 import { DataContext } from "./context";
 import { clearState, saveState, loadState } from "../localStorage";
 import {
-  convertStringToNumber,
   weatherTypeData,
   formatDate,
-  getDatesForFilter,
   compareTypeData,
+  getUserWeatherStations,
 } from "../helpers/functions";
+import toaster from "../components/Toaster";
 
 export class DataProvider extends React.Component {
   static defaultProps = {
@@ -81,10 +81,10 @@ export class DataProvider extends React.Component {
       if (userProfile.is_admin || userProfile.is_superuser) {
         return Promise.all([
           this.getUsers(token),
-          this.getWeatherData(token),
+          this.getWeatherData(token, userProfile),
           this.getAssets(token),
-          this.getContacts({token}),
-          this.getWeatherStations(token)
+          this.getContacts({ token }),
+          this.getWeatherStations(token),
         ]).then(response => {
           return {
             profile: userProfile,
@@ -92,23 +92,23 @@ export class DataProvider extends React.Component {
             weatherStations: data[1],
             assets: data[2],
             contacts: data[3],
-            weatherStationsList: data[4]
+            weatherStationsList: data[4],
           };
         });
       }
       if (userProfile.is_customer) {
         return Promise.all([
-          this.getWeatherData(token),
-          this.getContacts({token}),
+          this.getWeatherData(token, userProfile),
+          this.getContacts({ token }),
           this.getAssets(token),
-          this.getWeatherStations(token)
+          this.getWeatherStations(token),
         ]).then(response => {
           return {
             profile: userProfile,
-            weatherStations: response[0],
+            weatherStations: data[0],
             contacts: response[1],
             assets: response[2],
-            weatherStationsList: data[3]
+            weatherStationsList: data[3],
           };
         });
       }
@@ -494,19 +494,40 @@ export class DataProvider extends React.Component {
       });
   };
 
-  getWeatherData = token => {
+  getWeatherData = (token, profile) => {
     let { weatherStations } = this.state;
 
-    if (weatherStations.length > 0) {
-      return Promise(resolve => resolve({ weatherStations }));
+    if (profile.is_admin || profile.is_superuser) {
+      if (weatherStations.length > 0) {
+        return Promise(resolve => resolve({ weatherStations }));
+      }
+
+      return this.getAdapter()
+        .getWeatherData(token)
+        .then(data => {
+          this.updateState({ weatherStations: data });
+          return data;
+        });
     }
 
-    return this.getAdapter()
-      .getWeatherData(token)
-      .then(data => {
-        this.updateState({ weatherStations: data });
-        return data;
-      });
+    if (profile.is_customer) {
+      if (weatherStations.length > 0) {
+        return Promise(resolve => resolve({ weatherStations }));
+      }
+
+      return this.getAdapter()
+        .getWeatherData(token)
+        .then(data => {
+          let weatherLinkStations = data;
+          let userWeatherStations = profile.weather_stations;
+          let weatherStations = getUserWeatherStations(
+            userWeatherStations,
+            weatherLinkStations
+          );
+          this.updateState({ weatherStations });
+          return weatherStations;
+        });
+    }
   };
 
   updateWeatherStationData = station_name => {
@@ -533,33 +554,6 @@ export class DataProvider extends React.Component {
           return data;
         });
     }
-  };
-
-  getCompareStationData = station_name => {
-    let { token, compareStationLogs } = this.state;
-
-    return this.getAdapter()
-      .getAllWeatherStationData(token, station_name)
-      .then(data => {
-        this.updateState({
-          compareStationLogs: [
-            { station: station_name, data },
-            ...compareStationLogs,
-          ],
-        });
-        return [{ station: station_name, data }, ...compareStationLogs];
-      });
-  };
-
-  removeCompareStationData = station => {
-    let { compareStationLogs } = this.state;
-    let newData = compareStationLogs.filter(item => item.station !== station);
-    this.updateState({
-      compareStationLogs: newData,
-      compareStationCsvData: newData,
-    });
-
-    return new Promise(resolve => resolve({ compareStationLogs: newData }));
   };
 
   filterWeatherLogByDate = values => {
@@ -599,67 +593,64 @@ export class DataProvider extends React.Component {
     }
   };
 
-  filterCompareLogByDate = dates => {
-    let { compareStationLogs } = this.state;
-    let { startDate, endDate } = dates;
-    let {
-      todayInSeconds,
-      startDateInSeconds,
-      endDateInSeconds,
-    } = getDatesForFilter({ startDate, endDate });
-    let data = compareStationLogs;
+  getCompareStationData = payload => {
+    let { token } = this.state;
+    let stations = [];
 
-    if (
-      todayInSeconds === startDateInSeconds &&
-      todayInSeconds === endDateInSeconds
-    ) {
-      data = compareStationLogs;
-    } else {
-      let result = [];
-      compareStationLogs.forEach(({ station, data }) => {
-        let filteredStationLog = data.filter(stationItem => {
-          let { observation_time } = stationItem;
-          let time = convertStringToNumber(formatDate(observation_time, "X"));
-          if (time >= startDateInSeconds && time <= endDateInSeconds) {
-            return stationItem;
-          }
+    return this.getAdapter()
+      .getCompareWeatherStationData(token, payload)
+      .then(data => {
+        payload.station_names.forEach(station => {
+          let stationData = data.filter(item => item.station_name === station);
+          stations.push({ station, data: stationData });
         });
-        result.push({ station, data: filteredStationLog });
+        this.updateState({ compareStationLogs: stations });
+        let observationTimes =
+          stations &&
+          stations[0] &&
+          stations[0].data &&
+          stations[0].data.map(value =>
+            moment(value.observation_time).format("DD/MM")
+          );
+        if (observationTimes && observationTimes.length > 0) {
+          this.updateState({ observationTimes });
+          return { stations, observationTimes: observationTimes || [] };
+        }
+        return {
+          stations,
+          observationTimes: this.state.observationTimes || [],
+        };
       });
-      data = result;
-    }
-
-    return data;
   };
 
-  filterCompareLogByType = value => {
-    let { type, dates } = value;
+  removeCompareStationData = station => {
+    let { compareStationLogs } = this.state;
+    let newData = compareStationLogs.filter(item => item.station !== station);
+    this.updateState({
+      compareStationLogs: newData,
+    });
 
+    return new Promise(resolve => resolve({ compareStationLogs: newData }));
+  };
+
+  filterCompareLogByType = type => {
+    let { compareStationLogs } = this.state;
     if (type) {
       let result = [];
-      let weatherStationLogs = this.filterCompareLogByDate(dates);
       this.updateState({
-        compareStationCsvData: weatherStationLogs,
         compareType: type,
       });
-      let observationTimes =
-        weatherStationLogs &&
-        weatherStationLogs[0] &&
-        weatherStationLogs[0].data &&
-        weatherStationLogs[0].data.map(value =>
-          moment(value.observation_time).format("DD/MM")
-        );
       compareTypeData[type].forEach(item => {
-        result = weatherStationLogs.map(({ station, data }) => ({
-          station,
-          data: data.map(value => value[item]),
-        }));
+        result = compareStationLogs
+          ? compareStationLogs.map(({ station, data }) => ({
+              station,
+              data: data.map(value => value[item]),
+            }))
+          : [];
       });
-      if (observationTimes && observationTimes.length > 0) {
-        this.updateState({ observationTimes });
-        return { result, observationTimes: observationTimes || [] };
-      }
-      return { result, observationTimes: this.state.observationTimes || [] };
+      return result;
+    } else {
+      toaster.error("Please select weather type to compare");
     }
   };
 
@@ -726,15 +717,25 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .getAssets(token)
       .then(data => {
-        const { results } = data;
-        const crops = results.filter(asset => asset.is_crop);
-        const countries = results.filter(asset => asset.is_country);
-        const formattedAssets = [
-          { name: "Crop", data: crops },
-          { name: "Country", data: countries },
-        ];
-        this.updateState({ assets: results, formattedAssets });
-        return formattedAssets;
+        return this.getWeatherStations(token).then(stations => {
+          const { results } = data;
+          const crops = results.filter(asset => asset.is_crop);
+          const countries = results.filter(asset => asset.is_country);
+          const formattedAssets = [
+            { name: "Crop", data: crops },
+            { name: "Country", data: countries },
+            {
+              name: "Weather Station",
+              data: stations.map(station => ({
+                id: station.id,
+                name: station.station_name,
+                device_token: station.device_token,
+              })),
+            },
+          ];
+          this.updateState({ assets: results, formattedAssets });
+          return formattedAssets;
+        });
       });
   };
 
@@ -832,32 +833,92 @@ export class DataProvider extends React.Component {
   };
 
   createWeatherStation = payload => {
-    let { token } = this.state;
+    let { token, formattedAssets } = this.state;
 
     return this.getAdapter()
       .createWeatherStation(token, payload)
       .then(data => {
-        return data;
+        let newFormattedAssets = formattedAssets.map(item => {
+          if (item.name === "weather station") {
+            item.data = data.map(station => ({
+              id: station.id,
+              name: station.station_name,
+              device_token: station.device_token,
+            }));
+          }
+          return item;
+        });
+        this.updateState({ formattedAssets: newFormattedAssets });
+        return newFormattedAssets;
       });
   };
 
   updateWeatherStation = payload => {
-    let { token } = this.state;
+    let { token, formattedAssets } = this.state;
 
     return this.getAdapter()
       .updateWeatherStation(token, payload)
       .then(data => {
-        return data;
+        // get all weather station assets from list of assets
+        let weatherStaionAssets = formattedAssets.find(
+          asset => asset.name.toLowerCase() === "weather station"
+        );
+
+        //update weather station assets with updated weather station
+        let updatedWeatherStationAssets = weatherStaionAssets.data.map(
+          station => {
+            if (station.id === data.id) {
+              const { station_name, ...rest } = data;
+              return {
+                ...rest,
+                id: data.id,
+                name: station_name,
+                device_token: data.device_token,
+              };
+            }
+            return station;
+          }
+        );
+
+        //update list of assets with new weather station assets
+        let newFormattedAssets = formattedAssets.map(item => {
+          if (item.name.toLowerCase() === "weather station") {
+            item.data = updatedWeatherStationAssets;
+          }
+          return item;
+        });
+        
+        this.updateState({ formattedAssets: newFormattedAssets });
+        return newFormattedAssets;
       });
   };
 
   deleteWeatherStation = id => {
-    let { token } = this.state;
+    let { token, formattedAssets } = this.state;
 
     return this.getAdapter()
       .deleteWeatherStation(token, id)
-      .then(data => {
-        return data;
+      .then(() => {
+        // get all weather station assets from list of assets
+        let weatherStaionAssets = formattedAssets.find(
+          asset => asset.name.toLowerCase() === "weather station"
+        );
+
+        //remove deleted weather station from list of weather station assets
+        let updatedWeatherStationAssets = weatherStaionAssets.data.filter(
+          station => station.id !== id
+        );
+
+        //update list of assets with new weather station assets
+        let newFormattedAssets = formattedAssets.map(item => {
+          if (item.name.toLowerCase() === "weather station") {
+            item.data = updatedWeatherStationAssets;
+          }
+          return item;
+        });
+
+        this.updateState({ formattedAssets: newFormattedAssets });
+        return newFormattedAssets;
       });
   };
 

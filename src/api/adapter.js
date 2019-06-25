@@ -232,6 +232,16 @@ const getAllWeatherStationData = (token, station_name = "") => {
   });
 };
 
+const getCompareWeatherStationData = (token, data) => {
+  return makeApiCall({
+    baseURL: BASE_URL_TWO,
+    url: `/weatherlink/list-stations-data/`,
+    token,
+    data,
+    method: "POST"
+  })
+}
+
 const exportWeatherData = (token, station_name, start_date, end_date) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
@@ -313,11 +323,11 @@ const createWeatherStation = (token, data) => {
 }
 
 const updateWeatherStation = (token, data) => {
-  return makeApiCall({ url: `/weather-stations/${data.id}`, data, method: "PUT", token })
+  return makeApiCall({ url: `/weather-stations/${data.id}/`, data, method: "PUT", token })
 }
 
 const deleteWeatherStation = (token, id) => {
-  return makeApiCall({ url: `/weather-stations/${id}`, method: "DELETE", token })
+  return makeApiCall({ url: `/weather-stations/${id}/`, method: "DELETE", token })
 }
 
 export default {
@@ -361,4 +371,5 @@ export default {
   createWeatherStation,
   updateWeatherStation,
   deleteWeatherStation,
+  getCompareWeatherStationData,
 };

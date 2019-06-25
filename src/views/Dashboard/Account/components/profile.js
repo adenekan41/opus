@@ -12,6 +12,7 @@ import {
   errorCallback,
 } from "../../../../helpers/functions";
 import { Confirm } from "../../../../components/Modal";
+import { ErrorAlertComponent } from "../../../../components/AlertComponent";
 
 const ProfileStyle = styled.div`
   .card {
@@ -34,11 +35,18 @@ const ProfileStyle = styled.div`
 class Profile extends React.Component {
   state = {
     files: [],
+    apiErrors: {},
     loading: false,
     profilePicture: "",
     passwordLoading: false,
     deactivateLoading: false,
     showDeleteConfirm: false,
+  };
+
+  setApiErrors = errorPayload => {
+    this.setState({
+      apiErrors: errorPayload,
+    });
   };
 
   onProfileUpdate = values => {
@@ -63,7 +71,7 @@ class Profile extends React.Component {
         this.setState({
           loading: false,
         });
-        errorCallback(error);
+        errorCallback(error, this.setApiErrors);
       });
   };
 
@@ -136,54 +144,57 @@ class Profile extends React.Component {
 
     return (
       <ProfileStyle>
-        <div style={{ padding: "0px" }}>
-          <Flex width="100%">
-            <Box className="photo-section">
-              <div className="card d-flex justify-content-center">
-                <div className="card-body text-center">
-                  <center>
-                    <Avatar
-                      isRound
-                      size="8vw"
-                      photo_url={
-                        profilePhoto
-                          ? `${process.env.REACT_APP_API_URL}${profilePhoto}`
-                          : "" || image.preview
-                      }
-                      color="#ff9901"
-                      bgColor="rgba(255,153,1,.15)"
-                      initial={initials}
-                    />
-                  </center>
-                  <br />
-                  <div className="change_photo">
-                    <FileUploader accept="image/*" onUpload={this.onPhotoDrop}>
-                      {() => (
-                        <Button width="220px" kind="green">
-                          Change photo
-                        </Button>
-                      )}
-                    </FileUploader>
-                  </div>
-                  <Button onClick={clearAllState} width="100%" mt="16px">
-                    Log out
-                  </Button>
+        <Box my={3}>
+          <ErrorAlertComponent errors={this.state.apiErrors} />
+        </Box>
+        <Flex width="100%">
+          <Box className="photo-section">
+            <div className="card d-flex justify-content-center">
+              <div className="card-body text-center">
+                <center>
+                  <Avatar
+                    isRound
+                    size="8vw"
+                    photo_url={
+                      profilePhoto
+                        ? `${process.env.REACT_APP_API_URL}${profilePhoto}`
+                        : "" || image.preview
+                    }
+                    color="#ff9901"
+                    bgColor="rgba(255,153,1,.15)"
+                    initial={initials}
+                  />
+                </center>
+                <br />
+                <div className="change_photo">
+                  <FileUploader accept="image/*" onUpload={this.onPhotoDrop}>
+                    {() => (
+                      <Button block kind="green">
+                        Change photo
+                      </Button>
+                    )}
+                  </FileUploader>
                 </div>
+                <Button onClick={clearAllState} block mt="16px">
+                  Log out
+                </Button>
               </div>
-            </Box>
-            <Box mx="32px" />
-            <Box className="form-section">
-              <ProfileForm
-                {...profile}
-                isLoading={this.state.loading}
-                onSubmit={this.onProfileUpdate}
-                onPasswordChange={this.onPasswordUpdate}
-                passwordLoading={this.state.passwordLoading}
-                deactivateAccount={() => this.setState({ showDeleteConfirm: true })}
-              />
-            </Box>
-          </Flex>
-        </div>
+            </div>
+          </Box>
+          <Box mx="32px" />
+          <Box className="form-section">
+            <ProfileForm
+              {...profile}
+              isLoading={this.state.loading}
+              onSubmit={this.onProfileUpdate}
+              onPasswordChange={this.onPasswordUpdate}
+              passwordLoading={this.state.passwordLoading}
+              deactivateAccount={() =>
+                this.setState({ showDeleteConfirm: true })
+              }
+            />
+          </Box>
+        </Flex>
         <Confirm
           heading="Deactivate account"
           onConfirm={this.deactivateAccount}

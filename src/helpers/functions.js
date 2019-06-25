@@ -48,6 +48,15 @@ function getStationLabelColor(data) {
 
 function generateChartOptions(list) {
   return list.map(({ station, data }) => {
+    if (arrayDataIsNull(data)) {
+      return {
+        label: station,
+        backgroundColor: "transparent",
+        borderColor: getStationLabelColor(list)[station],
+        data: null,
+        borderWidth: 1,
+      };
+    }
     return {
       label: station,
       backgroundColor: "transparent",
@@ -192,17 +201,26 @@ export const weatherTypeData = {
 };
 
 export const compareTypeData = {
-  Temperature: ["temp_c"],
-  "Current rain": ["rain_rate_mm_h"],
-  "Total rain": ["rain_month", "rain_year"],
-  "Wind speed": ["wind_speed_m_s"],
-  Humidity: ["hum_%"],
+  Temperature: ["Temp°C"],
+  "Current rain": ["rain_rate"],
+  "Total rain": ["rain_month"],
+  "Wind speed": ["wind_peed"],
+  Humidity: ["current_humidity"],
   "Wind direction": ["wind_degrees"],
-  Barometer: ["barometer_hpa"],
+  Barometer: ["barometer_pressure"],
 };
 
 export const formatDate = (date, format) => {
   return moment(date).format(format);
+};
+
+export const displayDateFilterErrors = ({ startDate, endDate }) => {
+  if (startDate && !endDate) {
+    toaster.error("Please select end date");
+  }
+  if (!startDate && endDate) {
+    toaster.error("Please select start date");
+  }
 };
 
 export const getDatesForFilter = ({ startDate, endDate }) => {
@@ -277,6 +295,34 @@ export const getStates = (country, countries) => {
   );
   return result ? result.id : "";
 };
+
+export const getUserWeatherStations = (
+  userWeatherStations,
+  weatherStations
+) => {
+  let weatherLinkStations = weatherStations;
+  let userWeatherStationNames = userWeatherStations.map(s => s.station_name);
+  return weatherLinkStations.filter(station =>
+    userWeatherStationNames.includes(station.station_name)
+  );
+};
+
+export const arrayDataIsNull = data => {
+  return data.every(item => item === null);
+};
+
+export const arrayDataIsEmpty = data => {
+  return data.map(i => i.data).every(arrayDataIsNull);
+};
+
+export const getObservationTimes = (startDate, endDate ) => {
+  let diff = endDate.diff(startDate, "hours");
+  let observationTimes = [];
+  for(let i=0; i<diff; i++ ) {
+    observationTimes.push(moment(startDate).add(i, "hours"));
+  }
+  return observationTimes.map(item => item.format("DD/MM HH:mm"));
+}
 
 export function getAllUrlParams(url) {
   // get query string from url (optional) or window

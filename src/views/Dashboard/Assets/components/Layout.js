@@ -5,6 +5,11 @@ export const AssetManagementStyle = styled.div`
 .asset-list-section {
   height: calc(100vh - 80px);
 
+  @media(max-width: 768px) {
+    height: auto;
+    margin-bottom: 12px;
+  }
+
   .assets-list {
     list-style: none;
     margin: 0;
@@ -56,7 +61,7 @@ export const AssetManagementStyle = styled.div`
   }
 }
 
-.table-section {
-  height: calc(100vh - 80px);
+.asset-table-container {
+  height: calc(100vh - 170px);
 }
 `;

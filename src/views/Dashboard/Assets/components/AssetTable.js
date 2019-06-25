@@ -19,13 +19,14 @@ export default function AssetTable({
         resized={[
           {
             id: "name",
-            value: 150,
+            value: "20%",
           },
           {
             id: "actions",
-            value: 900,
+            value: "80%",
           },
         ]}
+        height="100%"
         onClickRow={onClickRow}
         pageSize={pageSize}
         currentPage={currentPage}

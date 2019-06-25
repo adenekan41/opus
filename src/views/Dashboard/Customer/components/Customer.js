@@ -100,7 +100,7 @@ class Customers extends React.Component {
             <form onSubmit={e => this.onCustomerSearch(e)}>
               <SearchInput
                 mb="8px"
-                placeholder="Search  first name, last name,"
+                placeholder="Type first name or last name and press enter"
                 onChange={e => this.handleSearchChange(e.target.value)}
               />
             </form>

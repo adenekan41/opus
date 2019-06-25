@@ -183,7 +183,7 @@ class Users extends React.Component {
               <form onSubmit={e => this.onUserSearch(e)}>
                 <SearchInput
                   mb="8px"
-                  placeholder="Search first name, last name, email"
+                  placeholder="Type first name, last name or email and press enter"
                   onChange={e => this.handleSearchChange(e.target.value)}
                 />
               </form>

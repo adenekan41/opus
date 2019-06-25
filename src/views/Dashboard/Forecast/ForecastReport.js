@@ -8,10 +8,11 @@ import Button from "../../../components/Button";
 import Card from "../../../components/Card";
 import { Icon } from "../../../components/Icon";
 import ReportChart from "./charts/ReportChart";
-import { createCSV } from "../../../helpers/functions";
+import { createCSV, displayDateFilterErrors } from "../../../helpers/functions";
 import { WEATHER_OPTIONS } from "../../../helpers/constants";
 import { Toast } from "../../../components/Toast";
 import { Spinner } from "../../../components/Spinner";
+import toaster from "../../../components/Toaster";
 
 export default class ForecastReport extends Component {
   state = {
@@ -38,31 +39,37 @@ export default class ForecastReport extends Component {
 
   getWeatherTypeData = (type, dates) => {
     const { dispatch, actions, weatherStation } = this.props;
+    const { startDate, endDate } = dates;
 
-    this.setState({
-      loading: true,
-    });
-
-    dispatch({
-      type: actions.FILTER_WEATHER_DATA_BY_TYPE,
-      value: {
-        type,
-        ...{ ...dates, station_name: weatherStation.station_name },
-      },
-    }).then(data => {
-      let { result, observationTimes } = data;
+    if (startDate && endDate && startDate.isValid() && endDate.isValid()) {
       this.setState({
-        data: result,
-        observationTimes,
-        loading: false,
+        loading: true,
       });
-    }).catch(() => {
-      this.setState({
-        loading: false,
-        error: true,
-        errorMessage: "An error occured. Please try again"
+
+      dispatch({
+        type: actions.FILTER_WEATHER_DATA_BY_TYPE,
+        value: {
+          type,
+          ...{ ...dates, station_name: weatherStation.station_name },
+        },
       })
-    });
+        .then(data => {
+          let { result, observationTimes } = data;
+          this.setState({
+            data: result,
+            observationTimes,
+            loading: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            loading: false,
+          });
+          toaster.error("An error occured. Please try again")
+        });
+    } else {
+      displayDateFilterErrors(dates);
+    }
   };
 
   exportWeatherData = () => {
@@ -136,7 +143,6 @@ export default class ForecastReport extends Component {
           </Box>
           <Box className="col-md-4">
             <DatePicker
-              isOutsideRange={() => false}
               startDate={this.state.startDate}
               endDate={this.state.endDate}
               onChange={({ startDate, endDate }) => {
@@ -159,6 +165,7 @@ export default class ForecastReport extends Component {
                 display: flex;
                 align-items: center;
               `}
+              disabled={data.length === 0}
               isLoading={this.state.buttonLoading}
               onClick={this.exportWeatherData}
             >

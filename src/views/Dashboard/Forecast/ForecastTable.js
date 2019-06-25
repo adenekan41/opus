@@ -9,18 +9,19 @@ import {
   createCSV,
   getValue,
   valueInDecimal,
+  displayDateFilterErrors,
 } from "../../../helpers/functions";
-import { Toast } from "../../../components/Toast";
 import { Spinner } from "../../../components/Spinner";
+import toaster from "../../../components/Toaster";
 
 const ForecastTableColumns = [
   {
     Header: "Time",
     id: "time",
     accessor: "time",
-    Cell: ({ original: { time } }) => (
-      <span>{moment(time).format("DD/MM/YY - HH:mm")}</span>
-    ),
+    Cell: ({ original: { time } }) => {
+      return <span>{moment(time).format("DD/MM/YY - HH:mm")}</span>;
+    },
     fixed: "left",
     style: {
       color: "#ffffff",
@@ -297,7 +298,7 @@ export default class ForecastTable extends Component {
   };
 
   getTableData = () => {
-    const { weatherStationLogs=[] } = this.state;
+    const { weatherStationLogs = [] } = this.state;
     return weatherStationLogs.map(this.getSingleDataPoint);
   };
 
@@ -330,35 +331,40 @@ export default class ForecastTable extends Component {
 
   filterDataByDate = dates => {
     const { dispatch, actions, weatherStation } = this.props;
-    this.setState({
-      loading: true,
-    });
-    dispatch({
-      type: actions.FILTER_WEATHER_DATA_BY_DATE,
-      value: { ...dates, station_name: weatherStation.station_name },
-    }).then(data => {
+    const { startDate, endDate } = dates;
+
+    if (startDate && endDate && startDate.isValid() && endDate.isValid()) {
       this.setState({
-        loading: false,
-        weatherStationLogs: data,
+        loading: true,
       });
-    }).catch(() => {
-      this.setState({
-        loading: false,
-        error: true,
-        errorMessage: "An error occured. Please refresh."
+      dispatch({
+        type: actions.FILTER_WEATHER_DATA_BY_DATE,
+        value: { ...dates, station_name: weatherStation.station_name },
       })
-    });
+        .then(data => {
+          this.setState({
+            loading: false,
+            weatherStationLogs: data,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            loading: false,
+          });
+          toaster.error("An error occured. Please refresh.");
+        });
+    } else {
+      displayDateFilterErrors(dates);
+    }
   };
 
   render() {
     let data = this.getTableData();
-    let { error, errorMessage } = this.state;
     return (
       <Box mt="32px">
         <Flex flexWrap="wrap">
           <Box width="350px" mr="20px">
             <DatePicker
-              isOutsideRange={() => false}
               startDate={this.state.startDate}
               endDate={this.state.endDate}
               onChange={({ startDate, endDate }) => {
@@ -381,6 +387,7 @@ export default class ForecastTable extends Component {
                 display: flex;
                 align-items: center;
               `}
+              disabled={data.length === 0}
               isLoading={this.state.buttonLoading}
               onClick={this.exportWeatherData}
             >
@@ -391,9 +398,9 @@ export default class ForecastTable extends Component {
         </Flex>
         <Box mt="40px">
           {this.state.loading ? (
-          <Flex alignItems="center" justifyContent="center" py="30vh">
-            <Spinner />
-          </Flex>
+            <Flex alignItems="center" justifyContent="center" py="30vh">
+              <Spinner />
+            </Flex>
           ) : data.length > 0 ? (
             <Table
               data={data}
@@ -408,19 +415,6 @@ export default class ForecastTable extends Component {
             </Flex>
           )}
         </Box>
-
-        {error && (
-          <Toast
-            showToast={error}
-            title="Error"
-            status="error"
-            showCloseButton
-            autoClose={false}
-            onClose={() => this.setState({ error: false })}
-          >
-            {errorMessage}
-          </Toast>
-        )}
       </Box>
     );
   }
