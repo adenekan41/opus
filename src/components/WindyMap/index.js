@@ -5,7 +5,16 @@ export default class WindyMap extends React.Component {
   componentDidMount() {
     this.initializeWindy();
   }
-
+  handleTest = (e) => {
+    const { map } = this.props;
+    e.stopPropagation()
+    if (e.which === 187 && e.ctrlKey) {
+    console.log(map)
+    }
+    if (e.which === 189 && e.ctrlKey) {
+     console.log(map)
+    }
+  };
   componentDidUpdate(prevProps) {
     if (prevProps.markers.length !== this.props.markers.length) {
       this.initializeWindy();
@@ -92,6 +101,7 @@ export default class WindyMap extends React.Component {
         style={{
           height: this.props.height || "100vh",
         }}
+        onKeyDown={(e) => this.handleTest(e)}
       />
     );
   }
