@@ -717,15 +717,25 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .getAssets(token)
       .then(data => {
-        const { results } = data;
-        const crops = results.filter(asset => asset.is_crop);
-        const countries = results.filter(asset => asset.is_country);
-        const formattedAssets = [
-          { name: "Crop", data: crops },
-          { name: "Country", data: countries },
-        ];
-        this.updateState({ assets: results, formattedAssets });
-        return formattedAssets;
+        return this.getWeatherStations(token).then(stations => {
+          const { results } = data;
+          const crops = results.filter(asset => asset.is_crop);
+          const countries = results.filter(asset => asset.is_country);
+          const formattedAssets = [
+            { name: "Crop", data: crops },
+            { name: "Country", data: countries },
+            {
+              name: "Weather Station",
+              data: stations.map(station => ({
+                id: station.id,
+                name: station.station_name,
+                device_token: station.device_token,
+              })),
+            },
+          ];
+          this.updateState({ assets: results, formattedAssets });
+          return formattedAssets;
+        });
       });
   };
 
@@ -823,32 +833,74 @@ export class DataProvider extends React.Component {
   };
 
   createWeatherStation = payload => {
-    let { token } = this.state;
+    let { token, formattedAssets } = this.state;
 
     return this.getAdapter()
       .createWeatherStation(token, payload)
       .then(data => {
-        return data;
+        let weatherStationAssets = { name: "Weather Station", data };
+        let newFormattedAssets = formattedAssets
+          .filter(item => item.name.toLowerCase() !== "weather station")
+          .push(weatherStationAssets);
+        this.updateState({ formattedAssets: newFormattedAssets });
+        return newFormattedAssets;
       });
   };
 
   updateWeatherStation = payload => {
-    let { token } = this.state;
+    let { token, formattedAssets } = this.state;
 
     return this.getAdapter()
       .updateWeatherStation(token, payload)
       .then(data => {
-        return data;
+        // get all weather station assets from list of assets
+        let weatherStaionAssets = formattedAssets.find(
+          asset => asset.name.toLowerCase() === "weather station"
+        );
+
+        //update weather station assets with updated weather station
+        let updatedWeatherStationAssets = weatherStaionAssets.data.map(
+          station => {
+            if (station.id === data.id) {
+              return data;
+            }
+            return station;
+          }
+        );
+
+        //update list of assets with new weather station assets
+        let newFormattedAssets = formattedAssets
+          .filter(item => item.name.toLowerCase() !== "weather station")
+          .push(updatedWeatherStationAssets);
+
+        this.updateState({ formattedAssets: newFormattedAssets });
+        return newFormattedAssets;
       });
   };
 
   deleteWeatherStation = id => {
-    let { token } = this.state;
+    let { token, formattedAssets } = this.state;
 
     return this.getAdapter()
       .deleteWeatherStation(token, id)
-      .then(data => {
-        return data;
+      .then(() => {
+        // get all weather station assets from list of assets
+        let weatherStaionAssets = formattedAssets.find(
+          asset => asset.name.toLowerCase() === "weather station"
+        );
+
+        //remove deleted weather station from list of weather station assets
+        let updatedWeatherStationAssets = weatherStaionAssets.data.filter(
+          station => station.id !== id
+        );
+
+        //update list of assets with new weather station assets
+        let newFormattedAssets = formattedAssets
+          .filter(item => item.name.toLowerCase() !== "weather station")
+          .push(updatedWeatherStationAssets);
+
+        this.updateState({ formattedAssets: newFormattedAssets });
+        return newFormattedAssets;
       });
   };
 
