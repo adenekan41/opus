@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import { Box, Flex } from "rebass";
 import moment from "moment";
-import { TagButton } from "../../../components/Tags";
-import EmptyState from "../../../components/EmptyState";
+import React, { Component } from "react";
+import { Box, Flex, Heading } from "rebass";
 import emptyStateImage from "../../../assets/img/empty-states/bulletin.png";
-import TemperatureChart from "./charts/TemperatureChart";
-import CurrentRainChart from "./charts/CurrentRainChart";
-import TotalRainChart from "./charts/TotalRainChart";
-import HumidityChart from "./charts/HumidityChart";
-import WindSpeedChart from "./charts/WindSpeedChart";
-import WindDirection from "./charts/WindDirectionChart";
-import BarometerChart from "./charts/BarometerChart";
-import { convertStringToNumber } from "../../../helpers/functions";
+import EmptyState from "../../../components/EmptyState";
 import { Spinner } from "../../../components/Spinner";
+import { TagButton } from "../../../components/Tags";
+import { convertStringToNumber } from "../../../helpers/functions";
+import BarometerChart from "./charts/BarometerChart";
+import CurrentRainChart from "./charts/CurrentRainChart";
+import HumidityChart from "./charts/HumidityChart";
+import TemperatureChart from "./charts/TemperatureChart";
+import TotalRainChart from "./charts/TotalRainChart";
+import WindDirection from "./charts/WindDirectionChart";
+import WindSpeedChart from "./charts/WindSpeedChart";
 
 const chartMapping = {
   temperature: { label: "Temperature", Component: TemperatureChart },
@@ -41,11 +41,14 @@ const chartMappingArray = [
 
 export default class ForecastCharts extends Component {
   state = {
-    charts: chartMapping,
     loading: false,
-    start_date: moment(new Date()).subtract(1, 'days').format("M/D/YYYY"),
-    end_date: moment(new Date()).format("M/D/YYYY"),
+    charts: chartMapping,
+    snapShotDataIsEmpty: false,
     selectedCharts: chartMappingArray,
+    end_date: moment(new Date()).format("M/D/YYYY"),
+    start_date: moment(new Date())
+      .subtract(1, "days")
+      .format("M/D/YYYY"),
   };
 
   componentDidMount() {
@@ -65,8 +68,9 @@ export default class ForecastCharts extends Component {
     dispatch({
       type: actions.GET_WEATHER_STATION_DATA,
       value: { station_name, start_date, end_date },
-    }).then(() => {
-      this.setState({ loading: false });
+    }).then(data => {
+      console.log(data);
+      this.setState({ loading: false, snapShotDataIsEmpty: data.length === 0 });
     });
   };
 
@@ -106,7 +110,7 @@ export default class ForecastCharts extends Component {
   };
 
   render() {
-    let { selectedCharts, charts } = this.state;
+    let { charts, selectedCharts, snapShotDataIsEmpty } = this.state;
     let selectedChartsLabels = selectedCharts.map(chart =>
       chart.label.toLowerCase()
     );
@@ -151,6 +155,13 @@ export default class ForecastCharts extends Component {
           <Flex alignItems="center" justifyContent="center" py="30vh">
             <Spinner />
           </Flex>
+        ) : snapShotDataIsEmpty ? (
+          <EmptyState
+            image={emptyStateImage}
+            margin="80px"
+            heading="No Data"
+            helpText="The weather station selected has no weather data. Go back to map to select another station."
+          />
         ) : (
           <>
             <Flex mb="30px">

@@ -207,6 +207,7 @@ class Users extends React.Component {
           ) : users.length > 0 ? (
             <UserTable
               teams={users}
+              pageSize={20}
               onUserEdit={this.handleEditClick}
               onUserDelete={this.handleDeleteClick}
             />

@@ -16,6 +16,7 @@ const customerFormValidation = yup.object().shape({
   crop_managed: yup.string().required("Crop managed is required"),
   phone_number: yup.string().required("Phone number is required"),
   organisation_name: yup.string().required("Company is required"),
+  email: yup.string().required("Email is required")
 });
 
 class CustomerForm extends React.Component {
