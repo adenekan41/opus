@@ -7,7 +7,10 @@ import Button from "../../../../components/Button";
 import { ErrorAlertComponent } from "../../../../components/AlertComponent";
 
 const assetFormValidation = yup.object().shape({
-  name: yup.string().required("Asset name is required"),
+  name: yup
+    .string()
+    .min(3, "Asset name is too short - should be 3 chars minimum.")
+    .required("Asset name is required"),
 });
 
 const weatherStationAssetFormValidation = yup.object().shape({

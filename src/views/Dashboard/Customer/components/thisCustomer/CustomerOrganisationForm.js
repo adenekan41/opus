@@ -12,6 +12,8 @@ import { getStates } from "../../../../../helpers/functions";
 
 const CustomerOrganizationValdationSchema = yup.object().shape({
   organisation_name: yup.string().required("Company name is required"),
+  country: yup.string().required("Country is required"),
+  city: yup.string().required("City is required")
 });
 
 const CustomerOrganizationForm = ({

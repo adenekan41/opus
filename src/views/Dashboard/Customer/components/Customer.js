@@ -22,6 +22,12 @@ class Customers extends React.Component {
     };
   }
 
+  handleSearchChange = value => {
+    this.setState({
+      search: value,
+    });
+  };
+
   handleDeleteClick = values => {
     this.setState({
       customerToDelete: values,
