@@ -27,7 +27,7 @@ export default class ForecastMap extends Component {
     const { dispatch, actions } = this.props;
     dispatch({ type: actions.CLEAR_WEATHER_LOGS });
   }
-
+  
   goToBulletinPage = station_name => {
     const { dispatch, history, actions } = this.props;
     dispatch({
@@ -75,7 +75,7 @@ export default class ForecastMap extends Component {
     let { latitude, longitude } = selectedStation;
     let { map } = this.props;
     let center = [latitude, longitude];
-
+    
     map.setView(center, 12);
   };
 
