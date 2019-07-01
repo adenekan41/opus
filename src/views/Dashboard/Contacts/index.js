@@ -285,6 +285,7 @@ class Contacts extends React.Component {
           ) : contacts.length > 0 ? (
             <ContactTable
               crops={crops}
+              pageSize={20}
               isAdmin={isAdmin}
               contacts={contacts}
               customers={customers}

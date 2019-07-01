@@ -33,15 +33,24 @@ export const generateCSVFile = data => {
   createCSV(csvContent);
 };
 
-const colors = ["#f42534", "#33475c", "#3589c3", "#29cb98"];
+// const colors = ["#f42534", "#33475c", "#3589c3", "#29cb98"];
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
 
 function getStationLabelColor(data) {
   let result = {};
   data
     .map(item => item.station)
     .forEach((element, index) => {
-      result[element] = colors[index];
-      // result[element] = getRandomColor();
+      // result[element] = colors[index];
+      result[element] = getRandomColor();
     });
   return result;
 }

@@ -10,6 +10,8 @@ import Switch from "../../../../../components/Switch";
 const profileValdationSchema = yup.object().shape({
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().required("Last name is required"),
+  email: yup.string().required("Email is required"),
+  phone_number: yup.string().required("Phone number is required"),
 });
 
 const CustomerDetailsForm = ({

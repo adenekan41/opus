@@ -5,7 +5,10 @@ import Input from "../../../components/Input";
 import Button from "../../../components/Button";
 
 const recoverPasswordValdationSchema = yup.object().shape({
-  password: yup.string().required("Password is required"),
+  password: yup
+    .string()
+    .min(6, "Password is too short - should be 6 chars minimum.")
+    .required("Password is required"),
   confirmPassword: yup
     .string()
     .required("Password confirmation is required")
