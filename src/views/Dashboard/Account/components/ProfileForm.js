@@ -5,10 +5,14 @@ import * as yup from "yup";
 import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
 import ChangePasswordForm from "./ChangePasswordForm";
+import { phoneRegExp } from "../../../../helpers/constants";
 
 const profileValdationSchema = yup.object().shape({
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().required("Last name is required"),
+  phone_number: yup
+    .string()
+    .matches(phoneRegExp, "Phone number is not valid"),
 });
 
 const ProfileForm = ({

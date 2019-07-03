@@ -52,7 +52,7 @@ class Contacts extends React.Component {
   };
 
   closeEditModal = () => {
-    this.setState({ showEditModal: false });
+    this.setState({ showEditModal: false, apiErrors: {} });
   };
 
   closeDeleteConfirm = () => {
@@ -187,8 +187,16 @@ class Contacts extends React.Component {
           callback && callback();
         });
       })
-      .catch(() => {
+      .catch(error => {
         this.setState({ percent: 0 });
+        if (
+          error &&
+          error.response &&
+          error.response.data &&
+          typeof error.response.data
+        ) {
+          toaster.error(error.response.data);
+        }
         toaster.error("An error occurred, please try again");
       });
   };

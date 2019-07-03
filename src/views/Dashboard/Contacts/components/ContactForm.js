@@ -8,6 +8,7 @@ import Button from "../../../../components/Button";
 import { getCountryStates, allCountries } from "../../../../helpers/countries";
 import { ErrorAlertComponent } from "../../../../components/AlertComponent";
 import { getStates } from "../../../../helpers/functions";
+import { phoneRegExp } from "../../../../helpers/constants";
 
 const contactFormValidation = yup.object().shape({
   first_name: yup.string().required("First name is required"),
@@ -15,7 +16,10 @@ const contactFormValidation = yup.object().shape({
   country: yup.string().required("Country is required"),
   city: yup.string().required("City is required"),
   crop_managed: yup.string().required("Crop managed is required"),
-  phone_number: yup.string().required("Phone number is required"),
+  phone_number: yup
+    .string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .required("Phone number is required"),
 });
 
 class ContactForm extends React.Component {

@@ -9,6 +9,7 @@ import { Icon } from "../../../../components/Icon";
 import { FileUploader } from "../../../../components/FileUpload";
 import { getBase64Url } from "../../../../helpers/functions";
 import { ErrorAlertComponent } from "../../../../components/AlertComponent";
+import { phoneRegExp } from "../../../../helpers/constants";
 
 const AvatarDiv = styled(Flex)`
   height: 129px;
@@ -27,7 +28,10 @@ const userFormValidation = yup.object().shape({
     .required("Email is required"),
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().required("Last name is required"),
-  phone_number: yup.string().required("Phone number is required"),
+  phone_number: yup
+    .string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .required("Phone number is required"),
 });
 
 const UserForm = ({

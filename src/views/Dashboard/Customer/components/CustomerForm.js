@@ -7,6 +7,7 @@ import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
 import { allCountries, getCountryStates } from "../../../../helpers/countries";
 import { getStates } from "../../../../helpers/functions";
+import { phoneRegExp } from "../../../../helpers/constants";
 
 const customerFormValidation = yup.object().shape({
   first_name: yup.string().required("First name is required"),
@@ -14,9 +15,12 @@ const customerFormValidation = yup.object().shape({
   country: yup.string().required("Country is required"),
   city: yup.string().required("City is required"),
   crop_managed: yup.string().required("Crop managed is required"),
-  phone_number: yup.string().required("Phone number is required"),
+  phone_number: yup
+    .string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .required("Phone number is required"),
   organisation_name: yup.string().required("Company is required"),
-  email: yup.string().required("Email is required")
+  email: yup.string().required("Email is required"),
 });
 
 class CustomerForm extends React.Component {
