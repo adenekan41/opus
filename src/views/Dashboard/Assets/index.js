@@ -97,7 +97,7 @@ export default class AssetManagement extends Component {
   };
 
   closeEditModal = () => {
-    this.setState({ showEditModal: false });
+    this.setState({ showEditModal: false, apiErrors: {} });
   };
 
   closeDeleteConfirm = () => {
