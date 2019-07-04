@@ -7,24 +7,22 @@ const bgColors = {
   success: "#29cb98",
 };
 
-export function AlertComponent({ type, children }) {
-  let [close, setClose] = useState(false);
-
+export function AlertComponent({ type, children, onClose }) {
   return (
-    !close && (
-      <Box px={16} py={16} bg={bgColors[type]} color="#fff">
+    <Box px={16} py={16} bg={bgColors[type]} color="#fff">
+      {onClose && (
         <Flex justifyContent="flex-end">
           <EmptyIconButton
             size="24px"
             icon="close"
             iconSize="16px"
             iconColor="white"
-            onClick={() => setClose(true)}
+            onClick={onClose}
           />
         </Flex>
-        {children}
-      </Box>
-    )
+      )}
+      {children}
+    </Box>
   );
 }
 

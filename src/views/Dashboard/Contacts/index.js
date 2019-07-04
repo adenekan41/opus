@@ -200,7 +200,6 @@ class Contacts extends React.Component {
           this.setState({
             contactsUploadErrors: { row_number, message },
           });
-          toaster.error(message);
         } else {
           toaster.error("An error occurred, please try again");
         }
@@ -288,6 +287,7 @@ class Contacts extends React.Component {
                 error={contactsUploadErrors}
                 onSubmit={this.onContactsUpload}
                 sampleFile="/static/files/contacts.csv"
+                closeErrorAlert={() => this.setState({ contactsUploadErrors: null })}
               />
             </div>
           </div>

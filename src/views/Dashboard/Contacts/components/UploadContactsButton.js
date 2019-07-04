@@ -17,6 +17,7 @@ export default function UploadContactsButton({
   isAdmin,
   progress,
   sampleFile,
+  closeErrorAlert,
   ...rest
 }) {
   return (
@@ -31,7 +32,10 @@ export default function UploadContactsButton({
             heading=""
             size="medium"
             showModal={show}
-            onCloseModal={closeModal}
+            onCloseModal={() => {
+              closeModal();
+              closeErrorAlert();
+            }}
           >
             <Box mt={4} width="400px" mx="auto" my={4}>
               <Heading
@@ -51,7 +55,7 @@ export default function UploadContactsButton({
             <Box width="450px" mx="auto" my="0">
               {!!error && (
                 <Box mb={16}>
-                  <AlertComponent type="error">
+                  <AlertComponent type="error" onClose={closeErrorAlert}>
                     <Text mb="8px">Error on row {error.row_number}</Text>
                     <Text mb="8px">{error.message}</Text>
                   </AlertComponent>
