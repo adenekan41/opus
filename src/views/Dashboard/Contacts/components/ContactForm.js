@@ -2,6 +2,7 @@ import React from "react";
 import { Formik, Field } from "formik";
 import { Box } from "rebass";
 import * as yup from "yup";
+import isEqual from "lodash.isequal";
 import Dropdown from "../../../../components/Select";
 import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
@@ -58,6 +59,19 @@ class ContactForm extends React.Component {
       customers,
       apiErrors,
     } = this.props;
+
+    let initialValues = {
+      id,
+      first_name,
+      last_name,
+      middle_name,
+      crop_managed,
+      city,
+      country,
+      language,
+      customer,
+      phone_number: phone_numbers && phone_numbers[0],
+    };
 
     return (
       <Formik
@@ -275,7 +289,13 @@ class ContactForm extends React.Component {
                 </Button>
               </div>
               <div className="col-md-6">
-                <Button kind="orange" block isLoading={isLoading} mb="8px">
+                <Button
+                  block
+                  mb="8px"
+                  kind="orange"
+                  isLoading={isLoading}
+                  disabled={isEqual(values, initialValues)}
+                >
                   Save
                 </Button>
               </div>
