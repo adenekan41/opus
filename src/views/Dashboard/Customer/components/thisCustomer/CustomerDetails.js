@@ -48,14 +48,15 @@ class CustomerDetails extends React.Component {
   };
 
   deactivateAccount = () => {
-    const { dispatch, actions, id } = this.props;
+    const { dispatch, actions, id, history } = this.props;
     this.setState({ deactivateLoading: true });
-    dispatch({ type: actions.UPDATE_USER, value: { is_active: false, id } })
+    dispatch({ type: actions.DELETE_USER, value: id })
       .then(() => {
         this.setState({
           deactivateLoading: false,
           showDeleteConfirm: false,
         });
+        history.push("/dashboard/customers");
         toaster.success("Customer deactivated successfully")
       })
       .catch(error => {
