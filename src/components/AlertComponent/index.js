@@ -1,14 +1,26 @@
-import React from "react";
-import { Box } from "rebass";
+import React, { useState } from "react";
+import { Box, Flex } from "rebass";
+import { EmptyIconButton } from "../Button";
 
 const bgColors = {
   error: "#f66262",
   success: "#29cb98",
 };
 
-export function AlertComponent({ type, children }) {
+export function AlertComponent({ type, children, onClose }) {
   return (
     <Box px={16} py={16} bg={bgColors[type]} color="#fff">
+      {onClose && (
+        <Flex justifyContent="flex-end">
+          <EmptyIconButton
+            size="24px"
+            icon="close"
+            iconSize="16px"
+            iconColor="white"
+            onClick={onClose}
+          />
+        </Flex>
+      )}
       {children}
     </Box>
   );

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { Flex, Heading, Text } from "rebass";
+import uniqBy from "lodash.uniqby";
 import SearchInput from "../../../../../components/Search";
 import WindyMap from "../../../../../components/WindyMap";
 import Card from "../../../../../components/Card";
@@ -44,6 +45,21 @@ const CustomerForecastContainer = styled.div`
   }
 `;
 
+
+
+const getUserWeatherStations = (
+  userWeatherStations,
+  weatherStations
+) => {
+  let weatherLinkStations = weatherStations;
+  let userWeatherStationNames = userWeatherStations.map(s => s.station_name);
+  let stations = weatherLinkStations.filter(station =>
+    !userWeatherStationNames.includes(station.station_name)
+  );
+  console.log(stations)
+  return uniqBy(stations, "station_name")
+};
+
 export default class CustomerForecastMap extends Component {
   state = {
     center: [8.7832, 34.5085],
@@ -53,10 +69,16 @@ export default class CustomerForecastMap extends Component {
 
   getSearchOptions = () => {
     const { weatherStations } = this.props;
-    let stations = weatherStations.map(station => ({
+    const { customerWeatherStations } = this.state;
+
+    let stations = getUserWeatherStations(
+      customerWeatherStations,
+      weatherStations
+    ).map(station => ({
       label: `${station.station_name}`,
       value: `${station.station_name}`,
     }));
+
     return [
       {
         label: "Stations",
@@ -67,7 +89,11 @@ export default class CustomerForecastMap extends Component {
 
   findSelectedStation = name => {
     const { weatherStations } = this.props;
-    return weatherStations.find(station => station.station_name === name);
+    const { customerWeatherStations } = this.state;
+    return getUserWeatherStations(
+      customerWeatherStations,
+      weatherStations
+    ).find(station => station.station_name === name);
   };
 
   setMap = map => {
@@ -161,7 +187,7 @@ export default class CustomerForecastMap extends Component {
               lat={center[0]}
               lon={center[1]}
               setMap={this.setMap}
-              markers={weatherStations}
+              markers={getUserWeatherStations(customerWeatherStations, weatherStations)}
             />
           </div>
         </div>

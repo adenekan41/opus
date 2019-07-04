@@ -838,16 +838,27 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .createWeatherStation(token, payload)
       .then(data => {
+        // get all weather station assets from list of assets
+        let weatherStaionAssets = formattedAssets.find(
+          asset => asset.name.toLowerCase() === "weather station"
+        );
+
+        //update weather station assets with updated weather station
+        let updatedWeatherStationAssets = [
+          {
+            id: data.id,
+            name: data.station_name,
+            device_token: data.device_token,
+          },
+          ...weatherStaionAssets.data,
+        ];
         let newFormattedAssets = formattedAssets.map(item => {
-          if (item.name === "weather station") {
-            item.data = data.map(station => ({
-              id: station.id,
-              name: station.station_name,
-              device_token: station.device_token,
-            }));
+          if (item.name.toLowerCase() === "weather station") {
+            item.data = updatedWeatherStationAssets;
           }
           return item;
         });
+
         this.updateState({ formattedAssets: newFormattedAssets });
         return newFormattedAssets;
       });
@@ -887,7 +898,7 @@ export class DataProvider extends React.Component {
           }
           return item;
         });
-        
+
         this.updateState({ formattedAssets: newFormattedAssets });
         return newFormattedAssets;
       });

@@ -4,6 +4,7 @@ import Modal, { ToggleModal } from "../../../../components/Modal";
 import Button from "../../../../components/Button";
 import { Icon } from "../../../../components/Icon";
 import { DragAndDropUploader } from "../../../../components/FileUpload";
+import { AlertComponent } from "../../../../components/AlertComponent";
 
 const DragAndDropUploaderStyle = `
 padding: 40px;
@@ -11,10 +12,12 @@ border: dashed 2px #979797;
 `;
 
 export default function UploadContactsButton({
+  error,
   onSubmit,
   isAdmin,
   progress,
   sampleFile,
+  closeErrorAlert,
   ...rest
 }) {
   return (
@@ -29,7 +32,10 @@ export default function UploadContactsButton({
             heading=""
             size="medium"
             showModal={show}
-            onCloseModal={closeModal}
+            onCloseModal={() => {
+              closeModal();
+              closeErrorAlert();
+            }}
           >
             <Box mt={4} width="400px" mx="auto" my={4}>
               <Heading
@@ -47,6 +53,14 @@ export default function UploadContactsButton({
             </Box>
 
             <Box width="450px" mx="auto" my="0">
+              {!!error && (
+                <Box mb={16}>
+                  <AlertComponent type="error" onClose={closeErrorAlert}>
+                    <Text mb="8px">Error on row {error.row_number}</Text>
+                    <Text mb="8px">{error.message}</Text>
+                  </AlertComponent>
+                </Box>
+              )}
               <DragAndDropUploader
                 padding={32}
                 display="flex"

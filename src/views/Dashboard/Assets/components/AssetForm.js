@@ -1,6 +1,7 @@
 import React from "react";
 import * as yup from "yup";
 import { Box } from "rebass";
+import isEqual from "lodash.isequal";
 import { Formik } from "formik";
 import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
@@ -9,13 +10,20 @@ import { ErrorAlertComponent } from "../../../../components/AlertComponent";
 const assetFormValidation = yup.object().shape({
   name: yup
     .string()
+    .matches(/^[A-Z]+$/i, "Asset name cannot contain numbers")
     .min(3, "Asset name is too short - should be 3 chars minimum.")
     .required("Asset name is required"),
 });
 
 const weatherStationAssetFormValidation = yup.object().shape({
-  name: yup.string().required("Weather station name is required"),
-  device_token: yup.string().required("Device token is required"),
+  name: yup
+    .string()
+    .min(4, "Weather station name is too short - should be 4 chars minimum.")
+    .required("Weather station name is required"),
+  device_token: yup
+    .string()
+    .min(12, "Device token should be 12 chars long.")
+    .required("Device token is required"),
 });
 
 export default function AssetForm({
@@ -29,6 +37,9 @@ export default function AssetForm({
   onCancel,
 }) {
   let isWeatherStation = label.toLowerCase() === "weather station";
+  let initialValues = isWeatherStation
+    ? { id, name, device_token }
+    : { id, name };
   return (
     <Formik
       validationSchema={
@@ -46,6 +57,7 @@ export default function AssetForm({
             }
           : { name: name || "", id: id || "" }
       }
+      isInitialValid
     >
       {({ values, errors, touched, handleSubmit, handleChange }) => (
         <form onSubmit={handleSubmit}>
@@ -89,7 +101,13 @@ export default function AssetForm({
               </Button>
             </div>
             <div className="col-md-6">
-              <Button kind="orange" block isLoading={isLoading} mb="8px">
+              <Button
+                kind="orange"
+                block
+                isLoading={isLoading}
+                mb="8px"
+                disabled={isEqual(values, initialValues)}
+              >
                 Save
               </Button>
             </div>
