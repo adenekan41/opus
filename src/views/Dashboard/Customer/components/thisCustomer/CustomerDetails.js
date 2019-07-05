@@ -7,7 +7,9 @@ import toaster from "../../../../../components/Toaster";
 import {
   errorCallback,
   setProfilePicture,
+  getApiErrors,
 } from "../../../../../helpers/functions";
+import { Confirm } from "../../../../../components/Modal";
 
 const CustomerDetailsStyle = styled.div`
   .card {
@@ -30,10 +32,39 @@ const CustomerDetailsStyle = styled.div`
 class CustomerDetails extends React.Component {
   state = {
     files: [],
+    apiErrors: {},
     profilePicture: "",
     loading: false,
     emailLoading: false,
     passwordLoading: false,
+    deactivateLoading: false,
+    showDeleteConfirm: false,
+  };
+
+  setApiErrors = errorPayload => {
+    this.setState({
+      apiErrors: errorPayload,
+    });
+  };
+
+  deactivateAccount = () => {
+    const { dispatch, actions, id, history } = this.props;
+    this.setState({ deactivateLoading: true });
+    dispatch({ type: actions.DELETE_USER, value: id })
+      .then(() => {
+        this.setState({
+          deactivateLoading: false,
+          showDeleteConfirm: false,
+        });
+        history.push("/dashboard/customers");
+        toaster.success("Customer deactivated successfully")
+      })
+      .catch(error => {
+        this.setState({
+          deactivateLoading: false,
+        });
+        errorCallback(error, this.setApiErrors);
+      });
   };
 
   onProfileUpdate = values => {
@@ -55,49 +86,7 @@ class CustomerDetails extends React.Component {
         this.setState({
           loading: false,
         });
-        errorCallback(error);
-      });
-  };
-
-  onEmailUpdate = (values, closeModal) => {
-    const { dispatch, actions } = this.props;
-
-    this.setState({ emailLoading: true });
-
-    dispatch({ type: actions.PATCH_USER, value: values })
-      .then(() => {
-        this.setState({
-          emailLoading: false,
-        });
-        closeModal();
-        toaster.success("Customer updated successful");
-      })
-      .catch(error => {
-        this.setState({
-          emailLoading: false,
-        });
-        errorCallback(error);
-      });
-  };
-
-  onPasswordUpdate = (values, closeModal) => {
-    const { dispatch, actions } = this.props;
-
-    this.setState({ passwordLoading: true });
-
-    dispatch({ type: actions.PATCH_USER, value: values })
-      .then(() => {
-        this.setState({
-          passwordLoading: false,
-        });
-        closeModal();
-        toaster.success("Customer updated successful");
-      })
-      .catch(error => {
-        this.setState({
-          passwordLoading: false,
-        });
-        errorCallback(error);
+        errorCallback(error, this.setApiErrors);
       });
   };
 
@@ -133,15 +122,26 @@ class CustomerDetails extends React.Component {
                 last_name,
                 ...rest,
               }}
+              deactivateAccount={() =>
+                this.setState({ showDeleteConfirm: true })
+              }
               isLoading={this.state.loading}
               onSubmit={this.onProfileUpdate}
-              onEmailChange={this.onEmailUpdate}
               emailLoading={this.state.emailLoading}
-              onPasswordChange={this.onPasswordUpdate}
               passwordLoading={this.state.passwordLoading}
+              apiErrors={getApiErrors(this.state.apiErrors)}
             />
           </Box>
         </Flex>
+        <Confirm
+          confirmText="Deactivate"
+          heading="Deactivate account"
+          onConfirm={this.deactivateAccount}
+          isLoading={this.state.deactivateLoading}
+          showModal={this.state.showDeleteConfirm}
+          onCloseModal={() => this.setState({ showDeleteConfirm: false })}
+          description="Are you sure you want to deactivate this customer?"
+        />
       </CustomerDetailsStyle>
     );
   }

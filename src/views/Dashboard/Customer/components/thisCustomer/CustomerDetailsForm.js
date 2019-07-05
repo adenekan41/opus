@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
-import { Flex, Text } from "rebass";
+import { Flex, Text, Box } from "rebass";
 import * as yup from "yup";
 import Input from "../../../../../components/Input";
 import Button from "../../../../../components/Button";
 import Card from "../../../../../components/Card";
 import Switch from "../../../../../components/Switch";
+import { phoneRegExp } from "../../../../../helpers/constants";
+import { ErrorAlertComponent } from "../../../../../components/AlertComponent";
 
 const profileValdationSchema = yup.object().shape({
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().required("Last name is required"),
   email: yup.string().required("Email is required"),
-  phone_number: yup.string().required("Phone number is required"),
+  phone_number: yup
+    .string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .required("Phone number is required"),
 });
 
 const CustomerDetailsForm = ({
@@ -23,6 +28,8 @@ const CustomerDetailsForm = ({
   phone_number,
   email,
   isLoading,
+  apiErrors,
+  deactivateAccount,
   receive_manual_messages,
   receive_advisory_messages,
   receive_automatic_messages,
@@ -56,6 +63,9 @@ const CustomerDetailsForm = ({
     >
       {({ values, touched, errors, handleChange, handleSubmit }) => (
         <form onSubmit={handleSubmit}>
+          <Box my={3}>
+            <ErrorAlertComponent errors={apiErrors} />
+          </Box>
           <div className="row">
             <div className="col">
               <Input
@@ -180,7 +190,13 @@ const CustomerDetailsForm = ({
           <div className="footer_button mt-3">
             <div className="row">
               <div className="col-md-4">
-                <Button size="large" block type="button" kind="red">
+                <Button
+                  size="large"
+                  block
+                  type="button"
+                  kind="red"
+                  onClick={deactivateAccount}
+                >
                   Deactivate Account
                 </Button>
               </div>

@@ -24,3 +24,5 @@ export const COMPARE_STATION_CHART_COLORS = {
   SEFWI03: '#3589c3',
   CRIG01: '#29cb98',
 };
+
+export const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;

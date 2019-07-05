@@ -2,12 +2,14 @@ import React from "react";
 import { Formik, Field } from "formik";
 import { Box } from "rebass";
 import * as yup from "yup";
+import isEqual from "lodash.isequal";
 import Dropdown from "../../../../components/Select";
 import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
 import { getCountryStates, allCountries } from "../../../../helpers/countries";
 import { ErrorAlertComponent } from "../../../../components/AlertComponent";
 import { getStates } from "../../../../helpers/functions";
+import { phoneRegExp } from "../../../../helpers/constants";
 
 const contactFormValidation = yup.object().shape({
   first_name: yup.string().required("First name is required"),
@@ -15,7 +17,10 @@ const contactFormValidation = yup.object().shape({
   country: yup.string().required("Country is required"),
   city: yup.string().required("City is required"),
   crop_managed: yup.string().required("Crop managed is required"),
-  phone_number: yup.string().required("Phone number is required"),
+  phone_number: yup
+    .string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .required("Phone number is required"),
 });
 
 class ContactForm extends React.Component {
@@ -54,6 +59,19 @@ class ContactForm extends React.Component {
       customers,
       apiErrors,
     } = this.props;
+
+    let initialValues = {
+      id,
+      first_name,
+      last_name,
+      middle_name,
+      crop_managed,
+      city,
+      country,
+      language,
+      customer,
+      phone_number: phone_numbers && phone_numbers[0],
+    };
 
     return (
       <Formik
@@ -271,7 +289,13 @@ class ContactForm extends React.Component {
                 </Button>
               </div>
               <div className="col-md-6">
-                <Button kind="orange" block isLoading={isLoading} mb="8px">
+                <Button
+                  block
+                  mb="8px"
+                  kind="orange"
+                  isLoading={isLoading}
+                  disabled={isEqual(values, initialValues)}
+                >
                   Save
                 </Button>
               </div>

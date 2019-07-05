@@ -121,6 +121,7 @@ export class Confirm extends React.Component {
       onCloseModal,
       onConfirm,
       isLoading,
+      confirmText,
       primaryButtonProps,
       secondaryButtonProps,
     } = this.props;
@@ -152,7 +153,7 @@ export class Confirm extends React.Component {
               }}
               {...primaryButtonProps}
             >
-              Delete
+              {confirmText || "Delete"}
             </Button>
           </div>
         </div>

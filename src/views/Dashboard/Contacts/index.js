@@ -17,15 +17,16 @@ class Contacts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonLoading: false,
-      showEditModal: false,
-      showDeleteConfirm: false,
-      searchLoading: false,
       percent: 0,
       search: "",
       apiErrors: {},
       contactToEdit: {},
       contactToDelete: {},
+      searchLoading: false,
+      buttonLoading: false,
+      showEditModal: false,
+      showDeleteConfirm: false,
+      contactsUploadErrors: null,
     };
   }
 
@@ -52,7 +53,7 @@ class Contacts extends React.Component {
   };
 
   closeEditModal = () => {
-    this.setState({ showEditModal: false });
+    this.setState({ showEditModal: false, apiErrors: {} });
   };
 
   closeDeleteConfirm = () => {
@@ -182,14 +183,26 @@ class Contacts extends React.Component {
           type: actions.GET_CONTACTS,
           value: { token: auth.token, refresh: true },
         }).then(() => {
-          this.setState({ percent: 0 });
+          this.setState({ percent: 0, contactsUploadErrors: null });
           toaster.success("Contact created successfully");
           callback && callback();
         });
       })
-      .catch(() => {
+      .catch(error => {
         this.setState({ percent: 0 });
-        toaster.error("An error occurred, please try again");
+        if (
+          error &&
+          error.response &&
+          error.response.data &&
+          typeof error.response.data === "object"
+        ) {
+          let { row_number, message } = error.response.data;
+          this.setState({
+            contactsUploadErrors: { row_number, message },
+          });
+        } else {
+          toaster.error("An error occurred, please try again");
+        }
       });
   };
 
@@ -225,6 +238,7 @@ class Contacts extends React.Component {
       searchLoading,
       contactToDelete,
       showDeleteConfirm,
+      contactsUploadErrors
     } = this.state;
     let isAdmin = profile.is_admin || profile.is_superuser;
     let crops = assets
@@ -270,8 +284,10 @@ class Contacts extends React.Component {
                 mb="8px"
                 isAdmin={isAdmin}
                 progress={percent}
+                error={contactsUploadErrors}
                 onSubmit={this.onContactsUpload}
                 sampleFile="/static/files/contacts.csv"
+                closeErrorAlert={() => this.setState({ contactsUploadErrors: null })}
               />
             </div>
           </div>

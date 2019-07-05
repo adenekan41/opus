@@ -97,7 +97,7 @@ export default class AssetManagement extends Component {
   };
 
   closeEditModal = () => {
-    this.setState({ showEditModal: false });
+    this.setState({ showEditModal: false, apiErrors: {} });
   };
 
   closeDeleteConfirm = () => {
@@ -227,7 +227,7 @@ export default class AssetManagement extends Component {
           loading: false,
         });
         closeModal();
-        toaster.success("Asset created successfully");
+        toaster.success("Weather station created successfully");
       })
       .catch(error => {
         this.setState({
@@ -253,7 +253,7 @@ export default class AssetManagement extends Component {
       .then(() => {
         this.setState({ loading: false });
         closeModal();
-        toaster.success("Asset updated successfully");
+        toaster.success("Weather station updated successfully");
       })
       .catch(error => {
         this.setState({
@@ -276,7 +276,7 @@ export default class AssetManagement extends Component {
           loading: false,
         });
         closeConfirm();
-        toaster.success("Asset deleted successfully");
+        toaster.success("Weather station deleted successfully");
       })
       .catch(error => {
         this.setState({

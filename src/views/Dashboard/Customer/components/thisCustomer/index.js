@@ -145,7 +145,7 @@ export default class thisCustomer extends Component {
                 exact
                 path={`/dashboard/customers/${id}/edit`}
                 render={props => (
-                  <CustomerDetails {...{ props, ...user, actions, dispatch }} />
+                  <CustomerDetails {...{ ...props, ...user, actions, dispatch }} />
                 )}
               />
               <Route
