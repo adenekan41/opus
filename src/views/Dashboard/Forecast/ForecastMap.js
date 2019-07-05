@@ -80,7 +80,7 @@ export default class ForecastMap extends Component {
   };
 
   render() {
-    const { weatherStations } = this.props;
+    const { weatherStations, map } = this.props;
     const { zoom, center } = this.state;
 
     window.onStationClick = station => this.goToBulletinPage(station);
@@ -96,6 +96,7 @@ export default class ForecastMap extends Component {
           />
         </div>
         <WindyMap
+          map={map}
           zoom={zoom}
           lat={center[0]}
           lon={center[1]}

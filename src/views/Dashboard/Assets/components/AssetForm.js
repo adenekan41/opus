@@ -38,8 +38,12 @@ export default function AssetForm({
 }) {
   let isWeatherStation = label.toLowerCase() === "weather station";
   let initialValues = isWeatherStation
-    ? { id, name, device_token }
-    : { id, name };
+    ? {
+        name: name || "",
+        id: id || "",
+        device_token: device_token || "",
+      }
+    : { name: name || "", id: id || "" };
   return (
     <Formik
       validationSchema={
@@ -48,22 +52,16 @@ export default function AssetForm({
           : assetFormValidation
       }
       onSubmit={values => onSubmit(values, onCancel)}
-      initialValues={
-        isWeatherStation
-          ? {
-              name: name || "",
-              id: id || "",
-              device_token: device_token || "",
-            }
-          : { name: name || "", id: id || "" }
-      }
+      initialValues={initialValues}
       isInitialValid
     >
       {({ values, errors, touched, handleSubmit, handleChange }) => (
         <form onSubmit={handleSubmit}>
-          <Box my={3}>
-            <ErrorAlertComponent errors={apiErrors} />
-          </Box>
+          {!apiErrors && Object.values(apiErrors).length > 0 && (
+            <Box my={3}>
+              <ErrorAlertComponent errors={apiErrors} />
+            </Box>
+          )}
           <Input
             id="name"
             name="name"
