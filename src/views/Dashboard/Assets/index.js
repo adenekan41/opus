@@ -110,6 +110,13 @@ export default class AssetManagement extends Component {
     });
   };
 
+  setWeatherStationApiErrors = errorPayload => {
+    const { non_field_errors } = errorPayload;
+    this.setState({
+      apiErrors: non_field_errors[0],
+    });
+  };
+
   onAssetCreate = (values, closeModal) => {
     const { dispatch, actions } = this.props;
     const { selectedAsset } = this.state;
@@ -233,7 +240,7 @@ export default class AssetManagement extends Component {
         this.setState({
           loading: false,
         });
-        errorCallback(error, this.setApiErrors);
+        errorCallback(error, this.setWeatherStationApiErrors);
       });
   };
 
@@ -259,7 +266,7 @@ export default class AssetManagement extends Component {
         this.setState({
           loading: false,
         });
-        errorCallback(error, this.setApiErrors);
+        errorCallback(error, this.setWeatherStationApiErrors);
       });
   };
 
@@ -282,7 +289,7 @@ export default class AssetManagement extends Component {
         this.setState({
           loading: false,
         });
-        errorCallback(error, this.setApiErrors);
+        errorCallback(error, this.setWeatherStationApiErrors);
       });
   };
 

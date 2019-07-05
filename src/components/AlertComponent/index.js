@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Flex } from "rebass";
+import React from "react";
+import { Box, Flex, Text } from "rebass";
 import { EmptyIconButton } from "../Button";
 
 const bgColors = {
@@ -30,11 +30,15 @@ export function ErrorAlertComponent({ errors = [] }) {
   return (
     errors.length > 0 && (
       <AlertComponent type="error">
-        <ul>
-          {errors.map((error, i) => (
-            <li key={`${error}-${i}`}>{error}</li>
-          ))}
-        </ul>
+        {typeof errors === "string" ? (
+          <Text>{errors}</Text>
+        ) : (
+          <ul>
+            {errors.map((error, i) => (
+              <li key={`${error}-${i}`}>{error}</li>
+            ))}
+          </ul>
+        )}
       </AlertComponent>
     )
   );

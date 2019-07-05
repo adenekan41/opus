@@ -2,19 +2,21 @@ import React from "react";
 import "./style.css";
 
 export default class WindyMap extends React.Component {
-  componentDidMount() {
-    this.initializeWindy();
+  componentDidMount(e) {
+    this.initializeWindy(e);
   }
-  handleTest = (e) => {
+
+  handleTest = e => {
     const { map } = this.props;
-    e.stopPropagation()
+    e.stopPropagation();
     if (e.which === 187 && e.ctrlKey) {
-    console.log(map)
+      map.zoomIn(1)
     }
     if (e.which === 189 && e.ctrlKey) {
-     console.log(map)
+      map.zoomOut(1)
     }
   };
+
   componentDidUpdate(prevProps) {
     if (prevProps.markers.length !== this.props.markers.length) {
       this.initializeWindy();
@@ -98,10 +100,11 @@ export default class WindyMap extends React.Component {
     return (
       <div
         id="windy"
+        tabIndex="0"
         style={{
           height: this.props.height || "100vh",
         }}
-        onKeyDown={(e) => this.handleTest(e)}
+        onKeyDown={e => this.handleTest(e)}
       />
     );
   }
