@@ -185,7 +185,11 @@ const CustomerDetailsForm = ({
                 </Button>
               </div>
               <div className="col-md-8">
-                <Button size="large" block kind="orange" isLoading={isLoading}>
+                <Button disabled={
+                  values.email  === email ? true:
+                  false
+                  } 
+                  size="large" block kind="orange" isLoading={isLoading}>
                   Save Changes
                 </Button>
               </div>
