@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Field } from "formik";
 import * as yup from "yup";
+import isEqual from 'lodash.isequal';
 import Input from "../../../../../components/Input";
 import Button from "../../../../../components/Button";
 import Dropdown from "../../../../../components/Select";
@@ -31,18 +32,18 @@ const CustomerOrganizationForm = ({
   const [cities, setCities] = useState(
     getCountryStates(getStates(country, countries)) || []
   );
-
+  const initialValue = {
+    id: id || "",
+    organisation_name: organisation_name || "",
+    country: country || "",
+    city: city || "",
+    organisation_zip_code: organisation_zip_code || "",
+    organisation_plot_number: organisation_plot_number || "",
+    organisation_street: organisation_street || "",
+  }
   return (
     <Formik
-      initialValues={{
-        id: id || "",
-        organisation_name: organisation_name || "",
-        country: country || "",
-        city: city || "",
-        organisation_zip_code: organisation_zip_code || "",
-        organisation_plot_number: organisation_plot_number || "",
-        organisation_street: organisation_street || "",
-      }}
+      initialValues={initialValue}
       onSubmit={values => onSubmit(values)}
       validationSchema={CustomerOrganizationValdationSchema}
     >
@@ -84,10 +85,13 @@ const CustomerOrganizationForm = ({
                           const value = country.value;
                           const countryName = country.label;
                           const selectedCountry = allCountries.find(
-                            country =>
-                              country.name.toLowerCase() ===
+                            country => {
+                              return country.name.toLowerCase() ===
                               countryName.toLowerCase()
+                            }
                           );
+                          // debugger;
+                         
                           form.setFieldValue("country", value);
                           setCities(getCountryStates(selectedCountry.id));
                         }}
@@ -177,6 +181,7 @@ const CustomerOrganizationForm = ({
                       size="large"
                       block
                       kind="orange"
+                      disabled={isEqual(initialValue, values)}
                       type="submit"
                       isLoading={isLoading}
                     >
