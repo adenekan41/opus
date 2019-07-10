@@ -205,7 +205,7 @@ class ContactForm extends React.Component {
                         isRequired
                         mb="20px"
                         name="city"
-                        label="City"
+                        label="State/Region"
                         touched={touched.city}
                         options={this.state.cities}
                         errorMessage={errors.city}

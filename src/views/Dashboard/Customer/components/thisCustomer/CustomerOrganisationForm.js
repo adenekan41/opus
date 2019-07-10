@@ -109,7 +109,7 @@ const CustomerOrganizationForm = ({
                         id="city"
                         isRequired
                         name="city"
-                        label="City"
+                        label="State/Region"
                         options={cities}
                         touched={touched.city}
                         value={values.city}

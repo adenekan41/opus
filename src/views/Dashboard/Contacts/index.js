@@ -67,6 +67,17 @@ class Contacts extends React.Component {
     });
   };
 
+  getUploadErrors = error => {
+    if (Object.keys(error).length === 1) {
+      const { non_field_errors } = error;
+      return { message: non_field_errors[0] };
+    }
+    else {
+      const { row_number, message } = error;
+      return { row_number, message };
+    }
+  };
+
   onContactCreate = (values, callback) => {
     const { dispatch, actions, profile } = this.props;
     let { phone_number, ...rest } = values;
@@ -197,9 +208,10 @@ class Contacts extends React.Component {
           error.response.data &&
           typeof error.response.data === "object"
         ) {
-          let { row_number, message } = error.response.data;
+          let uploadError = this.getUploadErrors(error.response.data);
+          console.log(uploadError);
           this.setState({
-            contactsUploadErrors: { row_number, message },
+            contactsUploadErrors: uploadError,
           });
         } else {
           toaster.error("An error occurred, please try again");
@@ -239,7 +251,7 @@ class Contacts extends React.Component {
       searchLoading,
       contactToDelete,
       showDeleteConfirm,
-      contactsUploadErrors
+      contactsUploadErrors,
     } = this.state;
     let isAdmin = profile.is_admin || profile.is_superuser;
     let crops = assets
@@ -289,7 +301,9 @@ class Contacts extends React.Component {
                 error={contactsUploadErrors}
                 onSubmit={this.onContactsUpload}
                 sampleFile="/static/files/contacts.csv"
-                closeErrorAlert={() => this.setState({ contactsUploadErrors: null })}
+                closeErrorAlert={() =>
+                  this.setState({ contactsUploadErrors: null })
+                }
               />
             </div>
           </div>
