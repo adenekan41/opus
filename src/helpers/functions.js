@@ -221,7 +221,7 @@ export const weatherTypeData = {
 };
 
 export const compareTypeData = {
-  Temperature: ["Temp°C"],
+  Temperature: ["Temp - °C"],
   "Current rain": ["rain_rate"],
   "Total rain": ["rain_month"],
   "Wind speed": ["wind_peed"],
