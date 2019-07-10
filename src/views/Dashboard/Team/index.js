@@ -1,14 +1,15 @@
 import React from "react";
-import UserTable from "./components/UserTable";
+import { Heading } from "rebass";
+import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
+import EmptyState from "../../../components/EmptyState";
+import Modal, { Confirm } from "../../../components/Modal";
+import SearchInput from "../../../components/Search";
+import { FullScreenSpinner } from "../../../components/Spinner";
+import toaster from "../../../components/Toaster";
+import { errorCallback, getApiErrors } from "../../../helpers/functions";
 import CreateButton from "./components/CreateButton";
 import UserForm from "./components/UserForm";
-import SearchInput from "../../../components/Search";
-import EmptyState from "../../../components/EmptyState";
-import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
-import Modal, { Confirm } from "../../../components/Modal";
-import toaster from "../../../components/Toaster";
-import { getApiErrors, errorCallback } from "../../../helpers/functions";
-import { FullScreenSpinner } from "../../../components/Spinner";
+import UserTable from "./components/UserTable";
 
 class Users extends React.Component {
   constructor(props) {
@@ -178,6 +179,7 @@ class Users extends React.Component {
     return (
       <>
         <div style={{ padding: "40px" }}>
+          <Heading pb="40px">Users</Heading>
           <div className="row">
             <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
               <form onSubmit={e => this.onUserSearch(e)}>

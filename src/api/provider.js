@@ -1,16 +1,12 @@
-import React from "react";
+import uniqBy from "lodash.uniqby";
 import moment from "moment";
-import adapter from "./adapter";
-import { ACTIONS } from "./actions";
-import { DataContext } from "./context";
-import { clearState, saveState, loadState } from "../localStorage";
-import {
-  weatherTypeData,
-  formatDate,
-  compareTypeData,
-  getUserWeatherStations,
-} from "../helpers/functions";
+import React from "react";
 import toaster from "../components/Toaster";
+import { compareTypeData, formatDate, getUserWeatherStations, weatherTypeData } from "../helpers/functions";
+import { clearState, loadState, saveState } from "../localStorage";
+import { ACTIONS } from "./actions";
+import adapter from "./adapter";
+import { DataContext } from "./context";
 
 export class DataProvider extends React.Component {
   static defaultProps = {
@@ -740,7 +736,7 @@ export class DataProvider extends React.Component {
   };
 
   createAsset = payload => {
-    let { token, assets } = this.state;
+    let { token, assets, formattedAssets: allAssets } = this.state;
 
     return this.getAdapter()
       .createAsset(token, payload)
@@ -748,17 +744,18 @@ export class DataProvider extends React.Component {
         let newAssets = [data, ...assets];
         const crops = newAssets.filter(asset => asset.is_crop);
         const countries = newAssets.filter(asset => asset.is_country);
-        const formattedAssets = [
+        const formattedAssets = uniqBy([
           { name: "Crop", data: crops },
           { name: "Country", data: countries },
-        ];
+          ...allAssets
+        ], "name");
         this.updateState({ assets: newAssets, formattedAssets });
         return data;
       });
   };
 
   updateAsset = payload => {
-    let { token, assets } = this.state;
+    let { token, assets, formattedAssets: allAssets } = this.state;
 
     return this.getAdapter()
       .updateAsset(token, payload)
@@ -771,17 +768,18 @@ export class DataProvider extends React.Component {
         });
         const crops = newAssets.filter(asset => asset.is_crop);
         const countries = newAssets.filter(asset => asset.is_country);
-        const formattedAssets = [
+        const formattedAssets = uniqBy([
           { name: "Crop", data: crops },
           { name: "Country", data: countries },
-        ];
+          ...allAssets
+        ], "name");
         this.updateState({ assets: newAssets, formattedAssets });
         return data;
       });
   };
 
   deleteAsset = id => {
-    let { token, assets } = this.state;
+    let { token, assets, formattedAssets: allAssets } = this.state;
 
     return this.getAdapter()
       .deleteAsset(token, id)
@@ -789,17 +787,18 @@ export class DataProvider extends React.Component {
         const newAssets = assets.filter(asset => asset.id !== id);
         const crops = newAssets.filter(asset => asset.is_crop);
         const countries = newAssets.filter(asset => asset.is_country);
-        const formattedAssets = [
+        const formattedAssets = uniqBy([
           { name: "Crop", data: crops },
           { name: "Country", data: countries },
-        ];
+          ...allAssets
+        ], "name");
         this.updateState({ assets: newAssets, formattedAssets });
         return data;
       });
   };
 
   searchAssets = search => {
-    let { token } = this.state;
+    let { token, formattedAssets: allAssets } = this.state;
 
     return this.getAdapter()
       .searchAssets(token, search)
@@ -807,10 +806,11 @@ export class DataProvider extends React.Component {
         const { results } = data;
         const crops = results.filter(asset => asset.is_crop);
         const countries = results.filter(asset => asset.is_country);
-        const formattedAssets = [
+        const formattedAssets = uniqBy([
           { name: "Crop", data: crops },
           { name: "Country", data: countries },
-        ];
+          ...allAssets
+        ], "name");
         this.updateState({
           assets: results,
           formattedAssets,

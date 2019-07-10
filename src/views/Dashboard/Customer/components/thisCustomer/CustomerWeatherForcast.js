@@ -56,7 +56,6 @@ const getUserWeatherStations = (
   let stations = weatherLinkStations.filter(station =>
     !userWeatherStationNames.includes(station.station_name)
   );
-  console.log(stations)
   return uniqBy(stations, "station_name")
 };
 
