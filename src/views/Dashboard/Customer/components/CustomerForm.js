@@ -181,7 +181,7 @@ class CustomerForm extends React.Component {
                         {...field}
                         mb="20px"
                         name="city"
-                        label="City"
+                        label="State/Region"
                         isRequired
                         touched={touched.city}
                         options={this.state.cities}
