@@ -56,7 +56,7 @@ export default function UploadContactsButton({
               {!!error && (
                 <Box mb={16}>
                   <AlertComponent type="error" onClose={closeErrorAlert}>
-                    <Text mb="8px">Error on row {error.row_number}</Text>
+                    {error.row_number && <Text mb="8px">Error on row {error.row_number}</Text>}
                     <Text mb="8px">{error.message}</Text>
                   </AlertComponent>
                 </Box>
