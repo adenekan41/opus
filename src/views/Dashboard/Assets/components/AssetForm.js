@@ -1,16 +1,16 @@
-import React from "react";
-import * as yup from "yup";
-import { Box } from "rebass";
-import isEqual from "lodash.isequal";
 import { Formik } from "formik";
-import Input from "../../../../components/Input";
-import Button from "../../../../components/Button";
+import isEqual from "lodash.isequal";
+import React from "react";
+import { Box } from "rebass";
+import * as yup from "yup";
 import { ErrorAlertComponent } from "../../../../components/AlertComponent";
+import Button from "../../../../components/Button";
+import Input from "../../../../components/Input";
 
 const assetFormValidation = yup.object().shape({
   name: yup
     .string()
-    .matches(/^[A-Z]+$/i, "Asset name cannot contain numbers")
+    .matches(/^[A-Z ]*$/i, "Asset name cannot contain numbers")
     .min(3, "Asset name is too short - should be 3 chars minimum.")
     .required("Asset name is required"),
 });
@@ -57,7 +57,7 @@ export default function AssetForm({
     >
       {({ values, errors, touched, handleSubmit, handleChange }) => (
         <form onSubmit={handleSubmit}>
-          {!apiErrors && Object.values(apiErrors).length > 0 && (
+          {!!apiErrors && Object.values(apiErrors).length > 0 && (
             <Box my={3}>
               <ErrorAlertComponent errors={apiErrors} />
             </Box>
@@ -65,6 +65,7 @@ export default function AssetForm({
           <Input
             id="name"
             name="name"
+            isRequired
             label={label}
             value={values.name}
             touched={touched.name}
@@ -75,6 +76,7 @@ export default function AssetForm({
           {isWeatherStation && device_token === undefined && (
             <Input
               mt="24px"
+              isRequired
               id="device_token"
               name="device_token"
               label="Device token"

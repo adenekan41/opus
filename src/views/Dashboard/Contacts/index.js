@@ -1,17 +1,18 @@
-import React from "react";
-import ContactTable from "./components/ContactTable";
-import EmptyState from "../../../components/EmptyState";
-import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
-import CreateContactButton from "./components/CreateContactButton";
-import UploadContactsButton from "./components/UploadContactsButton";
 import Axios from "axios";
+import React from "react";
+import { Heading } from "rebass";
+import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
+import EmptyState from "../../../components/EmptyState";
 import Modal, { Confirm } from "../../../components/Modal";
-import ContactForm from "./components/ContactForm";
 import SearchInput from "../../../components/Search";
+import { FullScreenSpinner } from "../../../components/Spinner";
 import toaster from "../../../components/Toaster";
 import { errorCallback, getApiErrors } from "../../../helpers/functions";
 import { loadState } from "../../../localStorage";
-import { FullScreenSpinner } from "../../../components/Spinner";
+import ContactForm from "./components/ContactForm";
+import ContactTable from "./components/ContactTable";
+import CreateContactButton from "./components/CreateContactButton";
+import UploadContactsButton from "./components/UploadContactsButton";
 
 class Contacts extends React.Component {
   constructor(props) {
@@ -257,6 +258,7 @@ class Contacts extends React.Component {
     return (
       <>
         <div style={{ padding: "40px" }}>
+          <Heading pb="40px">Contacts</Heading>
           <div className="row">
             <div className="col-md-6 col-xs-12 col-sm-6 col-lg-6">
               <form onSubmit={e => this.onContactSearch(e)}>

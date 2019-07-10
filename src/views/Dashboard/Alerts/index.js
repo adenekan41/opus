@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from 'rebass';
+import { Box, Heading } from 'rebass';
 import AlertTables from './components/alertTables';
 import SearchInput from '../../../components/SelectSearchInput';
 import Button from '../../../components/Button';
@@ -66,6 +66,7 @@ class Alerts extends React.Component {
       <div style={{ padding: '40px' }}>
         <ComingSoon />
         {/* <Box className="row" mb="40px">
+          <Heading pb="40px">Alerts</Heading>
           <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
             <SearchInput placeholder="Search messages" mb="8px" />
           </div>

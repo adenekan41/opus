@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import PrimaryLayout from './shared/Layout/primaryLayout';
 import { loadState, saveState, clearState } from './localStorage';
+import { hasExpired } from "./helpers/functions";
 
 class App extends Component {
   state = {
@@ -14,7 +15,12 @@ class App extends Component {
     if (!!auth.token === false) {
       return false;
     } else {
-      return true;
+      if (hasExpired(auth.token)) {
+        clearState();
+        return false;
+      } else {
+        return true;
+      }
     }
   };
   

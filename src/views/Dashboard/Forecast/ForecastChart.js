@@ -1,6 +1,6 @@
 import moment from "moment";
 import React, { Component } from "react";
-import { Box, Flex, Heading } from "rebass";
+import { Box, Flex } from "rebass";
 import emptyStateImage from "../../../assets/img/empty-states/bulletin.png";
 import EmptyState from "../../../components/EmptyState";
 import { Spinner } from "../../../components/Spinner";
@@ -69,7 +69,6 @@ export default class ForecastCharts extends Component {
       type: actions.GET_WEATHER_STATION_DATA,
       value: { station_name, start_date, end_date },
     }).then(data => {
-      console.log(data);
       this.setState({ loading: false, snapShotDataIsEmpty: data.length === 0 });
     });
   };

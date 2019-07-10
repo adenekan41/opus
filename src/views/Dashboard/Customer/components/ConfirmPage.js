@@ -148,7 +148,7 @@ export default function ConfirmPage({
               )}
             </Box>
           </Box>
-          <Box className="confirm-section">
+          {/* <Box className="confirm-section">
             <Heading color="#8c8c8c" fontWeight={500} fontSize={20} mb={3}>
               Advisory Messages
             </Heading>
@@ -162,7 +162,7 @@ export default function ConfirmPage({
                 <Text>No advisory modules for customer</Text>
               )}
             </Box>
-          </Box>
+          </Box> */}
           <Box className="confirm-section">
             <Box className="confirm-section__weather-forecast">
               <Heading color="#8c8c8c" fontWeight={500} fontSize={20} mb={3}>

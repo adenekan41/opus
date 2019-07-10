@@ -2,6 +2,17 @@ import moment from "moment";
 import toaster from "../components/Toaster";
 import { allCountries } from "./countries";
 
+export function decodeJwt(token) {
+  var base64Url = token && token.split(".")[1];
+  var base64 = base64Url.replace("-", "+").replace("_", "/");
+  return JSON.parse(window.atob(base64));
+}
+
+export function hasExpired(token) {
+  let { exp, ...rest } = decodeJwt(token);
+  return Date.now() > new Date(exp * 1000);
+}
+
 export const convertStringToNumber = string => (string ? Number(string) : 0);
 export const fahrenheitToCelcius = value => {
   if (!!value) {
@@ -283,7 +294,7 @@ export const getApiErrors = errors => {
   errors &&
     Object.keys(errors).length > 0 &&
     Object.keys(errors).forEach(key => {
-      result.push(...errors[key]);
+      result.push(errors[key]);
     });
   return result;
 };

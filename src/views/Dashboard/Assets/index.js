@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Box } from "rebass";
+import { Box, Heading } from "rebass";
 import isEqual from "lodash.isequal";
 import Card from "../../../components/Card";
 import Modal, { Confirm } from "../../../components/Modal";
@@ -97,7 +97,7 @@ export default class AssetManagement extends Component {
   };
 
   closeEditModal = () => {
-    this.setState({ showEditModal: false, apiErrors: {} });
+    this.setState({ showEditModal: false, apiErrors: null });
   };
 
   closeDeleteConfirm = () => {
@@ -113,7 +113,7 @@ export default class AssetManagement extends Component {
   setWeatherStationApiErrors = errorPayload => {
     const { non_field_errors } = errorPayload;
     this.setState({
-      apiErrors: non_field_errors[0],
+      apiErrors: non_field_errors && non_field_errors[0],
     });
   };
 
@@ -221,8 +221,8 @@ export default class AssetManagement extends Component {
 
   onWeatherStationCreate = (values, closeModal) => {
     const { dispatch, actions } = this.props;
-    const { name, ...rest} = values;
-    const payload = {...rest, station_name: name};
+    const { name, id, ...rest } = values;
+    const payload = { ...rest, station_name: name };
 
     this.setState({
       loading: true,
@@ -246,8 +246,8 @@ export default class AssetManagement extends Component {
 
   onWeatherStationEdit = (values, closeModal) => {
     const { dispatch, actions } = this.props;
-    const { name, ...rest} = values;
-    const payload = {...rest, station_name: name};
+    const { name, ...rest } = values;
+    const payload = { ...rest, station_name: name };
 
     this.setState({
       loading: true,
@@ -306,11 +306,14 @@ export default class AssetManagement extends Component {
     } = this.state;
     const { formattedAssets } = this.props;
     const isWeatherStation =
-      selectedAsset && selectedAsset.name && selectedAsset.name.toLowerCase() === "weather station";
+      selectedAsset &&
+      selectedAsset.name &&
+      selectedAsset.name.toLowerCase() === "weather station";
 
     return (
       <Box py="40px" px="40px">
         <AssetManagementStyle>
+      <Heading pb="40px">Assets</Heading>
           <div className="row">
             <div className="col-md-4">
               <Card className="asset-list-section">
@@ -335,7 +338,7 @@ export default class AssetManagement extends Component {
             <div className="col-md-8">
               <div className="table-section">
                 <div className="row">
-                  <div className="col-md-8 col-xs-12 col-sm-8 col-lg-8">
+                  <div className="col-md-7 col-xs-12">
                     <form onSubmit={e => this.onAssetSearch(e)}>
                       <SearchInput
                         placeholder={`Type ${selectedAsset.name &&
@@ -345,7 +348,7 @@ export default class AssetManagement extends Component {
                       />
                     </form>
                   </div>
-                  <div className="col-md-4 col-xs-12 col-sm-4 col-lg-4">
+                  <div className="col-md-5 col-xs-12">
                     <CreateAssetButton
                       isLoading={loading}
                       label={selectedAsset.name}
@@ -354,6 +357,7 @@ export default class AssetManagement extends Component {
                           ? this.onWeatherStationCreate
                           : this.onAssetCreate
                       }
+                      onCloseModal={() => this.setState({ apiErrors: null })}
                       apiErrors={getApiErrors(apiErrors)}
                     />
                   </div>

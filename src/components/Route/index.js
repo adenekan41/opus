@@ -6,6 +6,13 @@ export function NotLoggedInRoute({ isLoggedIn, redirect_url, ...rest }) {
   return !isLoggedIn() ? <Route {...rest} /> : <Redirect to={url} />;
 }
 
+export const AuthRoute = ({ isLoggedIn, ...rest }) => {
+  if (isLoggedIn()) {
+    return <Redirect to="/dashboard/weather-data/map" />;
+  }
+  return <Route {...rest} />;
+};
+
 export function ProtectedRoute({ isLoggedIn, ...rest }) {
   return isLoggedIn() ? <Route {...rest} /> : <Redirect to="/" />;
 }
