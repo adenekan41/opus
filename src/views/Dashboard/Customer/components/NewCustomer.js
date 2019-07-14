@@ -97,6 +97,7 @@ export default function NewCustomer({
       .then(() => {
         setLoading(false);
         setPayload({});
+        setApiErrors({});
         toaster.success("Customer created successfully");
         history.push("/dashboard/customers");
       })

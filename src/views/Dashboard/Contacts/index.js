@@ -96,6 +96,7 @@ class Contacts extends React.Component {
       .then(() => {
         this.setState({
           buttonLoading: false,
+          apiErrors: {}
         });
         callback();
         toaster.success("User created successfully");
@@ -124,6 +125,7 @@ class Contacts extends React.Component {
           buttonLoading: false,
           contactToEdit: {},
           showEditModal: false,
+          apiErrors: {}
         });
         toaster.success("Contact updated successfully");
       })
@@ -209,7 +211,6 @@ class Contacts extends React.Component {
           typeof error.response.data === "object"
         ) {
           let uploadError = this.getUploadErrors(error.response.data);
-          console.log(uploadError);
           this.setState({
             contactsUploadErrors: uploadError,
           });
@@ -291,6 +292,7 @@ class Contacts extends React.Component {
                 isLoading={buttonLoading}
                 onSubmit={this.onContactCreate}
                 apiErrors={getApiErrors(apiErrors)}
+                onCloseModal={() => this.setState({ apiErrors: {} })}
               />
             </div>
             <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">

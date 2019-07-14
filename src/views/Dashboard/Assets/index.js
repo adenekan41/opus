@@ -139,6 +139,7 @@ export default class AssetManagement extends Component {
       .then(() => {
         this.setState({
           loading: false,
+          apiErrors: null,
         });
         closeModal();
         toaster.success("Asset created successfully");
@@ -163,7 +164,7 @@ export default class AssetManagement extends Component {
       value: values,
     })
       .then(() => {
-        this.setState({ loading: false });
+        this.setState({ loading: false, apiErrors: null });
         closeModal();
         toaster.success("Asset updated successfully");
       })
@@ -232,6 +233,7 @@ export default class AssetManagement extends Component {
       .then(() => {
         this.setState({
           loading: false,
+          apiErrors: null,
         });
         closeModal();
         toaster.success("Weather station created successfully");
@@ -258,7 +260,7 @@ export default class AssetManagement extends Component {
       value: payload,
     })
       .then(() => {
-        this.setState({ loading: false });
+        this.setState({ loading: false, apiErrors: null });
         closeModal();
         toaster.success("Weather station updated successfully");
       })
@@ -313,7 +315,7 @@ export default class AssetManagement extends Component {
     return (
       <Box py="40px" px="40px">
         <AssetManagementStyle>
-      <Heading pb="40px">Assets</Heading>
+          <Heading pb="40px">Assets</Heading>
           <div className="row">
             <div className="col-md-4">
               <Card className="asset-list-section">

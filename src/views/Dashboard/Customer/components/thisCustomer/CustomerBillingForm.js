@@ -1,4 +1,5 @@
 import { Formik } from "formik";
+import isEqual from "lodash.isequal";
 import React from "react";
 import * as yup from "yup";
 import Button from "../../../../../components/Button";
@@ -20,14 +21,15 @@ const CustomerBillingForm = ({
   billing_registration_number,
   billing_service_delivery,
 }) => {
+  let initialValues = {
+    id: id || "",
+    billing_vat_number: billing_vat_number || "",
+    billing_registration_number: billing_registration_number || "",
+    billing_service_delivery: billing_service_delivery || "",
+  }
   return (
     <Formik
-      initialValues={{
-        id: id || "",
-        billing_vat_number: billing_vat_number || "",
-        billing_registration_number: billing_registration_number || "",
-        billing_service_delivery: billing_service_delivery || "",
-      }}
+      initialValues={initialValues}
       onSubmit={values => onSubmit(values)}
       validationSchema={CustomerBillingValdationSchema}
     >
@@ -100,6 +102,7 @@ const CustomerBillingForm = ({
                       kind="orange"
                       type="submit"
                       isLoading={isLoading}
+                      disabled={isEqual(initialValues, values)}
                     >
                       Save Changes
                     </Button>
