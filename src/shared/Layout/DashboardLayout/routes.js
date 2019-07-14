@@ -28,7 +28,7 @@ const DashboardRoutes = ({ token, clearAllState, ...rest }) => {
               {...rest}
               {...{ ...state, dispatch }}
             >
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<div/>}>
                 <Switch>
                   <Route
                     path="/dashboard/stats"
