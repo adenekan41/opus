@@ -94,6 +94,7 @@ class Users extends React.Component {
       .catch(error => {
         this.setState({
           loading: false,
+          apiErrors: {},
         });
         errorCallback(error, this.setApiErrors);
       });
@@ -109,7 +110,7 @@ class Users extends React.Component {
       value: values,
     })
       .then(() => {
-        this.setState({ loading: false });
+        this.setState({ loading: false, apiErrors: {} });
         closeModal();
         toaster.success("User updated successfully");
       })
@@ -130,7 +131,7 @@ class Users extends React.Component {
       .then(() => {
         this.setState({
           loading: false,
-          userToDelete: {}
+          userToDelete: {},
         });
         closeConfirm();
         toaster.success("User deleted successfully");
@@ -195,6 +196,7 @@ class Users extends React.Component {
                 apiErrors={getApiErrors(apiErrors)}
                 isLoading={this.state.loading}
                 onSubmit={this.onUserCreate}
+                clearErrors={() => this.setState({ apiErrors: {} })}
               />
             </div>
           </div>
