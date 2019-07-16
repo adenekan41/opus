@@ -1,10 +1,10 @@
-import React from 'react';
-import 'react-dates/initialize';
-import 'react-dates/lib/css/_datepicker.css';
-import styled from 'styled-components';
-import { DateRangePicker, isInclusivelyBeforeDay } from 'react-dates';
-import { Flex, Text } from 'rebass';
-import moment from 'moment';
+import React from "react";
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
+import styled from "styled-components";
+import { DateRangePicker, isInclusivelyBeforeDay } from "react-dates";
+import { Flex, Text } from "rebass";
+import moment from "moment";
 
 export const DatePickerContainer = styled.div`
   display: flex;
@@ -15,7 +15,7 @@ export const DatePickerContainer = styled.div`
   background-color: #ffffff;
   border-radius: 3px;
   border: solid 0.5px rgba(18, 18, 18, 0.11);
-  ${props => (props.isInvalid ? 'border: solid 0.5px #f66262 ' : '')};
+  ${props => (props.isInvalid ? "border: solid 0.5px #f66262 " : "")};
   ${props =>
     props.disabled &&
     `
@@ -34,6 +34,7 @@ export const DatePickerContainer = styled.div`
       color: #b4b4b4;
     }
   }
+
   .DateRangePickerInput {
     border: none;
     background-color: transparent;
@@ -41,6 +42,15 @@ export const DatePickerContainer = styled.div`
     width: 100%;
     top: 14px;
   }
+
+  .SingleDatePicker {
+    border: none;
+    background-color: transparent;
+    position: relative;
+    width: 100%;
+    top: 12px;
+  }
+
   .DateInput {
     background: transparent;
     width: 100px !important;
@@ -50,6 +60,7 @@ export const DatePickerContainer = styled.div`
       font-size: 16px;
       padding-left: 0;
       padding-right: 0;
+      outline: none;
 
       &__focused {
         border-bottom: none;
@@ -57,12 +68,18 @@ export const DatePickerContainer = styled.div`
     }
   }
 
-  .DateRangePickerInput_calendarIcon {
+  .DateRangePickerInput_calendarIcon,
+  .SingleDatePickerInput_calendarIcon {
     margin: 0 0 0 10px;
+    outline: none;
   }
 
   .DateRangePicker_picker {
     z-index: 4 !important;
+  }
+
+  .SingleDatePickerInput__withBorder {
+    border: none;
   }
 
   .label {
@@ -137,10 +154,10 @@ class DatePicker extends React.Component {
 }
 
 DatePicker.defaultProps = {
-  label: 'Date range',
+  label: "Date range",
   minimumNights: 0,
   onChange: values => console.log(values),
-  isOutsideRange: day => !isInclusivelyBeforeDay(day, moment())
+  isOutsideRange: day => !isInclusivelyBeforeDay(day, moment()),
 };
 
 export default DatePicker;
