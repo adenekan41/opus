@@ -1,14 +1,10 @@
+import moment from "moment";
 import React from "react";
+import { isInclusivelyBeforeDay, SingleDatePicker } from "react-dates";
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
-import { SingleDatePicker, isInclusivelyBeforeDay } from "react-dates";
 import { Flex, Text } from "rebass";
-import {
-  DatePickerContainer,
-  convertToMomentDate,
-  CustomArrowIcon,
-} from "./index";
-import moment from "moment";
+import { convertToMomentDate, CustomArrowIcon, DatePickerContainer } from "./index";
 
 class SingleDatePickerComponent extends React.Component {
   state = {
