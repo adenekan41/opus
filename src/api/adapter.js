@@ -231,11 +231,21 @@ const getAllWeatherStationData = (token, station_name = "") => {
     token,
   });
 };
+// Former
+// const getCompareWeatherStationData = (token, data) => {
+//   return makeApiCall({
+//     baseURL: BASE_URL_TWO,
+//     url: `/weatherlink/list-stations-data/`,
+//     token,
+//     data,
+//     method: "POST"
+//   })
+// }
 
 const getCompareWeatherStationData = (token, data) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
-    url: `/weatherlink/list-stations-data/`,
+    url: `/weatherlink/listcomparedbyspan/`,
     token,
     data,
     method: "POST"

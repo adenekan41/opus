@@ -6,7 +6,7 @@ import { DateRangePicker, isInclusivelyBeforeDay } from 'react-dates';
 import { Flex, Text } from 'rebass';
 import moment from 'moment';
 
-const DatePickerContainer = styled.div`
+export const DatePickerContainer = styled.div`
   display: flex;
   position: relative;
   height: 60px;
@@ -84,7 +84,7 @@ const DatePickerContainer = styled.div`
   }
 `;
 
-const CustomArrowIcon = styled.div`
+export const CustomArrowIcon = styled.div`
   width: 16px;
   height: 2px;
   position: relative;
@@ -92,7 +92,7 @@ const CustomArrowIcon = styled.div`
   background-color: #242424;
 `;
 
-const convertToMomentDate = value => moment(value);
+export const convertToMomentDate = value => moment(value);
 
 class DatePicker extends React.Component {
   state = {

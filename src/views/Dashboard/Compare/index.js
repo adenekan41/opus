@@ -4,7 +4,7 @@ import { Box, Flex, Text, Heading } from "rebass";
 import CompareChart from "./CompareChart";
 import Breadcrumbs, { BreadcrumbItem } from "../../../components/Breadcrumb";
 import Dropdown from "../../../components/Select";
-import DatePicker from "../../../components/DatePicker";
+import SingleDatePicker from "../../../components/DatePicker/SingleDatePicker";
 import Button from "../../../components/Button";
 import Card from "../../../components/Card";
 import CheckboxSelect from "../../../components/CheckboxSelect";
@@ -27,12 +27,14 @@ import toaster from "../../../components/Toaster";
 class Compare extends React.Component {
   state = {
     data: [],
+    span:"",
+    hours:null,
+    days:null,
     loading: false,
     buttonLoading: false,
     compareType: this.props.compareType,
     observationTimes: [],
-    endDate: moment(new Date()),
-    startDate: moment(new Date()).subtract(1, "days"),
+    date: moment(new Date()),
     selectedStations: [],
   };
 
@@ -69,33 +71,65 @@ class Compare extends React.Component {
         toaster.error("Unable to export data. Please try again.");
       });
   };
-
+  checkSelectedSpanValue = key => {
+    // debugger
+    if(key.value.includes('hour')){
+      this.setState({
+        hours:parseInt(key.value)
+      })
+    }
+    if(key.value.includes('day')){
+      this.setState({
+        days:parseInt(key.value)
+      })
+    }
+    if(key.value.includes('week')){
+      var week = key.value.split("week");
+      key = week.splice(0,1).join("");
+      key = parseInt(key) * 7
+      this.setState({
+        days:key
+      })
+    }
+    if(key.value.includes('year')){
+      var week = key.value.split("year");
+      key.value = week.splice(0,1).join("");
+      key.value = parseInt(key.value) * 365
+      this.setState({
+        days:key.value
+      })
+    }
+    this.setState({
+      span: key.value
+    })
+  }
   compareWeatherStations = () => {
-    let { selectedStations, startDate, endDate, compareType } = this.state;
+    let { selectedStations, date, compareType, days, hours } = this.state;
     let { actions } = this.props;
 
-    if (startDate && endDate) {
+    if (date) {
       let { dispatch } = this.props;
       this.setState({ loading: true });
-      let observationTimes = getObservationTimes(startDate, endDate)
+      // let observationTimes = getObservationTimes(date)
       dispatch({
         type: actions.GET_COMPARE_STATION_DATA,
         value: {
-          station_names: selectedStations,
-          start_date: moment(startDate).format("M/D/YYYY"),
-          end_date: moment(endDate).format("M/D/YYYY"),
-          weather_type: compareType,
+          stations: selectedStations,
+          start: moment(date).format("M/D/YYYY"),
+          type: compareType,
+          days,
+          hours
         },
       }).then(({ stations }) => {
         this.setState({ loading: false });
         let compareData = this.filterCompareLogByType(compareType, stations);
         this.setState({
           data: compareData,
-          observationTimes,
+         
         });
       });
     } else {
-      displayDateFilterErrors({ startDate, endDate });
+      displayDateFilterErrors({ date });
     }
   };
 
@@ -137,7 +171,7 @@ class Compare extends React.Component {
       data,
       endDate,
       loading,
-      startDate,
+      date,
       buttonLoading,
       observationTimes,
       selectedStations,
@@ -181,16 +215,24 @@ class Compare extends React.Component {
               value={this.state.compareType}
             />
           </Box>
-          <Box className="col-md-4" mb={2}>
-            <DatePicker
-              startDate={startDate}
-              endDate={endDate}
-              onChange={({ startDate, endDate }) => {
+          <Box className="col-md-2" mb={2}>
+            <SingleDatePicker
+              date={date}
+              onChange={({ date }) => {
                 this.setState({
-                  startDate,
-                  endDate,
+                  date,
                 });
               }}
+            />
+          </Box>
+          <Box className="col-md-2" mb={2}>
+             <Dropdown
+              options={[{value:"1 hour", label:"1 hour"},{value:"4 hours", label:"4 hours"},{value:"1 day", label:"1 day"},{value:"3 days", label:"3 days"},{value:"1 week", label:"1 week"},{value:"2 weeks", label:"2 weeks"},{value:"1 year", label:"1 year"}]}
+              onChange={key =>{
+                this.checkSelectedSpanValue(key)
+              }}
+              label="Span"
+              value={this.state.span}
             />
           </Box>
           <Box className="col-md-2" mb={2}>
@@ -251,8 +293,7 @@ class Compare extends React.Component {
                     Weather Station Comparism -
                   </span>
                   <span style={{ fontStyle: "italic" }}>
-                    {moment(startDate).format("DD MMM, YYYY hh:mm")} to{" "}
-                    {moment(endDate).format("DD MMM, YYYY hh:mm")}
+                    {moment(date).format("DD MMM, YYYY hh:mm")}
                   </span>
                 </Text>
               </Flex>
