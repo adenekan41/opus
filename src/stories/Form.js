@@ -3,6 +3,7 @@ import { storiesOf } from "@storybook/react";
 import Input from "../components/Input";
 import Dropdown from "../components/Select";
 import DatePicker from "../components/DatePicker";
+import SingleDatePickerComponent from "../components/DatePicker/SingleDatePicker";
 import Checkbox from "../components/Checkbox";
 import CheckboxSelect from "../components/CheckboxSelect";
 import SelectSearch from "../components/SelectSearchInput";
@@ -20,6 +21,7 @@ stories.add("Disabled Input", () => <Input disabled icon="lock" />);
 stories.add("Select", () => <Dropdown />);
 stories.add("Disabled Select", () => <Dropdown isDisabled />);
 stories.add("DatePicker", () => <DatePicker />);
+stories.add("SingleDatePicker", () => <SingleDatePickerComponent date="2019-02-27T11:00:00.000Z"/>);
 stories.add("DatePicker with values", () => (
   <DatePicker
     startDate="2019-02-27T11:00:00.000Z"
