@@ -23,7 +23,7 @@ class Organisation extends React.Component {
         this.setState({
           loading: false,
         });
-        toaster.success("Customer updated successful");
+        toaster.success("Customer updated successfully");
         getCustomer(id)
       })
       .catch(error => {

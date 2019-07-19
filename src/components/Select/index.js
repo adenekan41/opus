@@ -1,8 +1,8 @@
-import React from 'react';
-import Select from 'react-select';
-import styled from 'styled-components';
-import { Flex, Text } from 'rebass';
-import { sharedProps } from '../Avatar';
+import React from "react";
+import Select from "react-select";
+import { Flex, Text } from "rebass";
+import styled from "styled-components";
+import { sharedProps } from "../Avatar";
 
 const StyledSelect = styled(Select)`
   .select-inner__control {
@@ -57,7 +57,7 @@ const DropdownContainer = styled.div`
   background-color: #ffffff;
   border-radius: 3px;
   border: solid 0.5px rgba(18, 18, 18, 0.11);
-  ${props => (props.isInvalid ? 'border: solid 0.5px #f66262 ' : '')};
+  ${props => (props.isInvalid ? "border: solid 0.5px #f66262 " : "")};
   ${props =>
     props.disabled &&
     `
@@ -79,12 +79,17 @@ const DropdownContainer = styled.div`
     opacity: 0.5;
     display: inline-block;
     color: #8c8c8c;
+
+    &__required {
+      color: #f66262;
+      font-size: 12px;
+    }
   }
 
   .select {
     outline: none;
     border: none;
-    font-family: 'Avenir Opus', sans-serif;
+    font-family: "Avenir Opus", sans-serif;
     background-color: transparent;
     box-shadow: none;
     box-sizing: border-box;
@@ -123,7 +128,6 @@ const DropdownContainer = styled.div`
   ${sharedProps};
 `;
 
-
 function getValueWithLabel(value, options) {
   if (value && value.hasOwnProperty("label")) {
     return value;
@@ -137,11 +141,12 @@ const Dropdown = ({
   isDisabled,
   errorMessage,
   label,
-  value = '',
+  value = "",
   onChange,
   placeholder,
   inputId,
   options,
+  isRequired,
   mb,
   mt,
   width,
@@ -170,7 +175,7 @@ const Dropdown = ({
           classNamePrefix="select-inner"
         />
         <label className="label" htmlFor={inputId}>
-          {label}
+          {label} {isRequired && <span className="label__required">*</span>}
         </label>
       </Flex>
       {isInvalid && (
@@ -183,9 +188,9 @@ const Dropdown = ({
 };
 
 Dropdown.defaultProps = {
-  label: 'Label',
-  placeholder: '',
-  options: []
+  label: "Label",
+  placeholder: "",
+  options: [],
 };
 
 export default Dropdown;

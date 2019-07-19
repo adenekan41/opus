@@ -1,11 +1,12 @@
+import { Field, Formik } from "formik";
+import isEqual from "lodash.isequal";
 import React, { useState } from "react";
-import { Formik } from "formik";
 import { Flex, Text } from "rebass";
 import * as yup from "yup";
-import isEqual from 'lodash.isequal';
-import Input from "../../../../../components/Input";
 import Button from "../../../../../components/Button";
 import Card from "../../../../../components/Card";
+import Input from "../../../../../components/Input";
+import Dropdown from "../../../../../components/Select";
 import Switch from "../../../../../components/Switch";
 
 const profileValdationSchema = yup.object().shape({
@@ -13,6 +14,7 @@ const profileValdationSchema = yup.object().shape({
   last_name: yup.string().required("Last name is required"),
   email: yup.string().required("Email is required"),
   phone_number: yup.string().required("Phone number is required"),
+  crop_managed: yup.string().required("Crop managed is required"),
 });
 
 const CustomerDetailsForm = ({
@@ -23,7 +25,9 @@ const CustomerDetailsForm = ({
   other_name,
   phone_number,
   email,
+  crops,
   isLoading,
+  crop_managed,
   receive_manual_messages,
   receive_advisory_messages,
   receive_automatic_messages,
@@ -42,10 +46,11 @@ const CustomerDetailsForm = ({
     last_name,
     other_name,
     phone_number,
+    crop_managed,
     receive_manual_messages: manualMessages,
     receive_advisory_messages: advisoryMessages,
     receive_automatic_messages: automaticMessages,
-  }
+  };
   return (
     <Formik
       initialValues={initialValue}
@@ -68,6 +73,7 @@ const CustomerDetailsForm = ({
                 id="first_name"
                 name="first_name"
                 type="text"
+                isRequired
                 label="First name"
                 touched={touched.first_name}
                 value={values.first_name}
@@ -95,6 +101,7 @@ const CustomerDetailsForm = ({
                 id="last_name"
                 name="last_name"
                 type="text"
+                isRequired
                 label="Last name"
                 touched={touched.last_name}
                 value={values.last_name}
@@ -110,6 +117,7 @@ const CustomerDetailsForm = ({
                 id="phone_number"
                 name="phone_number"
                 type="tel"
+                isRequired
                 label="Phone number"
                 touched={touched.phone_number}
                 value={values.phone_number}
@@ -123,12 +131,33 @@ const CustomerDetailsForm = ({
                 id="email"
                 name="email"
                 type="email"
+                isRequired
                 label="Email Address"
                 touched={touched.email}
                 value={values.email}
                 onChange={handleChange}
                 errorMessage={errors.email}
                 isInvalid={errors.email && touched.email}
+              />
+            </div>
+            <div className="col-md-4">
+              <Field
+                name="crop_managed"
+                render={({ field, form }) => (
+                  <Dropdown
+                    {...field}
+                    mb="20px"
+                    name="crop_managed"
+                    label="Crop managed"
+                    touched={touched.crop_managed}
+                    options={crops}
+                    errorMessage={errors.crop_managed}
+                    isInvalid={errors.crop_managed && touched.crop_managed}
+                    onChange={crop =>
+                      form.setFieldValue("crop_managed", crop.value)
+                    }
+                  />
+                )}
               />
             </div>
           </div>
@@ -190,8 +219,13 @@ const CustomerDetailsForm = ({
                 </Button>
               </div>
               <div className="col-md-8">
-                <Button disabled={isEqual(initialValue, values)} 
-                  size="large" block kind="orange" isLoading={isLoading}>
+                <Button
+                  disabled={isEqual(initialValue, values)}
+                  size="large"
+                  block
+                  kind="orange"
+                  isLoading={isLoading}
+                >
                   Save Changes
                 </Button>
               </div>

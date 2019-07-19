@@ -1,8 +1,8 @@
-import React from 'react';
-import Modal, { ToggleModal } from '../../../../components/Modal';
-import Button from '../../../../components/Button';
-import { Icon } from '../../../../components/Icon';
-import ContactForm from './ContactForm';
+import React from "react";
+import Modal, { ToggleModal } from "../../../../components/Modal";
+import Button from "../../../../components/Button";
+import { Icon } from "../../../../components/Icon";
+import ContactForm from "./ContactForm";
 
 export default function CreateContactButton({
   crops,
@@ -13,6 +13,7 @@ export default function CreateContactButton({
   countries,
   customers,
   apiErrors,
+  onCloseModal,
   ...rest
 }) {
   return (
@@ -26,15 +27,21 @@ export default function CreateContactButton({
           <Modal
             size="medium"
             showModal={show}
-            onCloseModal={closeModal}
-            heading={'Add Contact'}
+            onCloseModal={() => {
+              onCloseModal();
+              closeModal();
+            }}
+            heading={"Add Contact"}
           >
             <ContactForm
               crops={crops}
               isAdmin={isAdmin}
               onSubmit={onSubmit}
               apiErrors={apiErrors}
-              onCancel={closeModal}
+              onCancel={() => {
+                onCloseModal();
+                closeModal();
+              }}
               isLoading={isLoading}
               countries={countries}
               customers={customers}

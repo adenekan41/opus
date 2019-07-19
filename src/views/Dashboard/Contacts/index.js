@@ -1,17 +1,18 @@
-import React from "react";
-import ContactTable from "./components/ContactTable";
-import EmptyState from "../../../components/EmptyState";
-import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
-import CreateContactButton from "./components/CreateContactButton";
-import UploadContactsButton from "./components/UploadContactsButton";
 import Axios from "axios";
+import React from "react";
+import { Heading } from "rebass";
+import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
+import EmptyState from "../../../components/EmptyState";
 import Modal, { Confirm } from "../../../components/Modal";
-import ContactForm from "./components/ContactForm";
 import SearchInput from "../../../components/Search";
+import { FullScreenSpinner } from "../../../components/Spinner";
 import toaster from "../../../components/Toaster";
 import { errorCallback, getApiErrors } from "../../../helpers/functions";
 import { loadState } from "../../../localStorage";
-import { FullScreenSpinner } from "../../../components/Spinner";
+import ContactForm from "./components/ContactForm";
+import ContactTable from "./components/ContactTable";
+import CreateContactButton from "./components/CreateContactButton";
+import UploadContactsButton from "./components/UploadContactsButton";
 
 class Contacts extends React.Component {
   constructor(props) {
@@ -66,6 +67,17 @@ class Contacts extends React.Component {
     });
   };
 
+  getUploadErrors = error => {
+    if (Object.keys(error).length === 1) {
+      const { non_field_errors } = error;
+      return { message: non_field_errors[0] };
+    }
+    else {
+      const { row_number, message } = error;
+      return { row_number, message };
+    }
+  };
+
   onContactCreate = (values, callback) => {
     const { dispatch, actions, profile } = this.props;
     let { phone_number, ...rest } = values;
@@ -84,6 +96,7 @@ class Contacts extends React.Component {
       .then(() => {
         this.setState({
           buttonLoading: false,
+          apiErrors: {}
         });
         callback();
         toaster.success("User created successfully");
@@ -112,6 +125,7 @@ class Contacts extends React.Component {
           buttonLoading: false,
           contactToEdit: {},
           showEditModal: false,
+          apiErrors: {}
         });
         toaster.success("Contact updated successfully");
       })
@@ -196,9 +210,9 @@ class Contacts extends React.Component {
           error.response.data &&
           typeof error.response.data === "object"
         ) {
-          let { row_number, message } = error.response.data;
+          let uploadError = this.getUploadErrors(error.response.data);
           this.setState({
-            contactsUploadErrors: { row_number, message },
+            contactsUploadErrors: uploadError,
           });
         } else {
           toaster.error("An error occurred, please try again");
@@ -238,7 +252,7 @@ class Contacts extends React.Component {
       searchLoading,
       contactToDelete,
       showDeleteConfirm,
-      contactsUploadErrors
+      contactsUploadErrors,
     } = this.state;
     let isAdmin = profile.is_admin || profile.is_superuser;
     let crops = assets
@@ -257,6 +271,7 @@ class Contacts extends React.Component {
     return (
       <>
         <div style={{ padding: "40px" }}>
+          <Heading pb="40px">Contacts</Heading>
           <div className="row">
             <div className="col-md-6 col-xs-12 col-sm-6 col-lg-6">
               <form onSubmit={e => this.onContactSearch(e)}>
@@ -277,6 +292,7 @@ class Contacts extends React.Component {
                 isLoading={buttonLoading}
                 onSubmit={this.onContactCreate}
                 apiErrors={getApiErrors(apiErrors)}
+                onCloseModal={() => this.setState({ apiErrors: {} })}
               />
             </div>
             <div className="col-md-3 col-xs-12 col-sm-3 col-lg-3">
@@ -287,7 +303,9 @@ class Contacts extends React.Component {
                 error={contactsUploadErrors}
                 onSubmit={this.onContactsUpload}
                 sampleFile="/static/files/contacts.csv"
-                closeErrorAlert={() => this.setState({ contactsUploadErrors: null })}
+                closeErrorAlert={() =>
+                  this.setState({ contactsUploadErrors: null })
+                }
               />
             </div>
           </div>

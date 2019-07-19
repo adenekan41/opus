@@ -1,15 +1,15 @@
-import React from "react";
-import styled from "styled-components";
 import { Formik } from "formik";
+import React from "react";
 import { Box, Flex } from "rebass";
+import styled from "styled-components";
 import * as yup from "yup";
-import Input from "../../../../components/Input";
-import Button from "../../../../components/Button";
-import { Icon } from "../../../../components/Icon";
-import { FileUploader } from "../../../../components/FileUpload";
-import { getBase64Url } from "../../../../helpers/functions";
 import { ErrorAlertComponent } from "../../../../components/AlertComponent";
+import Button from "../../../../components/Button";
+import { FileUploader } from "../../../../components/FileUpload";
+import { Icon } from "../../../../components/Icon";
+import Input from "../../../../components/Input";
 import { phoneRegExp } from "../../../../helpers/constants";
+import { getBase64Url } from "../../../../helpers/functions";
 
 const AvatarDiv = styled(Flex)`
   height: 129px;
@@ -134,6 +134,7 @@ const UserForm = ({
                 id="first_name"
                 name="first_name"
                 type="text"
+                isRequired
                 label="First name"
                 touched={touched.first_name}
                 value={values.first_name}
@@ -164,6 +165,7 @@ const UserForm = ({
                 id="last_name"
                 name="last_name"
                 type="text"
+                isRequired
                 label="Last name"
                 touched={touched.last_name}
                 value={values.last_name}
@@ -178,6 +180,7 @@ const UserForm = ({
                 id="phone_number"
                 name="phone_number"
                 type="tel"
+                isRequired
                 label="Phone number"
                 touched={touched.phone_number}
                 value={values.phone_number}
@@ -194,6 +197,7 @@ const UserForm = ({
                 id="email"
                 name="email"
                 type="email"
+                isRequired
                 label="Email address"
                 touched={touched.email}
                 value={values.email}

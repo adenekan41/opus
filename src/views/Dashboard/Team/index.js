@@ -1,14 +1,15 @@
 import React from "react";
-import UserTable from "./components/UserTable";
+import { Heading } from "rebass";
+import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
+import EmptyState from "../../../components/EmptyState";
+import Modal, { Confirm } from "../../../components/Modal";
+import SearchInput from "../../../components/Search";
+import { FullScreenSpinner } from "../../../components/Spinner";
+import toaster from "../../../components/Toaster";
+import { errorCallback, getApiErrors } from "../../../helpers/functions";
 import CreateButton from "./components/CreateButton";
 import UserForm from "./components/UserForm";
-import SearchInput from "../../../components/Search";
-import EmptyState from "../../../components/EmptyState";
-import emptyStateImage from "../../../assets/img/empty-states/contacts.png";
-import Modal, { Confirm } from "../../../components/Modal";
-import toaster from "../../../components/Toaster";
-import { getApiErrors, errorCallback } from "../../../helpers/functions";
-import { FullScreenSpinner } from "../../../components/Spinner";
+import UserTable from "./components/UserTable";
 
 class Users extends React.Component {
   constructor(props) {
@@ -93,6 +94,7 @@ class Users extends React.Component {
       .catch(error => {
         this.setState({
           loading: false,
+          apiErrors: {},
         });
         errorCallback(error, this.setApiErrors);
       });
@@ -108,7 +110,7 @@ class Users extends React.Component {
       value: values,
     })
       .then(() => {
-        this.setState({ loading: false });
+        this.setState({ loading: false, apiErrors: {} });
         closeModal();
         toaster.success("User updated successfully");
       })
@@ -129,7 +131,7 @@ class Users extends React.Component {
       .then(() => {
         this.setState({
           loading: false,
-          userToDelete: {}
+          userToDelete: {},
         });
         closeConfirm();
         toaster.success("User deleted successfully");
@@ -178,6 +180,7 @@ class Users extends React.Component {
     return (
       <>
         <div style={{ padding: "40px" }}>
+          <Heading pb="40px">Users</Heading>
           <div className="row">
             <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
               <form onSubmit={e => this.onUserSearch(e)}>
@@ -193,6 +196,7 @@ class Users extends React.Component {
                 apiErrors={getApiErrors(apiErrors)}
                 isLoading={this.state.loading}
                 onSubmit={this.onUserCreate}
+                clearErrors={() => this.setState({ apiErrors: {} })}
               />
             </div>
           </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import moment from "moment";
+import styled from "styled-components";
 import { Box, Flex, Text, Heading } from "rebass";
 import CompareChart from "./CompareChart";
 import Breadcrumbs, { BreadcrumbItem } from "../../../components/Breadcrumb";
@@ -23,6 +24,41 @@ import {
 } from "../../../helpers/functions";
 import { Spinner } from "../../../components/Spinner";
 import toaster from "../../../components/Toaster";
+
+const CompareFiltersSection = styled(Flex)`
+  .filter-section-item {
+    padding-right: 12px;
+  }
+
+  .stations {
+    width: 18%;
+  }
+
+  .weather-type {
+    width: 20%;
+  }
+
+  .date-range {
+    width: 30%;
+  }
+
+  .compare-button {
+    width: 15%;
+  }
+
+  .export-button {
+    width: 17%;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    .filter-section-item {
+      padding-right: 0;
+      width: 100%;
+    }
+  }
+`;
 
 class Compare extends React.Component {
   state = {
@@ -198,8 +234,8 @@ class Compare extends React.Component {
             <BreadcrumbItem isActive>Compare</BreadcrumbItem>
           </Breadcrumbs>
         </Box>
-        <Box className="row">
-          <Box className="col-md-2" mb={2}>
+        <CompareFiltersSection alignItems="center" flexWrap="wrap">
+          <Box mb={2} className="filter-section-item stations">
             <CheckboxSelect
               label="Weather Station"
               selected={selectedStations}
@@ -208,7 +244,7 @@ class Compare extends React.Component {
               onChange={value => this.checkboxSelectOptionClicked(value)}
             />
           </Box>
-          <Box className="col-md-2" mb={2}>
+          <Box mb={2} className="filter-section-item weather-type">
             <Dropdown
               options={WEATHER_OPTIONS}
               onChange={weatherType =>
@@ -256,7 +292,7 @@ class Compare extends React.Component {
               Compare
             </Button>
           </Box>
-          <Box className="col-md-2" mb={2}>
+          <Box mb={2} className="filter-section-item export-button">
             <Button
               kind="green"
               size="large"
@@ -273,7 +309,7 @@ class Compare extends React.Component {
               Export CSV
             </Button>
           </Box>
-        </Box>
+        </CompareFiltersSection>
 
         <Box mt="30px">
           {selectedStations.length < 2 ? (

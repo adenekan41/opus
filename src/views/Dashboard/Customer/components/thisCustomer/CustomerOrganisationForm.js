@@ -1,14 +1,11 @@
-import React, { useState } from "react";
-import { Formik, Field } from "formik";
-import * as yup from "yup";
+import { Field, Formik } from "formik";
 import isEqual from 'lodash.isequal';
-import Input from "../../../../../components/Input";
+import React, { useState } from "react";
+import * as yup from "yup";
 import Button from "../../../../../components/Button";
+import Input from "../../../../../components/Input";
 import Dropdown from "../../../../../components/Select";
-import {
-  allCountries,
-  getCountryStates,
-} from "../../../../../helpers/countries";
+import { allCountries, getCountryStates } from "../../../../../helpers/countries";
 import { getStates } from "../../../../../helpers/functions";
 
 const CustomerOrganizationValdationSchema = yup.object().shape({
@@ -58,6 +55,7 @@ const CustomerOrganizationForm = ({
                     id="organisation_name"
                     name="organisation_name"
                     type="text"
+                    isRequired
                     label="Company name"
                     touched={touched.organisation_name}
                     value={values.organisation_name}
@@ -76,6 +74,7 @@ const CustomerOrganizationForm = ({
                         {...field}
                         mb="20px"
                         id="country"
+                        isRequired
                         name="country"
                         label="Country"
                         options={countries}
@@ -90,7 +89,6 @@ const CustomerOrganizationForm = ({
                               countryName.toLowerCase()
                             }
                           );
-                          // debugger;
                          
                           form.setFieldValue("country", value);
                           setCities(getCountryStates(selectedCountry.id));
@@ -109,8 +107,9 @@ const CustomerOrganizationForm = ({
                         {...field}
                         mb="20px"
                         id="city"
+                        isRequired
                         name="city"
-                        label="City"
+                        label="State/Region"
                         options={cities}
                         touched={touched.city}
                         value={values.city}

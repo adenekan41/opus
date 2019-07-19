@@ -1,14 +1,15 @@
 import React from "react";
-import CustomerTable from "./CustomersTable";
-import SearchInput from "../../../../components/Search";
-import EmptyState from "../../../../components/EmptyState";
+import { Heading } from "rebass";
 import emptyStateImage from "../../../../assets/img/empty-states/contacts.png";
 import Button from "../../../../components/Button";
+import EmptyState from "../../../../components/EmptyState";
 import { Icon } from "../../../../components/Icon";
-import { errorCallback } from "../../../../helpers/functions";
-import toaster from "../../../../components/Toaster";
-import { FullScreenSpinner } from "../../../../components/Spinner";
 import { Confirm } from "../../../../components/Modal";
+import SearchInput from "../../../../components/Search";
+import { FullScreenSpinner } from "../../../../components/Spinner";
+import toaster from "../../../../components/Toaster";
+import { errorCallback } from "../../../../helpers/functions";
+import CustomerTable from "./CustomersTable";
 
 class Customers extends React.Component {
   constructor(props) {
@@ -56,7 +57,7 @@ class Customers extends React.Component {
           userToDelete: {},
           showDeleteConfirm: false
         });
-        toaster.success("User deleted successfully");
+        toaster.success("Customer deleted successfully");
       })
       .catch(error => {
         this.setState({
@@ -101,6 +102,7 @@ class Customers extends React.Component {
 
     return (
       <div style={{ padding: "40px" }}>
+      <Heading pb="40px">Customers</Heading>
         <div className="row">
           <div className="col-md-9 col-xs-12 col-sm-9 col-lg-9">
             <form onSubmit={e => this.onCustomerSearch(e)}>

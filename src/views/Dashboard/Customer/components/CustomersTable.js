@@ -108,8 +108,8 @@ const CustomerTable = ({
           value: 30,
         },
         {
-          id: "middle_name",
-          value: 130,
+          id: "other_name",
+          value: 180,
         },
         {
           id: "location",

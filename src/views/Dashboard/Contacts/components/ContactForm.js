@@ -1,20 +1,21 @@
+import { Field, Formik } from "formik";
+import isEqual from "lodash.isequal";
 import React from "react";
-import { Formik, Field } from "formik";
 import { Box } from "rebass";
 import * as yup from "yup";
-import isEqual from "lodash.isequal";
-import Dropdown from "../../../../components/Select";
-import Input from "../../../../components/Input";
-import Button from "../../../../components/Button";
-import { getCountryStates, allCountries } from "../../../../helpers/countries";
 import { ErrorAlertComponent } from "../../../../components/AlertComponent";
-import { getStates } from "../../../../helpers/functions";
+import Button from "../../../../components/Button";
+import Input from "../../../../components/Input";
+import Dropdown from "../../../../components/Select";
 import { phoneRegExp } from "../../../../helpers/constants";
+import { allCountries, getCountryStates } from "../../../../helpers/countries";
+import { getStates } from "../../../../helpers/functions";
 
 const contactFormValidation = yup.object().shape({
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().required("Last name is required"),
   country: yup.string().required("Country is required"),
+  language: yup.string().required("Language is required"),
   city: yup.string().required("City is required"),
   crop_managed: yup.string().required("Crop managed is required"),
   phone_number: yup
@@ -100,6 +101,7 @@ class ContactForm extends React.Component {
                 <div className="col-md-6">
                   <Input
                     mb="20px"
+                    isRequired
                     id="first_name"
                     name="first_name"
                     type="text"
@@ -114,6 +116,7 @@ class ContactForm extends React.Component {
                 <div className="col-md-6">
                   <Input
                     mb="20px"
+                    isRequired
                     id="last_name"
                     name="last_name"
                     type="text"
@@ -147,6 +150,7 @@ class ContactForm extends React.Component {
                     render={({ field, form }) => (
                       <Dropdown
                         {...field}
+                        isRequired
                         mb="20px"
                         name="crop_managed"
                         label="Crop"
@@ -169,6 +173,7 @@ class ContactForm extends React.Component {
                     render={({ field, form }) => (
                       <Dropdown
                         {...field}
+                        isRequired
                         mb="20px"
                         name="country"
                         label="Country"
@@ -197,9 +202,10 @@ class ContactForm extends React.Component {
                     render={({ field, form }) => (
                       <Dropdown
                         {...field}
+                        isRequired
                         mb="20px"
                         name="city"
-                        label="City"
+                        label="State/Region"
                         touched={touched.city}
                         options={this.state.cities}
                         errorMessage={errors.city}
@@ -220,6 +226,7 @@ class ContactForm extends React.Component {
                       <Dropdown
                         {...field}
                         mb="20px"
+                        isRequired
                         name="language"
                         label="Language"
                         touched={touched.language}
@@ -242,6 +249,7 @@ class ContactForm extends React.Component {
                     id="phone_number"
                     name="phone_number"
                     type="tel"
+                    isRequired
                     label="Phone number"
                     touched={touched.phone_number}
                     value={values.phone_number}

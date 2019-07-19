@@ -80,7 +80,7 @@ class CustomerDetails extends React.Component {
         this.setState({
           loading: false,
         });
-        toaster.success("Customer updated successful");
+        toaster.success("Customer updated successfully");
       })
       .catch(error => {
         this.setState({

@@ -1,8 +1,8 @@
 import React from 'react';
+import { Box, Flex, Text } from 'rebass';
 import styled from 'styled-components';
-import { Flex, Box, Text } from 'rebass';
-import { Icon } from '../Icon';
 import { sharedProps } from '../Avatar';
+import { Icon } from '../Icon';
 
 const hasStripStyle = `
     &:before {
@@ -52,6 +52,11 @@ const InputContainer = styled.div`
     opacity: 0.5;
     display: inline-block;
     color: #8c8c8c;
+
+    &__required {
+      color: #f66262;
+      font-size: 12px;
+    }
   }
 
   .input {
@@ -130,6 +135,7 @@ class Input extends React.Component {
       value = '',
       mb,
       mt,
+      isRequired,
       ...rest
     } = this.props;
     return (
@@ -145,7 +151,7 @@ class Input extends React.Component {
           <Flex flexDirection="column" className="input-label__wrapper">
             <input {...rest} value={value} id={id} className="input" />
             <label htmlFor={id} className="label">
-              {label}
+              {label} {isRequired && <span className="label__required">*</span>}
             </label>
           </Flex>
           {icon && (
