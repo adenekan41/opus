@@ -266,23 +266,42 @@ const exportWeatherData = (token, station_name, start_date, end_date) => {
   });
 };
 
+// const exportCompareData = (
+//   token,
+//   station_names,
+//   weather_type,
+//   start_date,
+//   end_date
+// ) => {
+//   return makeApiCall({
+//     baseURL: BASE_URL_TWO,
+//     url: `/weatherlink/compared/`,
+//     token,
+//     method: "POST",
+//     data: {
+//       station_names,
+//       weather_type,
+//       start_date: formatDate(start_date, "M/D/YYYY"),
+//       end_date: formatDate(end_date, "M/D/YYYY"),
+//     },
+//   });
+// };
+
 const exportCompareData = (
   token,
   station_names,
   weather_type,
-  start_date,
-  end_date
+  date,
 ) => {
   return makeApiCall({
     baseURL: BASE_URL_TWO,
-    url: `/weatherlink/compared/`,
+    url: `/weatherlink/exportspandata/`,
     token,
     method: "POST",
     data: {
       station_names,
       weather_type,
-      start_date: formatDate(start_date, "M/D/YYYY"),
-      end_date: formatDate(end_date, "M/D/YYYY"),
+      date: formatDate(date, "M/D/YYYY"),
     },
   });
 };

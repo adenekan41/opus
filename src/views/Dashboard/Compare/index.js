@@ -28,8 +28,8 @@ class Compare extends React.Component {
   state = {
     data: [],
     span:"",
-    hours:null,
-    days:null,
+    hours:0,
+    days:0,
     loading: false,
     buttonLoading: false,
     compareType: this.props.compareType,
@@ -47,7 +47,7 @@ class Compare extends React.Component {
 
   exportDataToCsv = () => {
     const { dispatch, actions } = this.props;
-    const { selectedStations, startDate, endDate, compareType } = this.state;
+    const { selectedStations, date, compareType } = this.state;
 
     this.setState({ buttonLoading: true });
 
@@ -56,8 +56,7 @@ class Compare extends React.Component {
       value: {
         station_names: selectedStations,
         weather_type: compareType,
-        start_date: moment(startDate).format("M/D/YYYY"),
-        end_date: moment(endDate).format("M/D/YYYY"),
+        date: moment(date).format("M/D/YYYY"),
       },
     })
       .then(data => {
@@ -75,28 +74,34 @@ class Compare extends React.Component {
     // debugger
     if(key.value.includes('hour')){
       this.setState({
+        days:0,
         hours:parseInt(key.value)
       })
     }
     if(key.value.includes('day')){
       this.setState({
+        hours:0,
         days:parseInt(key.value)
       })
     }
     if(key.value.includes('week')){
-      var week = key.value.split("week");
-      key = week.splice(0,1).join("");
-      key = parseInt(key) * 7
+      var value = key.value
+      var week = value.split("week");
+      value = week.splice(0,1).join("");
+      value = parseInt(key) * 7
       this.setState({
-        days:key
+        hours:0,
+        days:value
       })
     }
     if(key.value.includes('year')){
-      var week = key.value.split("year");
-      key.value = week.splice(0,1).join("");
-      key.value = parseInt(key.value) * 365
+      var value = key.value
+      var year = value.split("year")
+      value = year.splice(0,1).join("");
+      value = parseInt(value) * 365
       this.setState({
-        days:key.value
+        hours:0,
+        days:value
       })
     }
     this.setState({
@@ -219,6 +224,7 @@ class Compare extends React.Component {
             <SingleDatePicker
               date={date}
               onChange={({ date }) => {
+                
                 this.setState({
                   date,
                 });
