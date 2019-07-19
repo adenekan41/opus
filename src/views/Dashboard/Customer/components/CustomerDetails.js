@@ -11,7 +11,7 @@ const CustomerDetailsStyle = styled(Box)`
 export default function CustomerDetails({ crops, payload, onSubmit, countries, onCancel }) {
   return (
     <CustomerDetailsStyle>
-      <Heading textAlign="center" mb={4} fontWeight={500} fontSize={20}>Create Customer</Heading>
+      <Heading textAlign="center" mb={4} fontSize={20}>Create Customer</Heading>
       <CustomerForm crops={crops} {...payload} onSubmit={onSubmit} countries={countries} onCancel={onCancel}  />
     </CustomerDetailsStyle>
   );

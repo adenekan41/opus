@@ -10,6 +10,7 @@ export default function CreateAssetButton({
   onSubmit,
   isLoading,
   label,
+  onCloseModal,
 }) {
   return (
     <ToggleModal>
@@ -27,7 +28,10 @@ export default function CreateAssetButton({
           >
             <AssetForm
               label={label}
-              onCancel={closeModal}
+              onCancel={() => {
+                closeModal();
+                onCloseModal();
+              }}
               onSubmit={onSubmit}
               isLoading={isLoading}
               apiErrors={getApiErrors(apiErrors)}

@@ -1,9 +1,10 @@
-import React from "react";
 import { Formik } from "formik";
+import isEqual from "lodash.isequal";
+import React from "react";
 import * as yup from "yup";
+import Button from "../../../../../components/Button";
 import Input from "../../../../../components/Input";
 import TextArea from "../../../../../components/TextArea";
-import Button from "../../../../../components/Button";
 
 const CustomerBillingValdationSchema = yup.object().shape({
   billing_vat_number: yup.string().required("VAT is required"),
@@ -20,14 +21,15 @@ const CustomerBillingForm = ({
   billing_registration_number,
   billing_service_delivery,
 }) => {
+  let initialValues = {
+    id: id || "",
+    billing_vat_number: billing_vat_number || "",
+    billing_registration_number: billing_registration_number || "",
+    billing_service_delivery: billing_service_delivery || "",
+  }
   return (
     <Formik
-      initialValues={{
-        id: id || "",
-        billing_vat_number: billing_vat_number || "",
-        billing_registration_number: billing_registration_number || "",
-        billing_service_delivery: billing_service_delivery || "",
-      }}
+      initialValues={initialValues}
       onSubmit={values => onSubmit(values)}
       validationSchema={CustomerBillingValdationSchema}
     >
@@ -43,6 +45,7 @@ const CustomerBillingForm = ({
                     name="billing_vat_number"
                     type="text"
                     label="VAT"
+                    isRequired
                     touched={touched.billing_vat_number}
                     value={values.billing_vat_number}
                     onChange={handleChange}
@@ -58,6 +61,7 @@ const CustomerBillingForm = ({
                     id="billing_registration_number"
                     name="billing_registration_number"
                     type="text"
+                    isRequired
                     label="Company registration number"
                     touched={touched.billing_registration_number}
                     value={values.billing_registration_number}
@@ -98,6 +102,7 @@ const CustomerBillingForm = ({
                       kind="orange"
                       type="submit"
                       isLoading={isLoading}
+                      disabled={isEqual(initialValues, values)}
                     >
                       Save Changes
                     </Button>

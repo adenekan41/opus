@@ -1,13 +1,13 @@
+import { Field, Formik } from "formik";
 import React from "react";
-import { Formik, Field } from "formik";
 import { Box } from "rebass";
 import * as yup from "yup";
-import Dropdown from "../../../../components/Select";
-import Input from "../../../../components/Input";
 import Button from "../../../../components/Button";
+import Input from "../../../../components/Input";
+import Dropdown from "../../../../components/Select";
+import { phoneRegExp } from "../../../../helpers/constants";
 import { allCountries, getCountryStates } from "../../../../helpers/countries";
 import { getStates } from "../../../../helpers/functions";
-import { phoneRegExp } from "../../../../helpers/constants";
 
 const customerFormValidation = yup.object().shape({
   first_name: yup.string().required("First name is required"),
@@ -82,6 +82,7 @@ class CustomerForm extends React.Component {
                     id="first_name"
                     name="first_name"
                     type="text"
+                    isRequired
                     label="First name"
                     touched={touched.first_name}
                     value={values.first_name}
@@ -96,6 +97,7 @@ class CustomerForm extends React.Component {
                     id="last_name"
                     name="last_name"
                     type="text"
+                    isRequired
                     label="Last name"
                     touched={touched.last_name}
                     value={values.last_name}
@@ -127,6 +129,7 @@ class CustomerForm extends React.Component {
                       <Dropdown
                         {...field}
                         mb="20px"
+                        isRequired
                         name="crop_managed"
                         label="Crop managed"
                         touched={touched.crop_managed}
@@ -149,6 +152,7 @@ class CustomerForm extends React.Component {
                       <Dropdown
                         {...field}
                         mb="20px"
+                        isRequired
                         name="country"
                         label="Country"
                         touched={touched.country}
@@ -177,7 +181,8 @@ class CustomerForm extends React.Component {
                         {...field}
                         mb="20px"
                         name="city"
-                        label="City"
+                        label="State/Region"
+                        isRequired
                         touched={touched.city}
                         options={this.state.cities}
                         errorMessage={errors.city}
@@ -198,6 +203,7 @@ class CustomerForm extends React.Component {
                     name="organisation_name"
                     type="text"
                     label="Company"
+                    isRequired
                     touched={touched.organisation_name}
                     value={values.organisation_name}
                     onChange={handleChange}
@@ -213,6 +219,7 @@ class CustomerForm extends React.Component {
                     id="email"
                     name="email"
                     type="text"
+                    isRequired
                     label="Email Address"
                     touched={touched.email}
                     value={values.email}
@@ -229,6 +236,7 @@ class CustomerForm extends React.Component {
                     id="phone_number"
                     name="phone_number"
                     type="tel"
+                    isRequired
                     label="Phone number"
                     touched={touched.phone_number}
                     value={values.phone_number}

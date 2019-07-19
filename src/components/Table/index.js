@@ -34,6 +34,10 @@ const StyledTable = styled.div`
     text-align: center !important;
     justify-content: center !important;
   }
+  
+  .rthfc.-sp .rt-tbody {
+    flex: 9999 1 auto!important;
+  }
 
   .Table__Row {
     border-bottom: 4px solid #f5f6fa !important;

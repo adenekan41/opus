@@ -156,9 +156,9 @@ class Profile extends React.Component {
                     isRound
                     size="8vw"
                     photo_url={
-                      profilePhoto
-                        ? `${process.env.REACT_APP_API_URL}${profilePhoto}`
-                        : "" || image.preview
+                      image.preview ||
+                      (profilePhoto &&
+                        `${process.env.REACT_APP_API_URL}${profilePhoto}`)
                     }
                     color="#ff9901"
                     bgColor="rgba(255,153,1,.15)"

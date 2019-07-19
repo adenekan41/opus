@@ -64,7 +64,7 @@ export default class thisCustomer extends Component {
         this.setState({
           buttonLoading: false,
         });
-        toaster.success("Customer updated successful");
+        toaster.success("Customer updated successfully");
         this.getCustomer(id)
       })
       .catch(error => {
@@ -83,6 +83,9 @@ export default class thisCustomer extends Component {
     const countries = assets
       .filter(asset => asset.is_country)
       .map(country => ({ label: country.name, value: country.id }));
+  let crops = assets
+    .filter(asset => asset.is_crop)
+    .map(crop => ({ label: crop.name, value: crop.id }));
 
     return this.state.loading ? (
       <FullScreenSpinner
@@ -96,7 +99,7 @@ export default class thisCustomer extends Component {
         <Box mb="40px">
           <Breadcrumbs>
             <BreadcrumbItem url="/dashboard/customers" useNavlink>
-              Customer
+              Customers
             </BreadcrumbItem>
             <BreadcrumbItem isActive>{user.first_name}</BreadcrumbItem>
           </Breadcrumbs>
@@ -145,7 +148,7 @@ export default class thisCustomer extends Component {
                 exact
                 path={`/dashboard/customers/${id}/edit`}
                 render={props => (
-                  <CustomerDetails {...{ ...props, ...user, actions, dispatch }} />
+                  <CustomerDetails {...{ ...props, ...user, crops, actions, dispatch }} />
                 )}
               />
               <Route
@@ -172,7 +175,6 @@ export default class thisCustomer extends Component {
                     {...{ map, props, actions, dispatch, ...user }}
                     weatherStations={weatherStations}
                     renderButtons={weatherStations => {
-                      console.log(weatherStations);
                       return (
                         <Box mt={4}>
                           <Button

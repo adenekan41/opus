@@ -3,8 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import Login from '../../views/Auth/Login/login';
 import Recover from '../../views/Auth/Recover/Recover';
 import DashboardRoutes from '../../shared/Layout/DashboardLayout/routes';
-import AdminDashboardRoutes from '../../shared/Layout/AdminLayout/routes';
-import { ProtectedRoute } from '../../components/Route';
+import { ProtectedRoute, AuthRoute } from '../../components/Route';
 const PrimaryLayout = ({
   token,
   onLogin,
@@ -15,9 +14,10 @@ const PrimaryLayout = ({
 }) => (
   <React.Fragment>
     <Switch>
-      <Route
-        path="/"
+      <AuthRoute
         exact
+        path="/"
+        isLoggedIn={isLoggedIn}
         render={props => <Login {...props} onLogin={onLogin} />}
       />
       <Route
@@ -37,11 +37,6 @@ const PrimaryLayout = ({
             clearAllState={clearAllState}
           />
         )}
-      />
-      <ProtectedRoute
-        path="/admin/dashboard"
-        isLoggedIn={isLoggedIn}
-        render={props => <AdminDashboardRoutes {...props} token={token} />}
       />
     </Switch>
   </React.Fragment>
