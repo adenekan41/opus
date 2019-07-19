@@ -596,7 +596,7 @@ export class DataProvider extends React.Component {
     return this.getAdapter()
       .getCompareWeatherStationData(token, payload)
       .then(data => {
-        debugger
+        // debugger
         payload.stations.forEach(station => {
           let stationData = data.filter(item => item.station_name === station);
           stations.push({ station, data: stationData });
