@@ -85,23 +85,15 @@ class Compare extends React.Component {
       })
     }
     if(key.value.includes('week')){
-      var value = key.value
-      var week = value.split("week");
-      value = week.splice(0,1).join("");
-      value = parseInt(key) * 7
       this.setState({
         hours:0,
-        days:value
+        days:parseInt(key.value) * 7
       })
     }
     if(key.value.includes('year')){
-      var value = key.value
-      var year = value.split("year")
-      value = year.splice(0,1).join("");
-      value = parseInt(value) * 365
       this.setState({
         hours:0,
-        days:value
+        days:parseInt(key.value) * 365
       })
     }
     this.setState({
@@ -224,7 +216,7 @@ class Compare extends React.Component {
             <SingleDatePicker
               date={date}
               onChange={({ date }) => {
-                
+
                 this.setState({
                   date,
                 });
