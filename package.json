@@ -6,7 +6,7 @@
     "@babel/core": "^7.2.2",
     "@storybook/addon-links": "^4.1.11",
     "@storybook/react": "^4.1.11",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-loader": "8.0.4",
     "chart.js": "^2.8.0",
     "country-state-city": "^1.0.0",
