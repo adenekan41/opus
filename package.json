@@ -12,7 +12,7 @@
     "country-state-city": "^1.0.0",
     "formik": "^1.5.1",
     "google-maps": "^3.3.0",
-    "highcharts": "^7.0.3",
+    "highcharts": "^9.0.0",
     "highcharts-react-official": "^2.0.0",
     "leaflet": "^1.4.0",
     "leaflet.markercluster": "^1.4.1",
