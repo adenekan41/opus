@@ -8,7 +8,7 @@
     "@storybook/react": "^4.1.11",
     "axios": "^0.18.0",
     "babel-loader": "8.0.4",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "country-state-city": "^1.0.0",
     "formik": "^1.5.1",
     "google-maps": "^3.3.0",
